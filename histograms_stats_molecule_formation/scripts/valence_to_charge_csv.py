@@ -1,5 +1,5 @@
 import csv
-from fragCharges import process_fragments
+from histograms_stats_molecule_formation.fragments_stats_plots import process_fragments
 
 fragment_charges = process_fragments('moleculeFormations.csv')
 

@@ -2,6 +2,7 @@ import csv
 import matplotlib.pyplot as plt
 import numpy as np
 import re
+import os
 
 
 # Do you want the histogram to display the number of charges opposed to valence electrons?
@@ -62,24 +63,27 @@ def valence_to_charges(fragment_charges):
     H_electrons = 1
 
     neutral_counts_no_sub = {
+        "C":    (1 * C_valence_electrons) + (0 * H_electrons),
         "H":    (0 * C_valence_electrons) + (1 * H_electrons),
-        "C2":   (2 * C_valence_electrons) + (0 * H_electrons),
         "CH":   (1 * C_valence_electrons) + (1 * H_electrons),
-        "C2H":  (2 * C_valence_electrons) + (1 * H_electrons),
-        "C3H":  (3 * C_valence_electrons) + (1 * H_electrons),
-        "C4H":  (4 * C_valence_electrons) + (1 * H_electrons),
         "CH2":  (1 * C_valence_electrons) + (2 * H_electrons),
         "CH3":  (1 * C_valence_electrons) + (3 * H_electrons),
+        "C2":   (2 * C_valence_electrons) + (0 * H_electrons),
+        "C2H":  (2 * C_valence_electrons) + (1 * H_electrons),
         "C2H2": (2 * C_valence_electrons) + (2 * H_electrons),
         "C2H3": (2 * C_valence_electrons) + (3 * H_electrons),
         "C2H4": (2 * C_valence_electrons) + (4 * H_electrons),
         "C2H5": (2 * C_valence_electrons) + (5 * H_electrons),
+        "C3":   (3 * C_valence_electrons) + (0 * H_electrons),
+        "C3H":  (3 * C_valence_electrons) + (1 * H_electrons),
         "C3H2": (3 * C_valence_electrons) + (2 * H_electrons),
         "C3H3": (3 * C_valence_electrons) + (3 * H_electrons),
         "C3H4": (3 * C_valence_electrons) + (4 * H_electrons),
         "C3H5": (3 * C_valence_electrons) + (5 * H_electrons),
         "C3H6": (3 * C_valence_electrons) + (6 * H_electrons),
         "C3H7": (3 * C_valence_electrons) + (7 * H_electrons),
+        "C4":   (4 * C_valence_electrons) + (0 * H_electrons),
+        "C4H":  (4 * C_valence_electrons) + (1 * H_electrons),
         "C4H2": (4 * C_valence_electrons) + (2 * H_electrons),
         "C4H3": (4 * C_valence_electrons) + (3 * H_electrons),
         "C4H4": (4 * C_valence_electrons) + (4 * H_electrons),
@@ -87,7 +91,9 @@ def valence_to_charges(fragment_charges):
         "C4H6": (4 * C_valence_electrons) + (6 * H_electrons),
         "C4H7": (4 * C_valence_electrons) + (7 * H_electrons),
         "C4H8": (4 * C_valence_electrons) + (8 * H_electrons),
-        "C4H9": (4 * C_valence_electrons) + (9 * H_electrons)
+        "C4H9": (4 * C_valence_electrons) + (9 * H_electrons),
+        "C4H10":(4 * C_valence_electrons) + (10 * H_electrons)
+
     }
 
     #neutral_counts= {}
@@ -109,7 +115,7 @@ def rev_subscript_numbers(molecule):
     reverse_map = str.maketrans("₀₁₂₃₄₅₆₇₈₉", "0123456789")
     return molecule.translate(reverse_map)
 
-def plot_charge_states(fragments_data_passed):
+def plot_charge_states(fragments_data_passed,fig_name="frag_charge_states.png"):
     include_hydrogen_in_this_plot = False
     
     fragments_data = fragments_data_passed.copy()
@@ -120,13 +126,14 @@ def plot_charge_states(fragments_data_passed):
     fragments = list(fragments_data.keys())
     
     # Calculate the minimum and maximum electron to set up the bins
-    min_charge = min(min(num_electrons) for num_electrons in fragments_data.values() if num_electrons)
-    max_charge = max(max(num_electrons) for num_electrons in fragments_data.values() if num_electrons)
-    min_charge = ((min_charge * 10) // 1 ) / 10
+    min_charge = min(min(charge) for charge in fragments_data.values() if charge)
+    max_charge = max(max(charge) for charge in fragments_data.values() if charge)
+    min_charge = ((min_charge * 10) // 1 ) / 10 #round charges off to 1 decimal
     max_charge = ((max_charge * 10) // 1 ) / 10
 
+    eps=1E-9 #eps to include the charges that are equal to the max_charge
     bin_size = .2
-    bins = np.arange(min_charge, max_charge + bin_size, bin_size)  # Bins of size 0.2 up to the maximum electron
+    bins = np.arange(min_charge, max_charge + bin_size + eps, bin_size)  # Bins of size 0.2 up to the maximum electron
     labels = [f"{bins[i]:.1f} to {bins[i+1]:.1f}" for i in range(len(bins) - 1)]
     colors = plt.cm.viridis(np.linspace(0, 1, len(labels)))
 
@@ -185,9 +192,8 @@ def plot_charge_states(fragments_data_passed):
 
     plt.tick_params(axis='y', direction='in')
 
-
     plt.tight_layout(pad=1.0)  # Adjust layout with a bit more padding
-    plt.savefig('frag_charge_states.png', format='png')  # Save as PNG
+    plt.savefig(fig_name, format='png')  # Save as PNG
     plt.close()
 
 def plot_fragment_counts_and_averages_log(fragments_data, fig_name = 'frag_charge_averages.png', log_scale=True):
@@ -266,7 +272,7 @@ def plot_fragment_counts_and_averages_log(fragments_data, fig_name = 'frag_charg
     plt.close()
 
 
-def plot_fragment_counts_and_averages_two_ax(fragments_data, fig_name='frag_charge_averages.png'):
+def plot_fragment_counts_and_averages_two_ax(fragments_data, fig_name='frag_charge_averages.png',hydrogen_charge_scale_factor=10):
     # Extract fragment names
     fragments = list(fragments_data.keys())
     counts = []
@@ -325,11 +331,11 @@ def plot_fragment_counts_and_averages_two_ax(fragments_data, fig_name='frag_char
     max_hydrogen_height = hydrogen_count + abs(hydrogen_average_charge)
     ax1.set_ylim(0, max_hydrogen_height * 1.15)
 
-    hydrogen_size_scaler = 2.4242
     # Plot hydrogen bar on the primary y-axis
     if hydrogen_index is not None:
         hydrogen_bars_count = ax1.bar(["H"], [hydrogen_count], color='tab:orange', edgecolor='black',linewidth=.1, label='Hydrogen Frequency')
-        hydrogen_bars_average = ax1.bar(["H"], [abs(hydrogen_average_charge) * hydrogen_size_scaler], color='#ffc240', edgecolor='black',linewidth=.1, bottom=[hydrogen_count], label='Hydrogen Average Charge')
+        hydrogen_bars_average = ax1.bar(["H"], [abs(hydrogen_average_charge) * hydrogen_charge_scale_factor], 
+                                        color='#ffc240', edgecolor='black',linewidth=.1, bottom=[hydrogen_count], label='Hydrogen Average Charge')
 
         # Adding labels within the hydrogen bar for counts
         for bar in hydrogen_bars_count:
@@ -338,7 +344,7 @@ def plot_fragment_counts_and_averages_two_ax(fragments_data, fig_name='frag_char
 
         # Adding labels on top of the hydrogen bar for averages
         for bar in hydrogen_bars_average:
-            ax1.text(bar.get_x() + bar.get_width() / 2, hydrogen_count + (abs(hydrogen_average_charge) * hydrogen_size_scaler), f'{hydrogen_average_charge:.1f}', ha='center', va='bottom', fontweight='bold', color='black', fontsize=7)
+            ax1.text(bar.get_x() + bar.get_width() / 2, hydrogen_count + (abs(hydrogen_average_charge) * hydrogen_charge_scale_factor), f'{hydrogen_average_charge:.1f}', ha='center', va='bottom', fontweight='bold', color='black', fontsize=7)
 
 
     # Create primary y-axis for other fragments
@@ -477,23 +483,29 @@ def plot_hydrogen_boxplot(fragments_data, fig_name):
 
 
 def main():
+    print("-= GENERATING STATISTIC PLOTS =-")
     # Usage
-    file_path = 'moleculeFormations.csv'
-    fragments_data = process_fragments(file_path)
+    input_file_path = 'histograms_stats_molecule_formation/c3h8/moleculeFormations_7.5.csv'
+    print("READING IN DATA FROM FILE:",input_file_path)
+    fragments_data = process_fragments(input_file_path)
+    
+    # Set the output file directory to match the input file's directory
+    output_file_directory = os.path.dirname(input_file_path)
     
     if VALENCE_ELECTRONS_TO_CHARGES:
         valence_to_charges(fragments_data)
     
     fragments_data = dict(sorted(fragments_data.items(), key=custom_sort))
     
-    # Create plots
-    plot_charge_states(fragments_data)
-    plot_fragment_counts_and_averages_log(fragments_data, fig_name="frag_charge_averages_log.png", log_scale=True)
-    plot_fragment_counts_and_averages_two_ax(fragments_data, fig_name="frag_charge_averages_two_axes.png")
-    plot_hydrogen(fragments_data, fig_name='hydrogen_charge_distribution.png')
-    plot_hydrogen_boxplot(fragments_data, fig_name='hydrogen_charge_boxplot.png')
+    # Create plots with file names including the output directory
+    plot_charge_states(fragments_data, fig_name=os.path.join(output_file_directory, "frag_charge_states.png"))
+    plot_fragment_counts_and_averages_log(fragments_data, fig_name=os.path.join(output_file_directory, "frag_charge_averages_log.png"), log_scale=True)
+    plot_fragment_counts_and_averages_two_ax(fragments_data, fig_name=os.path.join(output_file_directory, "frag_charge_averages_two_axes.png"),
+                                                                                   hydrogen_charge_scale_factor=6)
+    plot_hydrogen(fragments_data, fig_name=os.path.join(output_file_directory, 'hydrogen_charge_distribution.png'))
+    plot_hydrogen_boxplot(fragments_data, fig_name=os.path.join(output_file_directory, 'hydrogen_charge_boxplot.png'))
     
-    print("Successfully created all figures...")
+    print("SUCCESSFULLY CREATED ALL FIGURES IN:",output_file_directory)
     
 if __name__ == '__main__':
     main()
