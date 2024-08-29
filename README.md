@@ -1,6 +1,6 @@
 # TDDFT-output-and-scripts
 
-**Description:** Output files, data, figures, and Python visualization scripts used for computational nanoscience research with Varga group.
+**Description:** Data, output files, figures, and Python visualization scripts used for computational nanoscience research with Varga group.
 
         See below for information on each folder and what output/data/scripts is contained.
 
