@@ -15,4 +15,4 @@ def check_identical_lines(file_path):
             print("No identical lines found.")
 
 # Replace 'molFormations.csv' with the path to your CSV file if it's located elsewhere
-check_identical_lines('moleculeFormationsNew.csv')
+check_identical_lines('histograms_stats_molecule_formation\scripts\moleculeFormations.csv')

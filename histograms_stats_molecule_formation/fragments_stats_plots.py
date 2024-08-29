@@ -34,9 +34,10 @@ def custom_sort_frags(hydrocarbon):
         return (2, carbons, hydrogens)
     return (3, 0, 0)  # Default case, should not happen with valid input
 
-def process_fragments(filepath):
+def process_fragments(filepath,line_skip_num=9):
+     # line_skip_num is how many lines to skip to get to next frag and dens info
+
     fragments_data = {}
-    line_skip_num = 9 # this is how many lines to skip to get to next frag and dens info
     
     with open(filepath, 'r') as file:
         reader = csv.reader(file)
@@ -485,9 +486,9 @@ def plot_hydrogen_boxplot(fragments_data, fig_name):
 def main():
     print("-= GENERATING STATISTIC PLOTS =-")
     # Usage
-    input_file_path = 'histograms_stats_molecule_formation/c3h8/moleculeFormations_7.5.csv'
+    input_file_path = 'histograms_stats_molecule_formation/x_polarized/moleculeFormations.csv'
     print("READING IN DATA FROM FILE:",input_file_path)
-    fragments_data = process_fragments(input_file_path)
+    fragments_data = process_fragments(input_file_path,line_skip_num=3)
     
     # Set the output file directory to match the input file's directory
     output_file_directory = os.path.dirname(input_file_path)
