@@ -12,6 +12,8 @@
 
 **histograms_stats_molecule_formation:** Contains statistical data on fragment formation Coulomb Explosion in hydrocarbons AND scripts to generate these figures.
 
+**newton_plot:** Contains figures of newton plots (velocity v.s. velocity) AND scripts to generate them.
+
 **pulse_electron_graph:** Contains data, figures, and animations on the pulse and the number of electrons in the grid AND scripts to generate line graphs of the pulse E-field and number of electrons v.s. time.
 
 **pulse_vector_animation:** Contains animation of the electric field vector of a given pulse AND scripts to create this animation.
