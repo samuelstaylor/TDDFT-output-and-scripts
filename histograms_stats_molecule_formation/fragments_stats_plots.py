@@ -485,10 +485,10 @@ def plot_hydrogen_boxplot(fragments_data, fig_name):
 
 def main():
     print("-= GENERATING STATISTIC PLOTS =-")
-    # Usage
-    input_file_path = 'histograms_stats_molecule_formation/x_polarized/moleculeFormations.csv'
+
+    input_file_path = 'histograms_stats_molecule_formation/c3h8/moleculeFormations_7.5.csv'
     print("READING IN DATA FROM FILE:",input_file_path)
-    fragments_data = process_fragments(input_file_path,line_skip_num=3)
+    fragments_data = process_fragments(input_file_path,line_skip_num=9)
     
     # Set the output file directory to match the input file's directory
     output_file_directory = os.path.dirname(input_file_path)
@@ -502,7 +502,7 @@ def main():
     plot_charge_states(fragments_data, fig_name=os.path.join(output_file_directory, "frag_charge_states.png"))
     plot_fragment_counts_and_averages_log(fragments_data, fig_name=os.path.join(output_file_directory, "frag_charge_averages_log.png"), log_scale=True)
     plot_fragment_counts_and_averages_two_ax(fragments_data, fig_name=os.path.join(output_file_directory, "frag_charge_averages_two_axes.png"),
-                                                                                   hydrogen_charge_scale_factor=6)
+                                                                                   hydrogen_charge_scale_factor=10.5)
     plot_hydrogen(fragments_data, fig_name=os.path.join(output_file_directory, 'hydrogen_charge_distribution.png'))
     plot_hydrogen_boxplot(fragments_data, fig_name=os.path.join(output_file_directory, 'hydrogen_charge_boxplot.png'))
     
