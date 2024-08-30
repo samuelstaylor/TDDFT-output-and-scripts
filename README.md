@@ -6,7 +6,10 @@
 
 **_FIGURES:** Contains figures, diagrams, screenshots, and images that were generated using external software sources.
 
+**cluster_job_run_script** Contains python scripts to automate running jobs on the cluster. Copies directories and renames the files accordingly, then submits each job ("qsub job.pbs")
+
 **ELI_pulse_data_and_scale:** Contains all of the laser pulse data on pulses used in ELI-ALPS Coulomb explosion experiments AND scripts to scale the laser electric fields and visualize the pulse.
+![Snapshot diagram of CH formation resulting from Coulomb explosion fragmentation of butane](_FIGURES/CH_r6_snapshots.png)
 
 **excel_laser_generation:** Excel sheet provided by Cody Covington. Used to generate laser pulses given different parameters.
 

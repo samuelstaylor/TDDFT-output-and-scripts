@@ -1,0 +1,37 @@
+# Number of atoms:     4
+
+ # Number of domains in the system:     1
+
+ # Grid step:     0.2500000000
+
+ # Number of grid points in x,y,z directions:    97    81    81
+
+ # Simulation box bounds:
+
+ # x    -12.00000000000000 :    12.00000000000000
+
+ # y    -10.00000000000000 :    10.00000000000000
+
+ # z    -10.00000000000000 :    10.00000000000000
+
+ # Distance along axes from leftmost/rightmost atoms to simulation box bounds:
+
+ # x     10.32238126000000 :    10.32238126000000
+
+ # y     10.00000000000000 :    10.00000000000000
+
+ # z     10.00000000000000 :    10.00000000000000
+
+ # System length (from leftmost to rightmost atom in each direction):
+
+ # x,y,z       2.42000     0.00000000000000     1.8706
+
+5 2 2 2
+
+-0.602596	    0.000000	    0.005146    6 1
+ 0.602596       0.000000        0.005146    6 1
+-1.6696011      0.000000        0.004853    1 1
+ 1.6696011      0.000000        0.004853    1 1
+ 0.000000	 5.000000	-0.602596 1 1
+
+0.3 100 100 100
