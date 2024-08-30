@@ -20,11 +20,19 @@
 
 **newton_plot:** Contains figures of newton plots (velocity v.s. velocity) AND scripts to generate them.
 
+<img src="newton_plot\images\presentation\ELI-VMI.png" alt="Coulomb explosion imaging of Acetylene with 75 simulations" width="400"/>
+
 **proton_grid_projectile:** Contains a script to copy ground state directories and adjust the locations of the proton projectile to be placed in a grid. for being launched at a molecule
+
+<img src="proton_grid_projectile\xz_birdseye_view.jpg" alt="Grid of initial proton positions to shoot as projectiles" width="400"/>
 
 **pulse_electron_graph:** Contains data, figures, and animations on the pulse and the number of electrons in the grid AND scripts to generate line graphs of the pulse E-field and number of electrons v.s. time.
 
+<img src="pulse_electron_graph\info_r6.png" alt="Laser pulse electric field and number of electrons in Butane from Coulomb explosion simulation" width="400"/>
+
 **pulse_vector_animation:** Contains animation of the electric field vector of a given pulse AND scripts to create this animation.
+
+<img src="pulse_vector_animation\pulse_animation.mp4" alt="Electric field vector of laser pulse" width="400"/>
 
 **seeds_random_extender:** Contains files of seeds for TDDFT Boltzmann distribution based runs AND scripts to generate/extend these seed files.
 
