@@ -9,11 +9,14 @@
 **cluster_job_run_script** Contains python scripts to automate running jobs on the cluster. Copies directories and renames the files accordingly, then submits each job ("qsub job.pbs")
 
 **ELI_pulse_data_and_scale:** Contains all of the laser pulse data on pulses used in ELI-ALPS Coulomb explosion experiments AND scripts to scale the laser electric fields and visualize the pulse.
-![Snapshot diagram of CH formation resulting from Coulomb explosion fragmentation of butane](_FIGURES\C4H10_snapshot_diagrams\CH_r6_snapshots.png)
+
+<img src="_FIGURES/C4H10_snapshot_diagrams/snapshots_new_CH.png" alt="Snapshot diagram of CH formation resulting from Coulomb explosion fragmentation of butane" width="400"/>
 
 **excel_laser_generation:** Excel sheet provided by Cody Covington. Used to generate laser pulses given different parameters.
 
 **histograms_stats_molecule_formation:** Contains statistical data on fragment formation Coulomb Explosion in hydrocarbons AND scripts to generate these figures.
+
+<img src="histograms_stats_molecule_formation/c4h10/paper_histo_x_polarized/frag_charge_averages_two_axes.png" alt="Histogram of fragment formations from 88 different simulations of butane Coulomb explosion" width="400"/>
 
 **newton_plot:** Contains figures of newton plots (velocity v.s. velocity) AND scripts to generate them.
 
