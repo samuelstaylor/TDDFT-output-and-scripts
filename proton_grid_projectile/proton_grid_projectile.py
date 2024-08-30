@@ -12,6 +12,7 @@ class Proton_grid_projectile():
         self.n = n  # Replace with your desired value for n
         self.m = m  # Replace with your desired value for m  
         self.proton_line_index = None
+        self.original_working_directory=os.getcwd()
 
     def is_float(self, value):
         try:
@@ -88,16 +89,22 @@ class Proton_grid_projectile():
         with open(job_script_path, 'w') as file:
             file.writelines(job_script_lines)
 
+        new_abs_path = os.path.abspath(new_dir)
+        # Calculate the relative path and count how many levels to go up
+        relative_path = os.path.relpath(new_abs_path, start=self.original_working_directory)
+        num_levels_up = relative_path.count(os.sep)  # Count the number of directory separators
+    
         # Change directory to the new directory
         os.chdir(new_dir)
 
         # Optionally execute the job script using sbatch
         if execute:
             #subprocess.run(["sbatch", "job_script.sh"])
-            print("sbatch job")
+            print("sbatch job_script")
 
-        # Change back to the original directory
         os.chdir("..")
+        for _ in range(num_levels_up):
+            os.chdir("..")
 
 
 def main():
@@ -107,10 +114,9 @@ def main():
     # x goes from 0 to n, z goes from 0 to m
     n = 3  # Replace with your desired value for n
     m = 4  # Replace with your desired value for m
-
+    
     proton_grid_projectile = Proton_grid_projectile(d, n, m)
 
-    # Define the original directory and the constant d
     original_dir = "proton_grid_projectile/c2h2_gs/"
     original_dft_inp = original_dir + "dft.inp"
 
@@ -121,7 +127,6 @@ def main():
         for j in range(0, m + 1):
             # Create the new directory name
             new_dir = f"proton_grid_projectile/c2h2_proton_x{i}z{j}_gs"
-            print(new_dir)
 
             # Check if the directory exists
             if not os.path.exists(new_dir):
