@@ -32,7 +32,7 @@
 
 **pulse_vector_animation:** Contains animation of the electric field vector of a given pulse AND scripts to create this animation.
 
-<img src="pulse_vector_animation\pulse_animation.mp4" alt="Electric field vector of laser pulse" width="400"/>
+<img src="pulse_vector_animation\pulse_vector_screenshot.jpg" alt="Electric field vector of laser pulse" width="400"/>
 
 **seeds_random_extender:** Contains files of seeds for TDDFT Boltzmann distribution based runs AND scripts to generate/extend these seed files.
 
