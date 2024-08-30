@@ -14,6 +14,8 @@
 
 **newton_plot:** Contains figures of newton plots (velocity v.s. velocity) AND scripts to generate them.
 
+**proton_grid_projectile:** Contains a script to copy ground state directories and adjust the locations of the proton projectile to be placed in a grid. for being launched at a molecule
+
 **pulse_electron_graph:** Contains data, figures, and animations on the pulse and the number of electrons in the grid AND scripts to generate line graphs of the pulse E-field and number of electrons v.s. time.
 
 **pulse_vector_animation:** Contains animation of the electric field vector of a given pulse AND scripts to create this animation.

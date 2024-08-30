@@ -8,7 +8,7 @@ def create_seeds_file(seeds_file, n):
 n = 200
 
 # Set location and name of seeds file
-seeds_file='input\\c2h2\\seeds.inp'
+seeds_file='seeds_scripts\\seeds.inp'
 
 create_seeds_file(seeds_file, n)
 
