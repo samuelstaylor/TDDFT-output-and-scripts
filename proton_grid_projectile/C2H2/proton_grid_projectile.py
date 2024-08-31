@@ -13,6 +13,7 @@ class Proton_grid_projectile():
         self.m = m  # Replace with your desired value for m  
         self.proton_line_index = None
         self.original_working_directory=os.getcwd()
+        self.gs_path_line_index = None
 
     def is_float(self, value):
         try:
@@ -73,6 +74,33 @@ class Proton_grid_projectile():
         # Write the updated lines back to the file
         with open(file_path, 'w') as file:
             file.writelines(self.lines)
+            
+    def read_original_control_inp(self, file_path):
+        with open(file_path, 'r') as file:
+            self.lines = file.readlines()
+        
+        # Find the correct insertion index
+        for i in range(0, len(self.lines), 1):
+            stripped_line = self.lines[i].strip()
+            print("strippedline",stripped_line)
+            if stripped_line and stripped_line.lower().startswith("gs_path"):
+                self.gs_path_line_index = i
+                break
+
+        if self.gs_path_line_index is None:
+            raise ValueError("No suitable insertion point found in the dft.inp file.")
+
+            
+    def update_control_inp(self, file_path, gs_rel_path,i,j):
+        gs_abs_path = os.path.abspath(gs_rel_path)
+        new_atom_line = f"gs_path={gs_abs_path}_x{i}z{j}\n"
+        self.lines[self.gs_path_line_index] = new_atom_line
+
+        # Write the updated lines back to the file
+        with open(file_path, 'w') as file:
+            file.writelines(self.lines)
+            
+        
 
     def run(self, new_dir, i, j, execute=True):
         # Path to the job script
@@ -99,26 +127,20 @@ class Proton_grid_projectile():
 
         # Optionally execute the job script using sbatch
         if execute:
-            #subprocess.run(["sbatch", "job_script.sh"])
-            print("sbatch job_script")
+            subprocess.run(["sbatch", "job_script.sh"])
+        else:
+            print(" 'sbatch job_script'")
 
         os.chdir("..")
         for _ in range(num_levels_up):
             os.chdir("..")
 
 
-def main():
-    d = 0.6025963854  # distance between points on i to n axis
-
-    # Number of iterations for i and j
-    # x goes from 0 to n, z goes from 0 to m
-    n = 3  # Replace with your desired value for n
-    m = 4  # Replace with your desired value for m
+def ground_state_grid(d=0.6025963854,n=1,m=1,original_gs_dir="proton_grid_projectile/C2H2/ground_state/C2H2_gs/"):
     
     proton_grid_projectile = Proton_grid_projectile(d, n, m)
 
-    original_dir = "proton_grid_projectile/c2h2_gs/"
-    original_dft_inp = original_dir + "dft.inp"
+    original_dft_inp = original_gs_dir + "dft.inp"
 
     proton_grid_projectile.read_original_dft_inp(original_dft_inp)
 
@@ -126,12 +148,12 @@ def main():
     for i in range(0, n + 1):
         for j in range(0, m + 1):
             # Create the new directory name
-            new_dir = f"proton_grid_projectile/c2h2_proton_x{i}z{j}_gs"
+            new_dir = f"proton_grid_projectile/C2H2/ground_state/c2h2_proton_x{i}z{j}_gs"
 
             # Check if the directory exists
             if not os.path.exists(new_dir):
                 # Copy the original directory to the new directory
-                shutil.copytree(original_dir, new_dir)
+                shutil.copytree(original_gs_dir, new_dir)
 
             # Path to the dft.inp file in the new directory
             dft_inp_path = os.path.join(new_dir, "dft.inp")
@@ -141,10 +163,58 @@ def main():
             print(dft_inp_path, "created and updated.")
 
             # Run the job script in the new directory
-            proton_grid_projectile.run(new_dir, i, j)
+            proton_grid_projectile.run(new_dir, i, j,execute=False)
+
+    print("Directories and dft.inp files have been successfully updated.")
+        
+
+def tddft_grid(n=1,m=1,original_gs_dir="proton_grid_projectile/C2H2/ground_state/C2H2_gs/",
+                       original_tddft_copy_dir = "proton_grid_projectile/C2H2/C2H2_copy/"):
+    
+    proton_grid_projectile = Proton_grid_projectile(d, n, m)
+
+    original_control_inp = original_tddft_copy_dir + "control.inp"
+
+    proton_grid_projectile.read_original_control_inp(original_control_inp)
+
+    # Loop through i and j, create new directories, and update dft.inp
+    for i in range(0, n + 1):
+        for j in range(0, m + 1):
+            # Create the new directory name
+            new_dir = f"proton_grid_projectile/C2H2/C2H2_proton_x{i}z{j}"
+
+            # Check if the directory exists
+            if not os.path.exists(new_dir):
+                # Copy the original directory to the new directory
+                shutil.copytree(original_tddft_copy_dir, new_dir)
+
+            # Path to the control.inp file in the new directory
+            control_inp_path = os.path.join(new_dir, "control.inp")
+
+            # Update the control.inp file
+            proton_grid_projectile.update_control_inp(control_inp_path,original_gs_dir,i,j)
+            print(control_inp_path, "created and updated.")
+
+            # Run the job script in the new directory
+            proton_grid_projectile.run(new_dir, i, j, execute=False)
 
     print("Directories and dft.inp files have been successfully updated.")
 
+def main():
+    n=1
+    m=1
+    d=0.6025963854
+    
+    original_gs_dir="proton_grid_projectile/C2H2/ground_state/C2H2_gs/"
+    original_tddft_copy_dir="proton_grid_projectile/C2H2/C2H2_copy/"
+    
+    run_mode="ground_state"
+    #run_mode="tddft"
+    
+    if (run_mode.lower().startswith("g")):
+        ground_state_grid(d=d,n=n,m=m,original_gs_dir=original_gs_dir)
+    elif (run_mode.lower().startswith("t")):
+        tddft_grid(n=1,m=1,original_gs_dir=original_gs_dir,original_tddft_copy_dir=original_tddft_copy_dir)
 
 if __name__ == '__main__':
     main()
