@@ -82,7 +82,6 @@ class Proton_grid_projectile():
         # Find the correct insertion index
         for i in range(0, len(self.lines), 1):
             stripped_line = self.lines[i].strip()
-            print("strippedline",stripped_line)
             if stripped_line and stripped_line.lower().startswith("gs_path"):
                 self.gs_path_line_index = i
                 break
@@ -136,19 +135,18 @@ class Proton_grid_projectile():
             os.chdir("..")
 
 
-def ground_state_grid(d=0.6025963854,n=1,m=1,original_gs_dir="proton_grid_projectile/C2H2/ground_state/C2H2_gs/"):
+def ground_state_grid(d=0.6025963854,n=1,m=1,original_gs_dir="proton_grid_projectile/C2H2/ground_state/C2H2_gs/",
+                      grid_gs_name_form="proton_grid_projectile/C2H2/ground_state/C2H2_proton_",execute=False):
     
     proton_grid_projectile = Proton_grid_projectile(d, n, m)
-
     original_dft_inp = original_gs_dir + "dft.inp"
-
     proton_grid_projectile.read_original_dft_inp(original_dft_inp)
 
     # Loop through i and j, create new directories, and update dft.inp
     for i in range(0, n + 1):
         for j in range(0, m + 1):
             # Create the new directory name
-            new_dir = f"proton_grid_projectile/C2H2/ground_state/c2h2_proton_x{i}z{j}_gs"
+            new_dir = grid_gs_name_form + f"x{i}z{j}"
 
             # Check if the directory exists
             if not os.path.exists(new_dir):
@@ -163,13 +161,15 @@ def ground_state_grid(d=0.6025963854,n=1,m=1,original_gs_dir="proton_grid_projec
             print(dft_inp_path, "created and updated.")
 
             # Run the job script in the new directory
-            proton_grid_projectile.run(new_dir, i, j,execute=False)
+            proton_grid_projectile.run(new_dir, i, j,execute=execute)
 
     print("Directories and dft.inp files have been successfully updated.")
         
 
-def tddft_grid(n=1,m=1,original_gs_dir="proton_grid_projectile/C2H2/ground_state/C2H2_gs/",
-                       original_tddft_copy_dir = "proton_grid_projectile/C2H2/C2H2_copy/"):
+def tddft_grid(d=1,n=1,m=1,original_gs_dir="proton_grid_projectile/C2H2/ground_state/C2H2_gs/",
+                       original_tddft_copy_dir = "proton_grid_projectile/C2H2/C2H2_copy/",
+                       grid_gs_name_form="proton_grid_projectile/C2H2/ground_state/C2H2_proton_",
+                       grid_tddft_name_form="proton_grid_projectile/C2H2/C2H2_proton_",execute=False):
     
     proton_grid_projectile = Proton_grid_projectile(d, n, m)
 
@@ -181,7 +181,7 @@ def tddft_grid(n=1,m=1,original_gs_dir="proton_grid_projectile/C2H2/ground_state
     for i in range(0, n + 1):
         for j in range(0, m + 1):
             # Create the new directory name
-            new_dir = f"proton_grid_projectile/C2H2/C2H2_proton_x{i}z{j}"
+            new_dir = grid_tddft_name_form + f"x{i}z{j}"
 
             # Check if the directory exists
             if not os.path.exists(new_dir):
@@ -196,25 +196,32 @@ def tddft_grid(n=1,m=1,original_gs_dir="proton_grid_projectile/C2H2/ground_state
             print(control_inp_path, "created and updated.")
 
             # Run the job script in the new directory
-            proton_grid_projectile.run(new_dir, i, j, execute=False)
+            proton_grid_projectile.run(new_dir, i, j, execute=execute)
 
     print("Directories and dft.inp files have been successfully updated.")
 
 def main():
+    # NOTE: SAM -- make it so that boltzmann can be ran and generate the velocity.inp file for the copy file before copying.
     n=1
     m=1
     d=0.6025963854
     
     original_gs_dir="proton_grid_projectile/C2H2/ground_state/C2H2_gs/"
     original_tddft_copy_dir="proton_grid_projectile/C2H2/C2H2_copy/"
+    grid_gs_name_form="proton_grid_projectile/C2H2/ground_state/C2H2_proton_gs_" #the x{i}z{j} will be appended to the name
+    grid_tddft_name_form="proton_grid_projectile/C2H2/C2H2_proton_"
     
     run_mode="ground_state"
     #run_mode="tddft"
     
+    execute=False
+    
     if (run_mode.lower().startswith("g")):
-        ground_state_grid(d=d,n=n,m=m,original_gs_dir=original_gs_dir)
+        ground_state_grid(d=d,n=n,m=m,original_gs_dir=original_gs_dir,
+                          grid_gs_name_form=grid_gs_name_form,execute=execute)
     elif (run_mode.lower().startswith("t")):
-        tddft_grid(n=1,m=1,original_gs_dir=original_gs_dir,original_tddft_copy_dir=original_tddft_copy_dir)
+        tddft_grid(d=d,n=1,m=1,original_gs_dir=original_gs_dir,original_tddft_copy_dir=original_tddft_copy_dir,
+                   grid_gs_name_form=grid_gs_name_form,grid_tddft_name_form=grid_tddft_name_form,execute=execute)
 
 if __name__ == '__main__':
     main()
