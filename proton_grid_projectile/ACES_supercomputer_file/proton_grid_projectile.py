@@ -168,7 +168,7 @@ def ground_state_grid(d=0.6025963854,n=1,m=1,original_gs_dir="proton_grid_projec
 
 def tddft_grid(d=1,n=1,m=1,original_gs_dir="proton_grid_projectile/C2H2/ground_state/C2H2_gs/",
                        original_tddft_copy_dir = "proton_grid_projectile/C2H2/C2H2_copy/",
-                       grid_gs_name_form="proton_grid_projectile/C2H2/ground_state/C2H2_proton_",
+                       grid_gs_name_form="proton_grid_projectile/C2H2/ground_state/C2H2_proton_gs_",
                        grid_tddft_name_form="proton_grid_projectile/C2H2/C2H2_proton_",execute=False):
     
     proton_grid_projectile = Proton_grid_projectile(d, n, m)
@@ -202,19 +202,19 @@ def tddft_grid(d=1,n=1,m=1,original_gs_dir="proton_grid_projectile/C2H2/ground_s
 
 def main():
     # NOTE: SAM -- make it so that boltzmann can be ran and generate the velocity.inp file for the copy file before copying.
-    n=1
-    m=1
+    n=3
+    m=4
     d=0.6025963854
     
-    original_gs_dir="proton_grid_projectile/C2H2/ground_state/C2H2_gs/"
-    original_tddft_copy_dir="proton_grid_projectile/C2H2/C2H2_copy/"
-    grid_gs_name_form="proton_grid_projectile/C2H2/ground_state/C2H2_proton_gs_" #the x{i}z{j} will be appended to the name
-    grid_tddft_name_form="proton_grid_projectile/C2H2/C2H2_proton_"
+    original_gs_dir="ground_state/C2H2_gs/"
+    original_tddft_copy_dir="C2H2_copy/"
+    grid_gs_name_form="ground_state/C2H2_proton_gs_" #the x{i}z{j} will be appended to the name
+    grid_tddft_name_form="C2H2_proton_"
     
-    run_mode="ground_state"
-    #run_mode="tddft"
+    #run_mode="ground_state"
+    run_mode="tddft"
     
-    execute=False
+    execute=True
     
     if (run_mode.lower().startswith("g")):
         ground_state_grid(d=d,n=n,m=m,original_gs_dir=original_gs_dir,
