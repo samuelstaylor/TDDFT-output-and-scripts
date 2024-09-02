@@ -4,16 +4,18 @@ import subprocess
 
 # Function to update the dft.inp file
 class Proton_grid_projectile():
-    def __init__(self, d, n, m):
+    def __init__(self, d, n, m, grid_plane):
         self.num_atoms = None
         self.lines = []
         self.d = d  # distance between points on i to n axis
         # Number of iterations for i and j
         self.n = n  # Replace with your desired value for n
         self.m = m  # Replace with your desired value for m  
+        self.grid_plane = grid_plane
         self.proton_line_index = None
         self.original_working_directory=os.getcwd()
         self.gs_path_line_index = None
+        self.grid_dist_from_origin=0
 
     def is_float(self, value):
         try:
@@ -61,11 +63,20 @@ class Proton_grid_projectile():
         # Insert the new atom line at the found index
         self.lines.insert(self.proton_line_index, new_atom_line)
 
-    def update_dft_inp(self, file_path, x, z, d):
+    def update_dft_inp(self, file_path, i, j, d):
         # Calculate the new atom position
-        new_atom_x = x * d
-        new_atom_y = 5
-        new_atom_z = z * d / 2 - d
+        if self.grid_plane=="xy":
+            new_atom_x = i * d
+            new_atom_y = j * d / 2 - d
+            new_atom_z = self.grid_dist_from_origin
+        if self.grid_plane=="xz":
+            new_atom_x = i * d
+            new_atom_y = self.grid_dist_from_origin
+            new_atom_z = j * d / 2 - d
+        if self.grid_plane=="yz":
+            new_atom_x = self.grid_dist_from_origin
+            new_atom_y = i * d
+            new_atom_z = j * d / 2 - d
 
         # Add the new atom to the end of the atom list
         new_atom_line = f"{new_atom_x: .6f}\t{new_atom_y: .6f}\t{new_atom_z: .6f} 1 1\n"
@@ -92,7 +103,7 @@ class Proton_grid_projectile():
             
     def update_control_inp(self, file_path, gs_rel_path,i,j):
         gs_abs_path = os.path.abspath(gs_rel_path)
-        new_atom_line = f"gs_path={gs_abs_path}x{i}z{j}\n"
+        new_atom_line = f"gs_path={gs_abs_path}{self.grid_plane[0]}{i}{self.grid_plane[1]}{j}\n"
         self.lines[self.gs_path_line_index] = new_atom_line
 
         # Write the updated lines back to the file
@@ -110,7 +121,7 @@ class Proton_grid_projectile():
             job_script_lines = file.readlines()
 
         # Modify the job name line
-        job_script_lines[1] = f"#SBATCH --job-name=C2H2_grid_x{i}z{j}\n"
+        job_script_lines[1] = f"#SBATCH --job-name=C2H2_grid_{self.grid_plane[0]}{i}{self.grid_plane[1]}{j}\n"
 
         # Write the updated job script back to the file
         with open(job_script_path, 'w') as file:
@@ -135,10 +146,12 @@ class Proton_grid_projectile():
             os.chdir("..")
 
 
-def ground_state_grid(d=0.6025963854,n=1,m=1,original_gs_dir="proton_grid_projectile/C2H2/ground_state/C2H2_gs/",
+def ground_state_grid(d=0.6025963854,n=1,m=1,grid_plane="xy",grid_dist_from_origin=5,
+                      original_gs_dir="proton_grid_projectile/C2H2/ground_state/C2H2_gs/",
                       grid_gs_name_form="proton_grid_projectile/C2H2/ground_state/C2H2_proton_",execute=False):
     
-    proton_grid_projectile = Proton_grid_projectile(d, n, m)
+    proton_grid_projectile = Proton_grid_projectile(d, n, m, grid_plane)
+    proton_grid_projectile.grid_dist_from_origin = grid_dist_from_origin
     original_dft_inp = original_gs_dir + "dft.inp"
     proton_grid_projectile.read_original_dft_inp(original_dft_inp)
 
@@ -146,7 +159,7 @@ def ground_state_grid(d=0.6025963854,n=1,m=1,original_gs_dir="proton_grid_projec
     for i in range(0, n + 1):
         for j in range(0, m + 1):
             # Create the new directory name
-            new_dir = grid_gs_name_form + f"x{i}z{j}"
+            new_dir = grid_gs_name_form + f"{proton_grid_projectile.grid_plane[0]}{i}{proton_grid_projectile.grid_plane[1]}{j}"
 
             # Check if the directory exists
             if not os.path.exists(new_dir):
@@ -166,12 +179,12 @@ def ground_state_grid(d=0.6025963854,n=1,m=1,original_gs_dir="proton_grid_projec
     print("Directories and dft.inp files have been successfully updated.")
         
 
-def tddft_grid(d=1,n=1,m=1,original_gs_dir="proton_grid_projectile/C2H2/ground_state/C2H2_gs/",
-                       original_tddft_copy_dir = "proton_grid_projectile/C2H2/C2H2_copy/",
-                       grid_gs_name_form="proton_grid_projectile/C2H2/ground_state/C2H2_proton_gs_",
-                       grid_tddft_name_form="proton_grid_projectile/C2H2/C2H2_proton_",execute=False):
+def tddft_grid(d=1,n=1,m=1,grid_plane="xy",
+               original_tddft_copy_dir = "proton_grid_projectile/C2H2/C2H2_copy/",
+               grid_gs_name_form="proton_grid_projectile/C2H2/ground_state/C2H2_proton_",
+               grid_tddft_name_form="proton_grid_projectile/C2H2/C2H2_proton_",execute=False):
     
-    proton_grid_projectile = Proton_grid_projectile(d, n, m)
+    proton_grid_projectile = Proton_grid_projectile(d, n, m, grid_plane)
 
     original_control_inp = original_tddft_copy_dir + "control.inp"
 
@@ -181,7 +194,7 @@ def tddft_grid(d=1,n=1,m=1,original_gs_dir="proton_grid_projectile/C2H2/ground_s
     for i in range(0, n + 1):
         for j in range(0, m + 1):
             # Create the new directory name
-            new_dir = grid_tddft_name_form + f"x{i}z{j}"
+            new_dir = grid_tddft_name_form + f"{proton_grid_projectile.grid_plane[0]}{i}{proton_grid_projectile.grid_plane[1]}{j}"
 
             # Check if the directory exists
             if not os.path.exists(new_dir):
@@ -200,6 +213,7 @@ def tddft_grid(d=1,n=1,m=1,original_gs_dir="proton_grid_projectile/C2H2/ground_s
 
     print("Directories and dft.inp files have been successfully updated.")
 
+
 def main():
     # NOTE: SAM -- make it so that boltzmann can be ran and generate the velocity.inp file for the copy file before copying.
     n=3
@@ -208,19 +222,23 @@ def main():
     
     original_gs_dir="ground_state/C2H2_gs/"
     original_tddft_copy_dir="C2H2_copy/"
-    grid_gs_name_form="ground_state/C2H2_proton_gs_" #the x{i}z{j} will be appended to the name
+    grid_gs_name_form="ground_state/C2H2_proton_gs_" #the x{i}y{j} will be appended to the name
     grid_tddft_name_form="C2H2_proton_"
+    grid_plane="yz"
+    grid_dist_from_origin = 5
     
-    #run_mode="ground_state"
-    run_mode="tddft"
+    run_mode="ground_state"
+    #run_mode="tddft"
     
     execute=True
     
+    # NOTE: CHECK THE FORMULA FOR THE ATOM GRID POSITIONS IN THE METHOD: update_dft_inp()
+    
     if (run_mode.lower().startswith("g")):
-        ground_state_grid(d=d,n=n,m=m,original_gs_dir=original_gs_dir,
-                          grid_gs_name_form=grid_gs_name_form,execute=execute)
+        ground_state_grid(d=d,n=n,m=m,grid_plane=grid_plane,grid_dist_from_origin=grid_dist_from_origin,
+                          original_gs_dir=original_gs_dir,grid_gs_name_form=grid_gs_name_form,execute=execute)
     elif (run_mode.lower().startswith("t")):
-        tddft_grid(d=d,n=n,m=m,original_gs_dir=original_gs_dir,original_tddft_copy_dir=original_tddft_copy_dir,
+        tddft_grid(d=d,n=n,m=m,grid_plane=grid_plane,original_tddft_copy_dir=original_tddft_copy_dir,
                    grid_gs_name_form=grid_gs_name_form,grid_tddft_name_form=grid_tddft_name_form,execute=execute)
 
 if __name__ == '__main__':
