@@ -1,1 +1,2 @@
 hydrogen_charge_scale_factor=5.5
+line_skip_num=7

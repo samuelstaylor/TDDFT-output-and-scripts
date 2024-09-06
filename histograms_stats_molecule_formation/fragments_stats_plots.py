@@ -273,7 +273,10 @@ def plot_fragment_counts_and_averages_log(fragments_data, fig_name = 'frag_charg
     plt.close()
 
 
-def plot_fragment_counts_and_averages_two_ax(fragments_data, fig_name='frag_charge_averages.png',hydrogen_charge_scale_factor=10):
+def plot_fragment_counts_and_averages_two_ax(fragments_data, fig_name='frag_charge_averages.png', hydrogen_charge_scale_factor=10,
+                                             fragment_freq_color='tab:blue', fragment_charge_color='#b0dce4',
+                                             hydrogen_freq_color='tab:orange', hydrogen_charge_color='#ffc240',
+                                             inner_num_font_size=7, include_seperate_charge_leg_for_h=True):
     # Extract fragment names
     fragments = list(fragments_data.keys())
     counts = []
@@ -305,7 +308,7 @@ def plot_fragment_counts_and_averages_two_ax(fragments_data, fig_name='frag_char
     frequency = [(x / total_num_frags) * 100 for x in counts]
     hydrogen_frequency = (hydrogen_counts / total_num_frags) * 100
     counts = frequency
-    print("Total frequency of fragments",sum(counts))
+    print("Total frequency of fragments", sum(counts))
     
     sorted_fragments = sorted(fragments, key=custom_sort_frags)
     
@@ -327,69 +330,74 @@ def plot_fragment_counts_and_averages_two_ax(fragments_data, fig_name='frag_char
     # Create the bar chart
     fig, ax1 = plt.subplots(figsize=(10, 6))  # Create y-axis (Hydrogen axis) first
     
-    #ax1.set_xlabel('Fragments', fontsize=12, fontweight='bold')
-    ax1.set_ylabel('Hydrogen Frequency (%)', fontsize=12, fontweight='bold', color='tab:orange')
+    ax1.set_ylabel('Hydrogen Frequency (%)', fontsize=16, fontweight='bold', color=hydrogen_freq_color, fontname='Times New Roman')
     max_hydrogen_height = hydrogen_count + abs(hydrogen_average_charge)
     ax1.set_ylim(0, max_hydrogen_height * 1.15)
 
     # Plot hydrogen bar on the primary y-axis
     if hydrogen_index is not None:
-        hydrogen_bars_count = ax1.bar(["H"], [hydrogen_count], color='tab:orange', edgecolor='black',linewidth=.1, label='Hydrogen Frequency')
-        hydrogen_bars_average = ax1.bar(["H"], [abs(hydrogen_average_charge) * hydrogen_charge_scale_factor], 
-                                        color='#ffc240', edgecolor='black',linewidth=.1, bottom=[hydrogen_count], label='Hydrogen Average Charge')
+        hydrogen_bars_count = ax1.bar(["H"], [hydrogen_count], color=hydrogen_freq_color, edgecolor='black', linewidth=.1, label='Hydrogen Frequency')
+        if include_seperate_charge_leg_for_h:
+            hydrogen_bars_average = ax1.bar(["H"], [abs(hydrogen_average_charge) * hydrogen_charge_scale_factor], 
+                                            color=hydrogen_charge_color, edgecolor='black', linewidth=.1, bottom=[hydrogen_count], label='Hydrogen Average Charge')
+        else:
+            hydrogen_bars_average = ax1.bar(["H"], [abs(hydrogen_average_charge) * hydrogen_charge_scale_factor], 
+                                            color=fragment_charge_color, edgecolor='black', linewidth=.1, bottom=[hydrogen_count])
 
         # Adding labels within the hydrogen bar for counts
         for bar in hydrogen_bars_count:
             height = bar.get_height()
-            ax1.text(bar.get_x() + bar.get_width() / 2, height - height * 0.05, f'{hydrogen_count:.1f}', ha='center', va='top', fontweight='bold', color='white', fontsize=7)
+            ax1.text(bar.get_x() + bar.get_width() / 2, height - height * 0.05, f'{hydrogen_count:.1f}', ha='center', va='top', fontweight='bold', color='white', fontsize=inner_num_font_size, fontname='Times New Roman')
 
         # Adding labels on top of the hydrogen bar for averages
         for bar in hydrogen_bars_average:
-            ax1.text(bar.get_x() + bar.get_width() / 2, hydrogen_count + (abs(hydrogen_average_charge) * hydrogen_charge_scale_factor), f'{hydrogen_average_charge:.1f}', ha='center', va='bottom', fontweight='bold', color='black', fontsize=7)
-
+            ax1.text(bar.get_x() + bar.get_width() / 2, hydrogen_count + (abs(hydrogen_average_charge) * hydrogen_charge_scale_factor), f'{hydrogen_average_charge:.1f}', ha='center', va='bottom', fontweight='bold', color='black', fontsize=inner_num_font_size, fontname='Times New Roman')
 
     # Create primary y-axis for other fragments
     ax2 = ax1.twinx()
 
-    bars_counts = ax2.bar(sorted_fragments, sorted_counts, color='tab:blue', edgecolor='black',linewidth=.1,label='Fragment Frequency')
+    bars_counts = ax2.bar(sorted_fragments, sorted_counts, color=fragment_freq_color, edgecolor='black', linewidth=.1, label='Fragment Frequency')
     abs_averages = [abs(x) for x in sorted_averages]
-    bars_averages = ax2.bar(sorted_fragments, abs_averages, color='#b0dce4', edgecolor='black',linewidth=.1,bottom=sorted_counts, label='Fragment Average Charge')
+    bars_averages = ax2.bar(sorted_fragments, abs_averages, color=fragment_charge_color, edgecolor='black', linewidth=.1, bottom=sorted_counts, label='Fragment Average Charge')
 
-    ax2.set_ylabel('Frequency (%)', fontsize=12, fontweight='bold', color='tab:blue')
-    #ax2.set_title('Fragment Product Frequency and Average Charge', fontsize=14, fontweight='bold')
-    plt.xticks(r, fragments, rotation=45, fontweight='bold')
-    subscripted_fragments = [subscript_numbers(frag) for frag in sorted_fragments]
-    ax2.set_xticks(range(len(subscripted_fragments)))
-    ax1.set_xticklabels(subscripted_fragments, rotation=45, ha="right", fontsize=10, fontweight='bold')
+    ax2.set_ylabel('Frequency (%)', fontsize=16, fontweight='bold', color=fragment_freq_color, fontname='Times New Roman')
     
-    ax1.tick_params(axis='y', direction='in')
-    ax2.tick_params(axis='y', direction='in')
-
-
-    ax2.tick_params(axis='y', which='both', labelsize=10, labelcolor='black', direction='in', length=5, width=1, colors='black', grid_color='gray', grid_alpha=0.5)
+    subscripted_fragments = [subscript_numbers(frag) for frag in sorted_fragments]
+    # Set the tick positions and labels
+    ax1.set_xticks(np.arange(len(subscripted_fragments)))  # Ensure the tick positions match the labels
+    ax1.set_xticklabels(subscripted_fragments, rotation=45, ha="right", fontsize=14, fontweight='bold', fontname='Times New Roman')
+    
+    ax1.tick_params(axis='y', which='both', labelsize=10, labelcolor=hydrogen_freq_color, direction='in', length=5, width=1, colors='black', grid_color='gray', grid_alpha=0.5)
+    ax2.tick_params(axis='y', which='both', labelsize=10, labelcolor=fragment_freq_color, direction='in', length=5, width=1, colors='black', grid_color='gray', grid_alpha=0.5)
+    
+    hydrogen_y_ticks = range(0,101,10)
+    ax1.set_yticks(hydrogen_y_ticks)  # Ensure the tick positions match the labels
+    ax1.set_yticklabels(hydrogen_y_ticks,fontsize=14, fontweight='bold', fontname='Times New Roman')
+    
+    fragment_y_ticks = range(0,100,1)
+    ax2.set_yticks(fragment_y_ticks)  # Ensure the tick positions match the labels
+    ax2.set_yticklabels(fragment_y_ticks,fontsize=14, fontweight='bold', fontname='Times New Roman')
     
     # Adding labels within each bar for counts
     for bar, count in zip(bars_counts, sorted_counts):
         height = bar.get_height()
         if height != 0:
-            ax2.text(bar.get_x() + bar.get_width() / 2, height - height * 0.05, f'{count:.1f}', ha='center', va='top', fontweight='bold', color='white', fontsize=7)
+            ax2.text(bar.get_x() + bar.get_width() / 2, height - height * 0.05, f'{count:.1f}', ha='center', va='top', fontweight='bold', color='white', fontsize=inner_num_font_size, fontname='Times New Roman')
 
     # Adding labels on top of each bar for averages
     for bar, average, count in zip(bars_averages, sorted_averages, sorted_counts):
         height = bar.get_height()
         if height != 0:
-            ax2.text(bar.get_x() + bar.get_width() / 2, count + abs(average), f'{average:.1f}', ha='center', va='bottom', fontweight='bold', color='black', fontsize=7)
-    
-    
+            ax2.text(bar.get_x() + bar.get_width() / 2, count + abs(average), f'{average:.1f}', ha='center', va='bottom', fontweight='bold', color='black', fontsize=inner_num_font_size, fontname='Times New Roman')
 
-    
     # Set y-axis limits for the other fragments
     non_hydrogen_counts = [count for frag, count in zip(sorted_fragments, sorted_counts) if frag != "H"]
     max_count = max(non_hydrogen_counts) if non_hydrogen_counts else 0
     ax2.set_ylim(0, max_count * 1.25)  # A little over the highest bar
 
-   
-    #Add both legends to the top right without overlapping
+    plt.rcParams['font.family'] = 'Times New Roman'
+
+    # Add both legends to the top right without overlapping
     handles1, labels1 = ax1.get_legend_handles_labels()
     handles2, labels2 = ax2.get_legend_handles_labels()
     combined_handles = handles1 + handles2
@@ -399,7 +407,7 @@ def plot_fragment_counts_and_averages_two_ax(fragments_data, fig_name='frag_char
     fig.tight_layout()  # Adjust layout to make room for the rotated x-axis labels
     plt.savefig(fig_name, format='png')  # Save as PNG
     plt.close()
-    
+ 
     
 import matplotlib.pyplot as plt
 import numpy as np
@@ -486,7 +494,7 @@ def plot_hydrogen_boxplot(fragments_data, fig_name):
 def main():
     print("-= GENERATING STATISTIC PLOTS =-")
 
-    input_file_path = 'histograms_stats_molecule_formation/c3h8/moleculeFormations_7.5.csv'
+    input_file_path = 'histograms_stats_molecule_formation\\c4h10\\paper_histo_x_polarized\\moleculeFormations.csv'
     print("READING IN DATA FROM FILE:",input_file_path)
     fragments_data = process_fragments(input_file_path,line_skip_num=9)
     
@@ -500,9 +508,13 @@ def main():
     
     # Create plots with file names including the output directory
     plot_charge_states(fragments_data, fig_name=os.path.join(output_file_directory, "frag_charge_states.png"))
-    plot_fragment_counts_and_averages_log(fragments_data, fig_name=os.path.join(output_file_directory, "frag_charge_averages_log.png"), log_scale=True)
+    #plot_fragment_counts_and_averages_log(fragments_data, fig_name=os.path.join(output_file_directory, "frag_charge_averages_log.png"), log_scale=True)
     plot_fragment_counts_and_averages_two_ax(fragments_data, fig_name=os.path.join(output_file_directory, "frag_charge_averages_two_axes.png"),
-                                                                                   hydrogen_charge_scale_factor=10.5)
+                                              hydrogen_charge_scale_factor=6,
+                                              fragment_freq_color='#194fa6',fragment_charge_color='#b0dce4',
+                                              hydrogen_freq_color='tab:blue',hydrogen_charge_color='#b3e897',
+                                              inner_num_font_size=10,
+                                              include_seperate_charge_leg_for_h=False)
     plot_hydrogen(fragments_data, fig_name=os.path.join(output_file_directory, 'hydrogen_charge_distribution.png'))
     plot_hydrogen_boxplot(fragments_data, fig_name=os.path.join(output_file_directory, 'hydrogen_charge_boxplot.png'))
     

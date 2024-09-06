@@ -1,0 +1,3 @@
+# Type the following in to generate the files:
+
+grep "INFOLINE" monitor.out > info.txt

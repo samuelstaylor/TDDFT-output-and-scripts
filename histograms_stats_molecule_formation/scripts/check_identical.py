@@ -8,11 +8,11 @@ def check_identical_lines(file_path):
         
         for i in range(num_lines):
             for j in range(i + 1, num_lines):
-                if csv_reader[i] == csv_reader[j] and csv_reader[i][0][0].lower() == 'd':
+                if len(csv_reader[i])!=0 and csv_reader[i] == csv_reader[j] and csv_reader[i][0][0].lower() == 'd':
                     identical_lines_found = True
                     print(f"Identical lines found: Line {i + 1} and Line {j + 1}")
         if not(identical_lines_found):
             print("No identical lines found.")
 
 # Replace 'molFormations.csv' with the path to your CSV file if it's located elsewhere
-check_identical_lines('histograms_stats_molecule_formation\scripts\moleculeFormations.csv')
+check_identical_lines('histograms_stats_molecule_formation\\ch4\\moleculeFormations.csv')
