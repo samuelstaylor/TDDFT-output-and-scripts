@@ -494,7 +494,7 @@ def plot_hydrogen_boxplot(fragments_data, fig_name):
 def main():
     print("-= GENERATING STATISTIC PLOTS =-")
 
-    input_file_path = 'histograms_stats_molecule_formation\\c4h10\\paper_histo_x_polarized\\moleculeFormations.csv'
+    input_file_path = 'histograms_stats_molecule_formation\\moleculeFormations_7.5.csv'
     print("READING IN DATA FROM FILE:",input_file_path)
     fragments_data = process_fragments(input_file_path,line_skip_num=9)
     
