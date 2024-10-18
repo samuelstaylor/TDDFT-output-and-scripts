@@ -2,7 +2,7 @@
 
 **Description:** Data, output files, figures, and Python visualization scripts used for computational nanoscience research with Varga group.
 
-        See below for information on each folder and what output/data/scripts is contained.
+**SEE BELOW FOR INFORMATION ON EACH FOLDER AND WHAT OUTPUT/DATA/SCRIPTS IS CONTAINED.**
 
 **_FIGURES:** Contains figures, diagrams, screenshots, and images that were generated using external software sources.
 
