@@ -16,7 +16,7 @@
 
 **histograms_stats_molecule_formation:** Contains statistical data on fragment formation Coulomb Explosion in hydrocarbons AND scripts to generate these figures.
 
-<img src="histograms_stats_molecule_formation/c4h10/paper_histo_x_polarized/frag_charge_averages_two_axes.png" alt="Histogram of fragment formations from 88 different simulations of butane Coulomb explosion" width="400"/>
+<img src="histograms_stats_molecule_formation/c4h10/karcsi_paper_histo_x_polarized/frag_charge_averages_two_axes.png" alt="Histogram of fragment formations from 88 different simulations of butane Coulomb explosion" width="400"/>
 
 **newton_plot:** Contains figures of newton plots (velocity v.s. velocity) AND scripts to generate them.
 
