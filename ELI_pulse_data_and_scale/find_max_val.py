@@ -1,4 +1,4 @@
-file_name = "pulse7_5.dat"
+file_name = "ELI_pulse_data_and_scale\pulse7_5.dat"
 
 # Initialize max absolute value to zero
 max_abs_value = 0

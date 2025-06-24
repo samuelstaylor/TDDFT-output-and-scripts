@@ -1,0 +1,2205 @@
+\documentclass[reprint,amsmath,amssymb,superscriptaddress,prb]{revtex4-2}
+
+\usepackage{graphicx}
+\usepackage{dcolumn}
+\usepackage{bm}
+\usepackage{color}
+\usepackage{hyperref}
+\usepackage{subcaption}
+
+
+\newcommand{\revc}[1]{{\color{red} #1}}
+
+\begin{document}
+
+
+\title{Fragmentation in Coulomb explosion of hydrocarbon molecules}
+
+\author{Samuel S. Taylor}
+\affiliation{Department of Physics and Astronomy, Vanderbilt University, Nashville, Tennessee, 37235, USA}
+
+\author{K\'alm\'an Varga}
+\email{kalman.varga@vanderbilt.edu}
+\affiliation{Department of Physics and Astronomy, Vanderbilt University, Nashville, Tennessee, 37235, USA}
+
+\author{K\'aroly Mogyor\'osi}
+\affiliation{ELI ALPS, ELI-HU Non-Profit Ltd, Wolfgang Sander u. 3, H-6728 Szeged, Hungary.}
+
+\author{Viktor Chik\'an}
+\affiliation{ELI ALPS, ELI-HU Non-Profit Ltd, Wolfgang Sander u. 3, H-6728 Szeged, Hungary.}
+\affiliation{Department of Chemistry, Kansas State University, Manhattan, Kansas 66506-0401, United States}
+\affiliation{ASML, 17082 Thornmint Ct, San Diego, CA 92, United States}
+
+\author{Cody Covington}
+\affiliation{Department of Chemistry, Austin Peay State University,
+Clarksville, USA}
+
+\begin{abstract}
+Fragmentation dynamics in the Coulomb explosion of hydrocarbons, specifically methane, 
+ethane, propane, and butane, are investigated using time dependent
+density functional theory (TDDFT) 
+simulations. The goal of this work is to elucidate 
+the distribution of fragments generated under laser-driven Coulomb explosion 
+conditions. Detailed analysis reveals the types of fragments formed, their respective 
+charge states, and the optimal laser intensities required for
+achieving various fragmentations. Our results indicate distinct fragmentation 
+patterns for each hydrocarbon, correlating with the molecular structure and 
+ionization potential. Additionally, we identify the laser parameters that maximize 
+fragmentation efficiency, providing valuable insights for experimental setups. 
+This research advances our understanding of Coulomb explosion mechanisms 
+and offers a foundation for further studies in controlled molecular fragmentation.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}
+Coulomb explosion, a process where molecules undergo rapid ionization 
+resulting in repulsive interactions between charged fragments, 
+has garnered significant attention due to its relevance across 
+various scientific and technological domains. 
+The advent of ultra-intense femtosecond lasers has made it possible 
+to probe this phenomenon with high temporal resolution, 
+making it a key subject of both theoretical and experimental 
+investigations. Applications of Coulomb explosion span molecular 
+imaging \cite{
+doi:10.1126/science.244.4903.426,
+annurev:/content/journals/10.1146/annurev-physchem-090419-053627,
+PhysRevResearch.4.013029,doi:10.1126/science.1246549,Unwin2023,
+Mogyorosi2020,doi:10.1126/science.1240362,PhysRevA.91.053424,Boll2022,
+PhysRevA.109.052813,10.1063/5.0024833,YATSUHASHI201852,C1CP21345H,
+WOS:000791982000001,WOS:000720777300004,PhysRevLett.99.258302,PhysRevA.99.023423,
+doi:10.1021/acs.jpclett.8b03726,10.1063/5.0098531,doi:10.1021/acs.jpclett.1c03916,
+10.1063/5.0200389,PhysRevA.107.023104,doi:10.1080/23746149.2022.2132182,
+WOS:000819572500001,WOS:000947237500006,WOS:000978312900001}, 
+structural dynamics
+\cite{10.1063/1.5041381,doi:10.1126/science.abc2960,Erattupuzha_2017,
+L_2006,PhysRevLett.74.3780,PhysRevA.101.012707,WOS:001171493100004,doi:10.1126/science.adk1833,
+PhysRevLett.131.143001,doi:10.1126/science.abc2960,D3CP01740K,
+Ekanayake2017,Ekanayake2018}, 
+generation of bright keV x-ray photons 
+\cite{PhysRevLett.75.3122,McPherson1994}, 
+and production of highly energetic electrons 
+\cite{PhysRevLett.77.3343}. In addition, fragment formation during 
+Coulomb explosion has been extensively studied 
+\cite{Hishikawa1998,https://doi.org/10.1002/cphc.201501118,Luzon2019,
+D3CP01740K,Bhattacharyya2022,Cornaggia_1992,
+C9RA02003A,XU2009255,XU2010119,10.1063/1.3561311,10.1063/1.3561311,Severt2024,
+10.1063/1.3561311,doi:10.1021/acs.jpca.3c05442,10.1063/1.5070067}.
+
+Hydrocarbon molecules, particularly methane, ethane, propane, and butane, 
+have been used as precursors in numerous Coulomb explosion experiments 
+\cite{PhysRevLett.106.163001,PhysRevLett.92.063001,Cornaggia_1992,PhysRevA.51.1431,
+SHIMIZU2000609,PhysRevA.82.043433}. These studies have reported key observations such as 
+the kinetic energies of ejected protons, emission spectra from the resulting plasma, 
+and fragment yields over a range of pulse intensities. However, a comprehensive 
+dynamical description of the fragmentation process is often missing\textemdash there 
+has been limited focus on identifying the optimal laser pulse parameters and 
+intensities that maximize fragmentation efficiency for the first four alkanes in the series.
+
+Previous theoretical efforts to model Coulomb explosions include classical models, which neglect quantum effects~\cite{PhysRevLett.132.123201,PhysRevResearch.4.013029,Unwin2023}, semiclassical methods~\cite{WOS:001290426300001,10.1063/5.0024833}, and \textit{ab initio} approaches~\cite{Corrales2012,PhysRevA.92.053413,OhmuraNagayaShimojoYao+2021+169+187,PhysRevA.95.052701,PhysRevA.91.023422,PhysRevA.89.023429,PhysRevA.86.043407}. Classical models often assume purely repulsive forces between positively charged atomic cores, lacking the attractive forces from electron densities that could form bonds and define molecular fragments. In contrast, \textit{ab initio} methods, such as TDDFT
+\cite{PhysRevLett.52.997,ullrich}, capture these electron interactions, 
+allowing for the formation of bonded fragments that classical models cannot represent. Given TDDFT's proven accuracy 
+in reproducing experimental results~\cite{PhysRevA.92.053413,PhysRevA.95.052701,PhysRevA.91.023422,PhysRevA.89.023429,PhysRevA.86.043407}, we have selected this approach for our study.
+
+In this work, we employ TDDFT simulations to comprehensively examine the fragmentation 
+dynamics of hydrocarbons under Coulomb explosion induced by intense laser fields. 
+This study is motivated by recent experiments that observed CH radicals and other 
+fragments resulting from the Coulomb explosion of ethene \cite{Li2020}
+and butane \cite{submitted}. The results are somewhat surprising, 
+as earlier experiments \cite{PhysRevA.86.043407,Erattupuzha_2017} primarily demonstrated that strong 
+laser pulses predominantly stripped protons from hydrocarbon molecules via a CH bond stretching mechanism.
+We will analyze the nature and charge distributions of the resulting fragments, as well as the electron 
+dynamics during ionization and the post-ionization molecular motion. Furthermore, 
+we will identify the laser intensities that yield optimal fragmentation, providing critical 
+insights for designing experiments. 
+
+Our focus on methane, ethane, propane, and butane allows us to uncover distinct fragmentation 
+behaviors linked to the molecular structure and ionization potentials of these hydrocarbons. 
+By pinpointing the laser parameters that maximize fragmentation efficiency, this study 
+enhances the understanding of Coulomb explosion mechanisms and lays the groundwork for 
+future investigations into controlled molecular fragmentation.
+
+\section{Computational Method}
+The simulations were performed using TDDFT  for modeling the electron dynamics on a 
+real-space grid with real-time propagation \cite{Varga_Driscoll_2011a}, 
+with the Kohn-Sham (KS) Hamiltonian of the following form
+\begin{equation}
+\begin{split}
+\hat{H}_{\text{KS}}(t) = -\frac{\hbar^2}{2m} \nabla^2 + V_{\text{ion}}(\mathbf{r},t) 
++ V_{\text{H}}[\rho](\mathbf{r},t) \\
++ V_{\text{XC}}[\rho](\mathbf{r},t) + V_{\text{laser}}(\mathbf{r},t).
+\end{split}
+\label{eq:hamiltonian}
+\end{equation}
+Here, $\rho$ is the electron density which is defined as the density sum over all occupied orbitals:
+\begin{equation}
+\rho(\mathbf{r},t) = \sum_{k=1}^{N_{\text{orbitals}}} 2|\psi_k(\mathbf{r},t)|^2,
+\end{equation}
+where the coefficient 2 accounts for there being two electrons in each orbital (via spin degeneracy) and $k$ is a quantum number labeling each orbital. 
+
+$V_{ion}$ in Eq.~\eqref{eq:hamiltonian} is the external potential due to the ions, represented by employing norm-conserving pseudopotentials centered at each ion as given by Troullier and Martins~\cite{PhysRevB.43.1993}. $V_{H}$ is the Hartree potential, defined as
+\begin{equation}
+V_H(\mathbf{r}, t) = \int \frac{\rho(\mathbf{r}', t)}{|\mathbf{r} - \mathbf{r}'|} \, d\mathbf{r}',
+\end{equation}
+and accounts for the electrostatic Coulomb interactions between
+electrons. The term $V_{XC}$ is the exchange-correlation potential,
+which is approximated by the adiabatic local-density approximation
+(ALDA), obtained from a parameterization to a homogeneous electron gas by Perdew and Zunger~\cite{PhysRevB.23.5048}. The last term in Eq.~\eqref{eq:hamiltonian}, $V_{laser}$ is the  time–dependent potential due to the electric field of the laser, and is described using the dipole approximation, $V_{\text{laser}} = \mathbf{r} \cdot \mathbf{E}_{\text{laser}}(t)$. The electric field $\mathbf{E}_{\text{laser}}(t)$ is given by
+\begin{equation}
+\mathbf{E}_{\text{laser}}(t) = E_{\text{max}} \exp\left[-\frac{(t - t_0)^2}{2a^2}\right] \sin(\omega t) \mathbf{\hat{k}},
+\label{eq:laser}
+\end{equation}
+where the parameters $E_{\text{max}}$, $t_{0}$, and $a$ define the maximum amplitude, initial position of the center, and the width of the Gaussian envelope, respectively. $\omega$ describes the frequency of the laser and $\mathbf{\hat{k}}$ is the unit vector in the polarization direction of the electric field.
+
+At the beginning of the TDDFT calculations, the ground state of the system is prepared by performing a Density-Functional Theory (DFT) calculation. With these initial conditions in place, we then proceed to propagate the Kohn–Sham orbitals, $\psi_{k}(\mathbf{r},t)$ over time by using the time-dependent KS equation, given as 
+\begin{equation}
+i \frac{\partial \psi_k(\mathbf{r}, t)}{\partial t} = \hat{H} \psi_k(\mathbf{r}, t).
+\label{eq:tdks}
+\end{equation}
+Eq.~\eqref{eq:tdks} was solved using the following time propagator
+\begin{equation}
+\psi_k(\mathbf{r}, t + \delta t) = \exp\left(-\frac{i \hat{H}_{\text{KS}}(t) \delta t}{\hbar}\right) \psi_k(\mathbf{r}, t).
+\end{equation}
+This operator is approximated using a fourth-degree Taylor expansion, given as
+\begin{equation}
+\psi_k(\mathbf{r}, t + \delta t) \approx \sum_{n=0}^{4} \frac{1}{n!} \left(\frac{-i \delta t}{\hbar} \hat{H}_{\text{KS}}(t)\right)^n \psi_k(\mathbf{r}, t).
+\end{equation}
+The operator is applied for $N$ time steps until the final time, $t_{final} = N \cdot \delta t$, is obtained. A time step of $\delta t = 1$ as was used in the simulations.
+
+In real-space TDDFT, the Kohn-Sham orbitals are represented at discrete points in real space. These points are organized on a uniform rectangular grid. The accuracy of the simulations is determined by the grid spacing, which is the key parameter that can be adjusted. In our simulations, we used a grid spacing of 0.3 Å and placed 100 points along each of the $x$, $y$, and $z$ axes.
+
+To enforce boundary conditions, we set the Kohn-Sham orbitals to zero at the edges of the simulation cell. However, when a strong laser field is applied, ionization can occur, potentially causing unphysical reflections of the wavefunction at the cell boundaries. To address this issue, we implemented a complex absorbing potential (CAP) to dampen the wavefunction as it reaches the boundaries. The specific form of the CAP used in our simulations, as described by Manopolous~\cite{10.1063/1.1517042}, is given by:
+\begin{equation}
+- i w(x) = -i \frac{\hbar^2}{2m} \left(\frac{2\pi}{\Delta x}\right)^2 f(y),
+\end{equation}
+where $x_{1}$ is the start and $x_{2}$ is the end of the absorbing region, $\Delta x = x_{2} - x_{1}$, $c = 2.62$ is a numerical constant, $m$ is the electron’s mass, and
+\begin{equation}
+f(y) = \frac{4}{c^2} \left( \frac{1}{(1 + y)^2} + \frac{1}{(1 - y)^2} - 2 \right), \quad y = \frac{x - x_1}{\Delta x}.
+\end{equation}
+
+As the molecule is ionized by the laser field, the electron density is directed towards the CAP. Additionally, the ejected fragments carry their electron density move towards the CAP. When any electron density into contact with the CAP, it is absorbed. Consequently, the total electron number
+\begin{equation}
+N(t) = \int_V \rho(\mathbf{r}, t) \, d^3x,
+\end{equation}
+where $V$ is the volume of the simulation box, will diverge from the initial electron number, $N(0)$. We interpret $N(0) - N(t)$ as the total number of electrons ejected from the simulation box.
+
+Motion of the ions in the simulations were treated classically. Using the Ehrenfest theorem
+, the quantum forces on the ions due to the electrons are given by the derivatives 
+of the expectation value of the total electronic energy with respect to the ionic positions. 
+These forces are then fed into Newton’s Second Law, giving
+\begin{equation}
+\begin{split}
+M_i \frac{d^2 \mathbf{R}_i}{dt^2} = Z_i \mathbf{E}_{\text{laser}}(t) 
++ \sum_{j \neq i}^{N_{\text{ions}}} \frac{Z_i Z_j (\mathbf{R}_i - \mathbf{R}_j)}{|\mathbf{R}_i - \mathbf{R}_j|^3}\\ 
+- \nabla_{\mathbf{R}_i} \int V_{\text{ion}}(\mathbf{r}, \mathbf{R}_i) \rho(\mathbf{r}, t) \, d\mathbf{r},
+\end{split}
+\end{equation}
+where $M_{i}$, $Z_{i}$, and $\mathbf{R}_{i}$ are the mass, pseudocharge (valence), and position of the $i$-th ion, respectively, and $N_{\text{ions}}$ is the total number of ions. This differential equation was time propagated using the Verlet algorithm at every time step $\delta t$. 
+This approach has been successfully used to describe the Coulomb explosion of molecules~\cite{PhysRevA.89.023429,
+PhysRevA.91.023422,PhysRevA.92.053413,PhysRevA.95.052701,PhysRevA.86.043407}.
+
+In each simulation, the ion velocities are initialized using a Boltzmann distribution corresponding to 300 K. This random initialization facilitates the exploration of various fragmentation pathways during the Coulomb explosion. If the ion velocities were held constant, the simulations would yield identical fragmentation outcomes, thus constraining the statistical variability of the results. To ensure a comprehensive distribution of data, more than 
+50 simulations were conducted for each molecule, 
+allowing for the formation of C$_n$H$_m$ fragments in several instances across all tested molecules. Due to limited computational resources, no further simulations were performed.
+
+Each molecule in the simulations was positioned at the center of the simulation box, with its longest molecular axis aligned along the \(x\)-axis and 
+its shortest axis oriented along the \(z\)-axis. In every simulation, the electric field was polarized along the \(x\)-axis to maximize ionization~\cite{PhysRevA.92.053413}. These conditions model experiment, where precise molecular alignment is achievable 
+\cite{annurev:/content/journals/10.1146/annurev-physchem-090419-053627}.
+
+
+
+In the following section, we present the results from a substantial
+number of simulations conducted on the first four alkanes: methane
+(CH\textsubscript{4}), ethane (C\textsubscript{2}H\textsubscript{6}), propane (C\textsubscript{3}H\textsubscript{8}), and butane (C\textsubscript{4}H\textsubscript{10}), using a laser intensity determined to optimize fragmentation. The laser parameters, including wavelength and duration, were modeled after the pulse described in \cite{submitted}, which follows the functional form outlined in Eq.~\eqref{eq:laser}. The only varying parameter in our simulations was the laser intensity, which was adjusted to explore the ionization, fragmentation, and dissociation ranges for the selected alkanes.
+
+\subsection{Methane (CH\textsubscript{4})}
+
+\begin{figure*}
+\centering
+\includegraphics[width=\textwidth]{CH4-snapshot.png}
+\caption{CH\textsubscript{4} Coulomb explosion snapshots resulting in the formation of 
+one CH\textsubscript{2} molecule and two discharged H atoms  have  $1.26^+$, $0.62^+$, and $0.84^+$ charges, 
+respectively (the 0.5, 0.1, 0.01, and 0.001 density isosurfaces are displayed). 
+The pulse electric field and the number of electrons in the simulation are shown, 
+with vertical dashed purple lines indicating the specific times in the simulation when each snapshot was captured.}
+\label{CH4-snapshot}
+\end{figure*}
+
+\begin{figure*}
+\centering
+\includegraphics[width=.9\textwidth]{CH4-histogram.png}\\
+\caption{Average production frequency of each fragment generated in 71
+CH$_4$ Coulomb explosion simulations. 
+The darker columns represent the formation frequency of hydrogen fragments and 
+carbon-containing fragments. The lighter appended columns indicate the corresponding average charges associated with each 
+produced fragment}
+\label{CH4-histogram}
+\end{figure*}
+
+\begin{figure*}
+\centering
+\includegraphics[width=\textwidth]{C2H6-snapshot.png}
+\caption{Snapshots of the Coulomb explosion of C\textsubscript{2}H\textsubscript{6}, 
+illustrating the formation of CH\textsubscript{2} and CH\textsubscript{3} fragments, 
+which carry charges of \(1.18^{+}\) and \(1.18^{+}\), respectively (the 0.5, 0.1, 0.01, and 0.001 
+density isosurfaces are shown). The bar between the two fragments at 120 fs denotes the distance between their center of masses.}
+\label{C2H6-snapshot}
+\end{figure*}
+
+\begin{figure*}
+\centering
+\includegraphics[width=.9\textwidth]{C2H6-histogram.png}\\
+\caption{Histogram illustrating the average production frequency and charge of each 
+fragment generated in 50 C\textsubscript{2}H\textsubscript{6} Coulomb explosion simulations.}
+\label{C2H6-histogram}
+\end{figure*}
+
+\begin{table}[b] % The best place to locate the table environment is directly after its first reference in text
+\begin{ruledtabular}
+\begin{tabular}{lccc}
+\textrm{} &
+\textrm{Ionization} &
+\textrm{Fragmentation} &
+\textrm{Dissociation} \\
+\textrm{Alkane} &
+\textrm{threshold} &
+\textrm{threshold} &
+\textrm{threshold} \\
+\textrm{} &
+\textrm{$(\text{W}/\text{cm}^2)$} &
+\textrm{$(\text{W}/\text{cm}^2)$} &
+\textrm{$(\text{W}/\text{cm}^2)$} \\
+\colrule
+CH\textsubscript{4} & $7.0 \times 10^{14}$ & $1.1 \times 10^{15}$ & $1.5 \times 10^{15}$ \\
+C\textsubscript{2}H\textsubscript{6} & $6.1 \times 10^{14}$ & $9.0 \times 10^{14}$ & $1.5 \times 10^{15}$ \\
+C\textsubscript{3}H\textsubscript{8} & $3.8 \times 10^{14}$ & $7.0 \times 10^{14}$ & $1.5 \times 10^{15}$ \\
+C\textsubscript{4}H\textsubscript{10} & $4.5 \times 10^{14}$ & $7.0 \times 10^{14}$ & $1.3 \times 10^{15}$ \\
+\end{tabular}
+\end{ruledtabular}
+\caption{\label{table_laser_parameters}%
+Approximate pulse intensities required for ionization, fragmentation, and dissociation of the first four alkanes are presented, with a pulse wavelength of 890 nm and a duration of 7.8 fs (FWHM). Pulse intensities below the ionization threshold result in minimal or no dissociation of the molecular structure. Intensities near the fragmentation threshold cause partial molecular breakup, leading to the formation of smaller ionized fragments. Intensities above the dissociation threshold result in nearly complete molecular disintegration, with all atoms being ejected from the molecule.}
+
+\end{table}
+The electron densities and molecular dynamics of a CH\textsubscript{4} molecule during a Coulomb explosion simulation 
+are illustrated in Fig.~\ref{CH4-snapshot}. These snapshots are from one of the 71 simulations conducted 
+using CH\textsubscript{4} as the precursor molecule. Initially, the snapshots show how the laser 
+field rips the electron density away from the molecule, triggering rapid ionization. As shown in the 
+figure, significant ionization begins when the electric field magnitude reaches approximately 
+$5.5~\text{V}/\text{\AA}$ at 14 fs. The ionization process concludes when the laser field 
+falls below $6~\text{V}/\text{\AA}$ at around 24 fs, leaving the molecule with 5.3 valence electrons. 
+This near-triple ionization creates strong Coulomb repulsion between the resulting fragments, causing them 
+to separate rapidly. In our calculations, the electron density is integrated over a finite volume, resulting in non-integer electron counts. This phenomenon can be interpreted in several ways. One interpretation suggests that approximately 5.3 electrons remain localized within the molecular region during the simulation, with the fractional charge either recombining with the ionized electron cloud or dissociating over a longer simulation period. Alternatively, the non-integer charge could be understood as an average, where some molecular fragments retain 5 valence electrons, others 6, and 5.3 represents the mean electron count per fragment. For example, if a hydrogen atom was ejected with a charge of $0.6^{+}$, that would indicate that 60\% of the time it would be detected as a $1^{+}$ ion, and 40\% of the time it would be a neutral hydrogen atom.
+
+The ejected hydrogen fragments are observed moving toward the CAP, 
+where their electrons are absorbed, leading to a further
+(artificial) reduction in the number of electrons. After the ionization, the remaining 
+fragment (CH\textsubscript{2}) undergoes structural rearrangement. Fig.~\ref{CH4-snapshot}
+depicts the CH\textsubscript{2} fragment transitioning from a right-bent geometry at 70 fs to a linear 
+conformation at 103 fs, and finally to a left-bent structure at 120 fs.
+The laser pulse used in the Coulomb explosion simulations of 
+CH\textsubscript{4} (also shown Fig.~\ref{CH4-snapshot}) had an intensity of 
+$1.1 \times 10^{15}~\text{W}/\text{cm}^2$, a peak electric field of 
+$9.2~\text{V}/\text{\AA}$, a wavelength of $890~\text{nm}$, and a pulse duration of 7.8 fs (FWHM). 
+This intensity was found to be optimal for inducing fragmentation of CH\textsubscript{4}, as lower intensities 
+(approximately $7 \times 10^{14}~\text{W}/\text{cm}^2$ and below) led to ionization without significant fragmentation, 
+while higher intensities (approximately $1.5 \times 10^{15}~\text{W}/\text{cm}^2$ and above) caused complete molecular dissociation 
+(see Table~\ref{table_laser_parameters}). Intermediate laser intensities, 
+ranging from the ionization to the dissociation thresholds, were also explored. 
+At intensities between the ionization and fragmentation threshold, 
+fragmentation was less effective, often leading to partial dissociation and the formation of larger fragments, such as CH\textsubscript{3}. 
+At intensities between the fragmentation and dissociation threshold, smaller fragments, such as C and CH, were observed with little diversity. 
+It is important to note that in experimental conditions, only part of the target is exposed to the highest intensity of the laser pulse, 
+while molecules outside the focal region interact with lower intensity
+fields. As a result, various fragmentation processes 
+can occur simultaneously in experiments.
+
+
+Fig.~\ref{CH4-histogram} illustrates the distribution of fragments and their corresponding charges resulting 
+from the Coulomb explosion of CH\textsubscript{4}. The data demonstrate that the reaction yields a range of 
+hydrocarbons smaller than CH\textsubscript{4}. Among these fragments, CH is the most frequently 
+observed carbon-containing species, appearing in 12.8\% of the simulations with an average charge 
+of 0.9\textsuperscript{+}. Hydrogen fragments are the most commonly detected overall, with an average 
+charge of 0.6\textsuperscript{+} (equivalent to 0.4 electrons) as they approach the CAP. Other fragments, such as CH, CH\textsubscript{2}, and CH\textsubscript{3}, are also 
+present but occur less frequently. Importantly, no CH\textsubscript{4} fragments were observed, indicating 
+that the laser pulse intensity was sufficiently strong to dissociate at least one atom from the molecule 
+in every simulation. On average, the laser ejected 2.72 electrons per simulation. These simulations help determine 
+the optimal pulse parameters and predict the dissociation pathways for CH\textsubscript{4} in 
+Coulomb explosion fragmentation.
+
+\subsection{Ethane (C\textsubscript{2}H\textsubscript{6})}
+
+
+
+Fig.~\ref{C2H6-snapshot} presents snapshots from one of the 50 Coulomb explosion 
+simulations with C\textsubscript{2}H\textsubscript{6} as the precursor molecule. These snapshots 
+illustrate the interaction between the electric field of the laser pulse and the electron 
+density of the molecule. The field stretches and compresses the electron density. As shown in the 
+pulse diagram in Fig.~\ref{C2H6-snapshot}, when the electric field exceeds $5~\text{V}/\text{\AA}$, between 14 fs 
+and 22 fs, rapid ionization occurs, reducing the valence electron count to approximately 10.7. 
+Following the dissipation of the laser pulse at 40 fs, two CH$_3$ fragments are
+produced. By 60 fs, due to the asymmetric charge distribution, one of the fragments ejects a hydrogen atom.
+The ionization induces strong Coulomb repulsion between the 
+resulting fragments, causing the CH\textsubscript{2} and CH\textsubscript{3} groups to visibly repel 
+each other throughout the simulation.
+Additionally, the snapshots reveal rotational motion of the fragments, particularly within 
+the CH\textsubscript{2} fragment. Between 60 and 94 fs, the CH\textsubscript{2} molecule rotates 
+approximately 90 degrees about the $z$-axis, followed by an additional 90-degree rotation from 94 to 120 fs.
+
+\begin{figure}
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{trajectory.png}
+        % \label{C2H6-trajectory-a}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{velocity.png}
+        % \label{C2H6-trajectory-b}
+    \end{subfigure}
+    \caption{Distance (top) and speed (bottom) between the CH\textsubscript{2} and CH\textsubscript{3} 
+    shown in Fig.~\ref{C2H6-snapshot} from 120 fs to 500 fs. Note that
+    1\AA/fs is 100000 m/s.}
+    \label{C2H6-trajectory}
+\end{figure}
+
+The CH\textsubscript{2}$^+$ and CH\textsubscript{3}$^+$ fragments are well
+separated at the end of the TDDFT simulation in Fig.
+\ref{C2H6-snapshot}. Fig.~\ref{C2H6-trajectory} shows how the fragments
+move after 120 fs assuming that the two charged fragments interact via
+the Coulomb potential and their motion can be described by solving the
+Newton equations of motions using the Verlet algorithm.
+%The distances between the fragments and their respective velocities from 120 fs to 240 fs are 
+%illustrated in Fig.~\ref{C2H6-trajectory}. The simulation time window was extended by incorporating 
+%classical Coulomb repulsion between the centers of mass of the molecules, which was propagated using 
+%the Verlet algorithm. 
+By the conclusion of the TDDFT simulation, the centers of mass of the molecules 
+were separated by 6.2 \AA. 
+Fig.~\ref{C2H6-trajectory} shows that the acceleration
+gradually decreases and the distance between the ions grows linearly. 
+At 500 fs, the distance between the molecules increased to 45 \AA, with 
+the CH\textsubscript{2}$^+$ and CH\textsubscript{3}$^+$ groups each exhibiting velocities 
+of $6.6 \times 10^{-2}$~\AA/fs (6600 m/s) and $4.7 \times
+10^{-2}$~\AA/fs (4700 m/s), respectively. The large difference in
+velocity is due to the difference between the initial velocities of the
+fragments. In experiment, the velocity of the 
+CH\textsubscript{2}$^+$ ion in Coulomb explosion of methanol has been
+measured to be 4800 m/s \cite{C9RA02003A}, which is within the same magnitude as in the present calculations. Considering that the laser intensity used in the simulations is six times higher than in the experiment, this agreement is remarkably good.
+
+
+As depicted in Fig.~\ref{C2H6-snapshot}, the laser pulse employed in the Coulomb explosion simulations 
+of C\textsubscript{2}H\textsubscript{6} had an intensity of $9 \times 10^{14}~\text{W}/\text{cm}^2$,
+a maximum electric field of $8.23~\text{V}/\text{\AA}$, a wavelength of $890~\text{nm}$, and a pulse 
+duration of 7.8 fs (FWHM). This intensity was found to be optimal for inducing the richest diversity in fragmentation pathways 
+of C\textsubscript{2}H\textsubscript{6}. To evaluate the effects of varying laser intensities, additional simulations were conducted across a broader range, extending beyond the ionization, fragmentation, and dissociation thresholds listed in Table~\ref{table_laser_parameters}. It was determined that $9 \times 10^{14}~\text{W}/\text{cm}^2$ 
+achieved the most effective fragmentation because lower intensities led to weak or incomplete dissociation 
+(producing CH\textsubscript{3} or not dissociating at all) and higher intensities led to over-dissociation 
+(producing only C\textsubscript{2} or complete fragmentation). Consequently, a pulse intensity of $9 \times 10^{14}~\text{W}/\text{cm}^2$ was 
+selected for the 50 simulations, yielding the most diverse range of fragmentation pathways for 
+C\textsubscript{2}H\textsubscript{6}.
+
+Fig.~\ref{C2H6-histogram} shows the distribution of fragments and their corresponding charges resulting 
+from the Coulomb explosion of C\textsubscript{2}H\textsubscript{6}. The data reveal that the fragmentation 
+produces various hydrocarbons smaller than C\textsubscript{2}H\textsubscript{6}. Among these fragments, 
+C\textsubscript{2}H\textsubscript{3} is the most frequently detected carbon-containing species, 
+appearing in 7.7\% of the simulations with an average charge of $1.6^{+}$. Hydrogen fragments are the most 
+prevalent overall, carrying an average charge of $0.6^{+}$ as they are ejected from the molecule. 
+Other fragments, including CH, CH\textsubscript{2}, and C\textsubscript{2}H\textsubscript{3}, are also observed but with lower 
+frequencies. Notably, no C\textsubscript{2}H\textsubscript{6} or C\textsubscript{2}H\textsubscript{5} 
+fragments were detected, indicating that the laser pulse intensity was sufficient to dissociate at least two 
+hydrogen atoms from the molecule in every simulation. On average, the laser ejected 3.42 electrons per simulation. 
+
+
+\subsection{Propane (C\textsubscript{3}H\textsubscript{8})}
+
+\begin{figure*}
+\centering
+\includegraphics[width=\textwidth]{C3H8-snapshot.png}
+\caption{C\textsubscript{3}H\textsubscript{8} Coulomb explosion snapshots 
+resulting in the formation of C\textsubscript{2}H and CH\textsubscript{2} fragments 
+with $2.22^+$ and $0.91^+$ charges, respectively (the 0.5, 0.1, 0.01, and 0.001 density 
+isosurfaces are shown). The bar
+between the two fragments at 120 fs denotes the distance between their center of masses.}
+\label{C3H8-snapshot}
+\end{figure*}
+
+\begin{figure*}
+\centering
+\includegraphics[width=.9\textwidth]{C3H8-histogram.png}\\
+\caption{Histogram illustrating the average production frequency and charge of each fragment generated 
+in 50 C\textsubscript{3}H\textsubscript{8} Coulomb explosion simulations.}
+\label{C3H8-histogram}
+\end{figure*}
+
+Fig.~\ref{C3H8-snapshot} shows snapshots from one of the 50 Coulomb
+explosion simulations using C\textsubscript{3}H\textsubscript{8} as
+the precursor molecule. These images depict how the laser pulse’s
+electric field interacts with the molecule’s electron density,
+stretching it and expelling it from the molecule, which leads to fragmentation. 
+According to the pulse diagram in Fig.~\ref{C3H8-snapshot}, rapid ionization occurs when the electric field intensity exceeds $4~\text{V}/\text{\AA}$ from approximately 14 fs to 24 fs, resulting in the retention of 14.8 valence electrons in the molecule. This ionization leads to the ejection of two hydrogen atoms at 30 fs, followed by the ejection of three additional hydrogen atoms at 55 fs. At 88 fs in the simulation, a hydrogen atom is observed transferring from the C\textsubscript{2}H fragment to the CH fragment, indicating that molecular rearrangement and bonding can occur even after the laser-induced ionization.
+As illustrated in the figure, the resulting Coulomb explosion and subsequent molecular dynamics lead to the formation of C\textsubscript{2}H and CH\textsubscript{2} fragments. The laser pulse employed in the Coulomb explosion simulations of C\textsubscript{3}H\textsubscript{8} featured an intensity of \(7 \times 10^{14}~\text{W}/\text{cm}^2\), a maximum electric field of \(7.26~\text{V}/\text{\AA}\), a wavelength of \(890~\text{nm}\), and a pulse duration of 7.8 fs (FWHM) (refer to Table~\ref{table_laser_parameters} for details regarding the fragmentation pulse intensity threshold).
+
+%This specific intensity was identified as optimal for achieving the 
+%desired fragmentation of C\textsubscript{3}H\textsubscript{8}. To evaluate how varying intensities 
+%affect fragmentation, additional simulations were carried out over a range from 
+%$5.3 \times 10^{14}~\text{W}/\text{cm}^2$ to $1.7 \times 10^{15}~\text{W}/\text{cm}^2$. It was found 
+%that $7 \times 10^{14}~\text{W}/\text{cm}^2$ produced the most effective fragmentation. Lower intensities 
+%resulted in insufficient dissociation, sometimes leading to the formation of C\textsubscript{3}H\textsubscript{6} or 
+%no dissociation at all, while higher intensities caused excessive dissociation, yielding only individual 
+%atoms without any bonding. Therefore, a pulse intensity of $7 \times 10^{14}~\text{W}/\text{cm}^2$ was chosen 
+%for the 50 simulations, as it provided the most varied fragmentation pathways for C\textsubscript{3}H\textsubscript{8}.
+
+
+Fig.~\ref{C3H8-histogram} presents the distribution of fragments and their corresponding charges 
+resulting from the Coulomb explosion of C\textsubscript{3}H\textsubscript{8}. The data reveals the diverse set of fragmentation pathways achievable with C\textsubscript{3}H\textsubscript{8} as the precursor molecule, among which C\textsubscript{3}H is the most commonly observed hydrocarbon, appearing in 2.8\% of the simulations with an average charge of $1.2^{+}$.
+Hydrogen fragments are the most frequently detected overall, 
+exhibiting an average charge of $0.6^{+}$ as they near the CAP. Other fragments, such as 
+CH, C\textsubscript{3}, and C\textsubscript{3}H, are also present but with a lower formation rate. Importantly, no fragments 
+of C\textsubscript{3}H\textsubscript{4} or larger were found, suggesting that the laser pulse intensity was 
+adequate to remove at least five hydrogen atoms from the molecule in each simulation. On average, the laser 
+expelled 5.15 electrons per simulation. 
+%These simulations are crucial for identifying the optimal pulse parameters 
+%and predicting the fragmentation pathways of C\textsubscript{3}H\textsubscript{8} during Coulomb explosion.
+
+\subsection{Butane (C\textsubscript{4}H\textsubscript{10})}
+
+\begin{figure*}
+\centering
+\includegraphics[width=\textwidth]{C4H10-snapshot.png}
+\caption{C\textsubscript{4}H\textsubscript{10} Coulomb explosion snapshots resulting in the 
+formation of C\textsubscript{2}H\textsubscript{2} and two CH\textsubscript{2} fragments 
+measured to have $1.12^+$, $0.77^+$ and $0.90^+$ charges, 
+respectively (the 0.5, 0.1, 0.01, and 0.001 density isosurfaces are shown).}
+\label{C4H10-snapshot}
+\end{figure*}
+
+\begin{figure*}
+\centering
+\includegraphics[width=.9\textwidth]{C4H10-histogram.png}\\
+\caption{Histogram illustrating the average production frequency and charge of each fragment generated 
+in 88 C\textsubscript{4}H\textsubscript{10} Coulomb explosion simulations.}
+\label{C4H10-histogram}
+\end{figure*}
+
+Fig.~\ref{C4H10-snapshot} shows snapshots from one of the 88 Coulomb explosion simulations conducted with C\textsubscript{4}H\textsubscript{10} in the gauche conformation the precursor molecule These snapshots capture the dynamic 
+interaction between the laser pulse's electric field and the electron density of the molecule, which causes 
+the electron density to stretch and be expelled toward the CAP. As illustrated in 
+the pulse diagram in Fig.~\ref{C4H10-snapshot}, when the electric field intensity surpasses $4~\text{V}/\text{\AA}$ 
+(between 14 fs and 24 fs), a rapid ionization process occurs, leaving 20.5 valence electrons in the molecule. 
+Similarly to the previous case, by the end of the laser pulse at approximately 30 fs, two hydrogen atoms are ejected. 
+Additionally, the CH bond involving the two hydrogen atoms at the top is significantly stretched, resulting in further ejection around 45 fs.
+In this instance, the system ultimately forms a charged C\textsubscript{2}H\textsubscript{2} molecule along with two charged CH\textsubscript{2} fragments.
+
+
+Fig.~\ref{C4H10-snapshot} depicts the laser pulse parameters used in the Coulomb explosion simulations of 
+C\textsubscript{4}H\textsubscript{10}, which included an intensity of $7 \times 10^{14}~\text{W}/\text{cm}^2$, a 
+maximum electric field of $7.26~\text{V}/\text{\AA}$, a wavelength of $890~\text{nm}$, and a pulse duration of 
+7.8 fs (FWHM). This intensity was determined to be optimal for achieving effective fragmentation of 
+C\textsubscript{4}H\textsubscript{10}. To assess the impact of varying laser intensities on fragmentation, 
+additional simulations were performed across a spectrum of intensities shown in Table~\ref{table_laser_parameters}. It was found that, similar
+to the previous cases, that a particular intensity region centered
+around  $7 \times 10^{14}~\text{W}/\text{cm}^2$ yielded the most
+effective fragmentation.
+Lower intensities resulted in insufficient dissociation, often producing larger fragments like 
+C\textsubscript{2}H\textsubscript{4} without any free hydrogen dissociation, whereas higher intensities 
+led to excessive dissociation, resulting in only individual atoms without any bonding. Consequently, a pulse 
+intensity of $7 \times 10^{14}~\text{W}/\text{cm}^2$ was selected for the 88 simulations to ensure a diverse 
+range of fragmentation pathways for C\textsubscript{4}H\textsubscript{10}.
+
+Fig.~\ref{C4H10-histogram} displays the distribution and charges of fragments resulting from the Coulomb 
+explosion of C\textsubscript{4}H\textsubscript{10}. The data indicate a diverse range of fragmentation 
+products. Among these, CH\textsubscript{2} is the most frequently observed hydrocarbon, appearing in 
+6.8\% of the simulations with an average charge of $0.9^{+}$. Hydrogen fragments are the most prevalent 
+overall, exhibiting an average charge of $0.6^{+}$ as they approach the CAP. Other 
+fragments such as CH, CH\textsubscript{2}, and C\textsubscript{2}H\textsubscript{2} are also present but occur less frequently. 
+the laser pulse intensity was sufficient to remove at least three hydrogen atoms from the molecule in each simulation, as no fragments larger than C\textsubscript{3}H\textsubscript{6} were detected.  
+On average, the laser ejected 5.54 electrons per simulation. These results are crucial for optimizing pulse 
+parameters and predicting the fragmentation pathways of C\textsubscript{4}H\textsubscript{10} in Coulomb explosion studies.
+
+\section{Summary}
+
+Fragmentation in the Coulomb explosion of hydrocarbon molecules was
+investigated using time dependent density functional theory simulations. This approach enables the visualization of the underlying mechanisms 
+of fragment formation, the prediction of product formation pathways, and the identification of ideal 
+intensities for diverse fragmentation. We have demonstrated that at specific regions of laser intensity, hydrocarbon molecules dissociate into charged fragments 
+consisting of \( n \) carbon and \( m \) hydrogen atoms, denoted as C\(_n\)H\(_m\). Higher laser intensities result in the complete dissociation of the molecule, 
+while lower intensities typically lead to the stripping of protons or cause only ionization (refer to Table~\ref{table_laser_parameters}). 
+The C\(_n\)H\(_m\) fragments can be experimentally detected \cite{submitted}.
+
+The optimal pulse intensities that yielded the most favorable fragmentation distributions for CH\textsubscript{4}, C\textsubscript{2}H\textsubscript{6}, C\textsubscript{3}H\textsubscript{8}, and C\textsubscript{4}H\textsubscript{10} were determined to be \(1.1 \times 10^{15}~\text{W}/\text{cm}^2\), \(9 \times 10^{14}~\text{W}/\text{cm}^2\), \(7 \times 10^{14}~\text{W}/\text{cm}^2\), and \(7 \times 10^{14}~\text{W}/\text{cm}^2\), respectively (as demonstrated in Table~\ref{table_laser_parameters}). All other laser parameters, including wavelength, duration, and center frequency, were held constant for each molecule across their respective simulations. The electric field strength—and consequently, the intensity—was the only parameter adjusted for each molecule. 
+
+Notably, ionization of the molecule in each simulation occurred only when the laser electric field exceeded a specific range corresponding to each molecule. Fig.~\ref{CH4-snapshot}, Fig.~\ref{C2H6-snapshot}, Fig.~\ref{C3H8-snapshot}, and Fig.~\ref{C4H10-snapshot} illustrate the electric field of the laser and the number of electrons in the molecule over time, demonstrating that ionization occurs approximately 5 fs before and after the peak electric field.
+
+The initialization of velocities based on the Boltzmann distribution at 300 K facilitated the distribution of fragment products for each molecule using the same laser pulse across all simulations. The statistical distributions of fragment production frequencies provide crucial insights into predicting the probabilities of various fragment formation pathways for each tested molecule. Furthermore, the average charge of the fragments indicates the likelihood of different charge states for a molecule. Fig.~\ref{C4H10-histogram}, for example, depicts an average charge of \(0.6^{+}\) for the produced CH species, which suggests that any CH fragment resulting from the Coulomb explosion has a 60\% probability of being positively charged and a 40\% probability of being neutral. 
+
+Moreover, a comparison of the histograms for all molecules (Fig.~\ref{CH4-histogram}, Fig.~\ref{C2H6-histogram}, Fig.~\ref{C3H8-histogram}, Fig.~\ref{C4H10-histogram}) provides valuable insights. For instance, the average charge of the expelled free hydrogen is consistently \(0.6^{+}\) across all precursor molecules. Notable similarities are observed in the characteristics of the CH fragments as well. The two smaller alkanes (CH\textsubscript{4} and C\textsubscript{2}H\textsubscript{6}) produced CH fragments with an average charge of \(0.8^{+}\), while the two larger alkanes (C\textsubscript{3}H\textsubscript{8} and C\textsubscript{4}H\textsubscript{10}) yielded CH fragments with an average charge of \(0.6^{+}\).
+
+The snapshot diagrams from specific simulations illustrate the formation of fragments and bonds following 
+the rapid ionization induced by a strong laser field. These images provide crucial insights into the 
+discharge of electron density from the molecule
+%its interaction with itself upon compression, 
+and the repulsion between the resulting charged fragments. Additionally, the snapshots enable the study of 
+fragment dynamics after the laser-driven ionization, including structural rearrangements 
+(Fig.~\ref{CH4-snapshot}), rotations (Fig.~\ref{C2H6-snapshot}), and the transfer of atoms 
+between different fragments (Fig.~\ref{C3H8-snapshot}).
+
+%In conclusion, this study elucidates the fragmentation mechanisms in the Coulomb explosion of hydrocarbon 
+%molecules using Time-Dependent Density-Functional Theory, highlighting optimal laser intensities for 
+%effective fragmentation. The insights gained into fragment distributions and charge states are crucial 
+%for understanding and predicting the outcomes of such high-energy processes. 
+
+Future work could involve experimental validation of these findings to refine theoretical models, particularly by exploring different 
+laser parameters and molecular environments. Such experimental efforts will help bridge the gap between theory 
+and practice, providing a more comprehensive understanding of fragmentation dynamics of the Coulomb explosion.
+
+
+\begin{acknowledgments} 
+This work has been supported by the National Science Foundation (NSF) under Grant No. 2217759.
+
+This work used ACES at TAMU through allocation PHYS240167 from the Advanced Cyberinfrastructure Coordination Ecosystem: Services \& Support (ACCESS) program, which is supported by National Science 
+Foundation grants \#2138259, \#2138286, \#2138307, \#2137603, and \#2138296~\cite{aces}.
+
+\end{acknowledgments}
+
+%\bibliography{cite}
+%apsrev4-2.bst 2019-01-14 (MD) hand-edited version of apsrev4-1.bst
+%Control: key (0)
+%Control: author (8) initials jnrlst
+%Control: editor formatted (1) identically to author
+%Control: production of article title (0) allowed
+%Control: page (0) single
+%Control: year (1) truncated
+%Control: production of eprint (0) enabled
+\begin{thebibliography}{76}%
+\makeatletter
+\providecommand \@ifxundefined [1]{%
+ \@ifx{#1\undefined}
+}%
+\providecommand \@ifnum [1]{%
+ \ifnum #1\expandafter \@firstoftwo
+ \else \expandafter \@secondoftwo
+ \fi
+}%
+\providecommand \@ifx [1]{%
+ \ifx #1\expandafter \@firstoftwo
+ \else \expandafter \@secondoftwo
+ \fi
+}%
+\providecommand \natexlab [1]{#1}%
+\providecommand \enquote  [1]{``#1''}%
+\providecommand \bibnamefont  [1]{#1}%
+\providecommand \bibfnamefont [1]{#1}%
+\providecommand \citenamefont [1]{#1}%
+\providecommand \href@noop [0]{\@secondoftwo}%
+\providecommand \href [0]{\begingroup \@sanitize@url \@href}%
+\providecommand \@href[1]{\@@startlink{#1}\@@href}%
+\providecommand \@@href[1]{\endgroup#1\@@endlink}%
+\providecommand \@sanitize@url [0]{\catcode `\\12\catcode `\$12\catcode
+  `\&12\catcode `\#12\catcode `\^12\catcode `\_12\catcode `\%12\relax}%
+\providecommand \@@startlink[1]{}%
+\providecommand \@@endlink[0]{}%
+\providecommand \url  [0]{\begingroup\@sanitize@url \@url }%
+\providecommand \@url [1]{\endgroup\@href {#1}{\urlprefix }}%
+\providecommand \urlprefix  [0]{URL }%
+\providecommand \Eprint [0]{\href }%
+\providecommand \doibase [0]{https://doi.org/}%
+\providecommand \selectlanguage [0]{\@gobble}%
+\providecommand \bibinfo  [0]{\@secondoftwo}%
+\providecommand \bibfield  [0]{\@secondoftwo}%
+\providecommand \translation [1]{[#1]}%
+\providecommand \BibitemOpen [0]{}%
+\providecommand \bibitemStop [0]{}%
+\providecommand \bibitemNoStop [0]{.\EOS\space}%
+\providecommand \EOS [0]{\spacefactor3000\relax}%
+\providecommand \BibitemShut  [1]{\csname bibitem#1\endcsname}%
+\let\auto@bib@innerbib\@empty
+%</preamble>
+\bibitem [{\citenamefont {Vager}\ \emph {et~al.}(1989)\citenamefont {Vager},
+  \citenamefont {Naaman},\ and\ \citenamefont
+  {Kanter}}]{doi:10.1126/science.244.4903.426}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {Z.}~\bibnamefont
+  {Vager}}, \bibinfo {author} {\bibfnamefont {R.}~\bibnamefont {Naaman}},\ and\
+  \bibinfo {author} {\bibfnamefont {E.~P.}\ \bibnamefont {Kanter}},\ }\bibfield
+   {title} {\bibinfo {title} {Coulomb explosion imaging of small molecules},\
+  }\href {https://doi.org/10.1126/science.244.4903.426} {\bibfield  {journal}
+  {\bibinfo  {journal} {Science}\ }\textbf {\bibinfo {volume} {244}},\ \bibinfo
+  {pages} {426} (\bibinfo {year} {1989})},\ \Eprint
+  {https://arxiv.org/abs/https://www.science.org/doi/pdf/10.1126/science.244.4903.426}
+  {https://www.science.org/doi/pdf/10.1126/science.244.4903.426} \BibitemShut
+  {NoStop}%
+\bibitem [{\citenamefont {Schouder}\ \emph {et~al.}(2022)\citenamefont
+  {Schouder}, \citenamefont {Chatterley}, \citenamefont {Pickering},\ and\
+  \citenamefont
+  {Stapelfeldt}}]{annurev:/content/journals/10.1146/annurev-physchem-090419-053627}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {C.~A.}\ \bibnamefont
+  {Schouder}}, \bibinfo {author} {\bibfnamefont {A.~S.}\ \bibnamefont
+  {Chatterley}}, \bibinfo {author} {\bibfnamefont {J.~D.}\ \bibnamefont
+  {Pickering}},\ and\ \bibinfo {author} {\bibfnamefont {H.}~\bibnamefont
+  {Stapelfeldt}},\ }\bibfield  {title} {\bibinfo {title} {Laser-induced coulomb
+  explosion imaging of aligned molecules and molecular dimers},\ }\href
+  {https://doi.org/https://doi.org/10.1146/annurev-physchem-090419-053627}
+  {\bibfield  {journal} {\bibinfo  {journal} {Annual Review of Physical
+  Chemistry}\ }\textbf {\bibinfo {volume} {73}},\ \bibinfo {pages} {323}
+  (\bibinfo {year} {2022})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Li}\ \emph {et~al.}(2022)\citenamefont {Li},
+  \citenamefont {Rudenko}, \citenamefont {Sch\"offler}, \citenamefont {Anders},
+  \citenamefont {Baumann}, \citenamefont {Eckart}, \citenamefont {Erk},
+  \citenamefont {De~Fanis}, \citenamefont {Fehre}, \citenamefont {D\"orner},
+  \citenamefont {Foucar}, \citenamefont {Grundmann}, \citenamefont {Grychtol},
+  \citenamefont {Hartung}, \citenamefont {Hofmann}, \citenamefont {Ilchen},
+  \citenamefont {Janke}, \citenamefont {Kastirke}, \citenamefont {Kircher},
+  \citenamefont {Kubicek}, \citenamefont {Kunitski}, \citenamefont {Mazza},
+  \citenamefont {Meister}, \citenamefont {Melzer}, \citenamefont {Montano},
+  \citenamefont {Music}, \citenamefont {Nalin}, \citenamefont {Ovcharenko},
+  \citenamefont {Passow}, \citenamefont {Pier}, \citenamefont {Rennhack},
+  \citenamefont {Rist}, \citenamefont {Rivas}, \citenamefont {Schlichting},
+  \citenamefont {Schmidt}, \citenamefont {Schmidt}, \citenamefont {Siebert},
+  \citenamefont {Strenger}, \citenamefont {Trabert}, \citenamefont {Trinter},
+  \citenamefont {Vela-Perez}, \citenamefont {Wagner}, \citenamefont {Walter},
+  \citenamefont {Weller}, \citenamefont {Ziolkowski}, \citenamefont {Czasch},
+  \citenamefont {Rolles}, \citenamefont {Meyer}, \citenamefont {Jahnke},\ and\
+  \citenamefont {Boll}}]{PhysRevResearch.4.013029}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {X.}~\bibnamefont
+  {Li}}, \bibinfo {author} {\bibfnamefont {A.}~\bibnamefont {Rudenko}},
+  \bibinfo {author} {\bibfnamefont {M.~S.}\ \bibnamefont {Sch\"offler}},
+  \bibinfo {author} {\bibfnamefont {N.}~\bibnamefont {Anders}}, \bibinfo
+  {author} {\bibfnamefont {T.~M.}\ \bibnamefont {Baumann}}, \bibinfo {author}
+  {\bibfnamefont {S.}~\bibnamefont {Eckart}}, \bibinfo {author} {\bibfnamefont
+  {B.}~\bibnamefont {Erk}}, \bibinfo {author} {\bibfnamefont {A.}~\bibnamefont
+  {De~Fanis}}, \bibinfo {author} {\bibfnamefont {K.}~\bibnamefont {Fehre}},
+  \bibinfo {author} {\bibfnamefont {R.}~\bibnamefont {D\"orner}}, \bibinfo
+  {author} {\bibfnamefont {L.}~\bibnamefont {Foucar}}, \bibinfo {author}
+  {\bibfnamefont {S.}~\bibnamefont {Grundmann}}, \bibinfo {author}
+  {\bibfnamefont {P.}~\bibnamefont {Grychtol}}, \bibinfo {author}
+  {\bibfnamefont {A.}~\bibnamefont {Hartung}}, \bibinfo {author} {\bibfnamefont
+  {M.}~\bibnamefont {Hofmann}}, \bibinfo {author} {\bibfnamefont
+  {M.}~\bibnamefont {Ilchen}}, \bibinfo {author} {\bibfnamefont
+  {C.}~\bibnamefont {Janke}}, \bibinfo {author} {\bibfnamefont
+  {G.}~\bibnamefont {Kastirke}}, \bibinfo {author} {\bibfnamefont
+  {M.}~\bibnamefont {Kircher}}, \bibinfo {author} {\bibfnamefont
+  {K.}~\bibnamefont {Kubicek}}, \bibinfo {author} {\bibfnamefont
+  {M.}~\bibnamefont {Kunitski}}, \bibinfo {author} {\bibfnamefont
+  {T.}~\bibnamefont {Mazza}}, \bibinfo {author} {\bibfnamefont
+  {S.}~\bibnamefont {Meister}}, \bibinfo {author} {\bibfnamefont
+  {N.}~\bibnamefont {Melzer}}, \bibinfo {author} {\bibfnamefont
+  {J.}~\bibnamefont {Montano}}, \bibinfo {author} {\bibfnamefont
+  {V.}~\bibnamefont {Music}}, \bibinfo {author} {\bibfnamefont
+  {G.}~\bibnamefont {Nalin}}, \bibinfo {author} {\bibfnamefont
+  {Y.}~\bibnamefont {Ovcharenko}}, \bibinfo {author} {\bibfnamefont
+  {C.}~\bibnamefont {Passow}}, \bibinfo {author} {\bibfnamefont
+  {A.}~\bibnamefont {Pier}}, \bibinfo {author} {\bibfnamefont {N.}~\bibnamefont
+  {Rennhack}}, \bibinfo {author} {\bibfnamefont {J.}~\bibnamefont {Rist}},
+  \bibinfo {author} {\bibfnamefont {D.~E.}\ \bibnamefont {Rivas}}, \bibinfo
+  {author} {\bibfnamefont {I.}~\bibnamefont {Schlichting}}, \bibinfo {author}
+  {\bibfnamefont {L.~P.~H.}\ \bibnamefont {Schmidt}}, \bibinfo {author}
+  {\bibfnamefont {P.}~\bibnamefont {Schmidt}}, \bibinfo {author} {\bibfnamefont
+  {J.}~\bibnamefont {Siebert}}, \bibinfo {author} {\bibfnamefont
+  {N.}~\bibnamefont {Strenger}}, \bibinfo {author} {\bibfnamefont
+  {D.}~\bibnamefont {Trabert}}, \bibinfo {author} {\bibfnamefont
+  {F.}~\bibnamefont {Trinter}}, \bibinfo {author} {\bibfnamefont
+  {I.}~\bibnamefont {Vela-Perez}}, \bibinfo {author} {\bibfnamefont
+  {R.}~\bibnamefont {Wagner}}, \bibinfo {author} {\bibfnamefont
+  {P.}~\bibnamefont {Walter}}, \bibinfo {author} {\bibfnamefont
+  {M.}~\bibnamefont {Weller}}, \bibinfo {author} {\bibfnamefont
+  {P.}~\bibnamefont {Ziolkowski}}, \bibinfo {author} {\bibfnamefont
+  {A.}~\bibnamefont {Czasch}}, \bibinfo {author} {\bibfnamefont
+  {D.}~\bibnamefont {Rolles}}, \bibinfo {author} {\bibfnamefont
+  {M.}~\bibnamefont {Meyer}}, \bibinfo {author} {\bibfnamefont
+  {T.}~\bibnamefont {Jahnke}},\ and\ \bibinfo {author} {\bibfnamefont
+  {R.}~\bibnamefont {Boll}},\ }\bibfield  {title} {\bibinfo {title} {Coulomb
+  explosion imaging of small polyatomic molecules with ultrashort x-ray
+  pulses},\ }\href {https://doi.org/10.1103/PhysRevResearch.4.013029}
+  {\bibfield  {journal} {\bibinfo  {journal} {Phys. Rev. Res.}\ }\textbf
+  {\bibinfo {volume} {4}},\ \bibinfo {pages} {013029} (\bibinfo {year}
+  {2022})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Herwig}\ \emph {et~al.}(2013)\citenamefont {Herwig},
+  \citenamefont {Zawatzky}, \citenamefont {Grieser}, \citenamefont {Heber},
+  \citenamefont {Jordon-Thaden}, \citenamefont {Krantz}, \citenamefont
+  {Novotný}, \citenamefont {Repnow}, \citenamefont {Schurig}, \citenamefont
+  {Schwalm}, \citenamefont {Vager}, \citenamefont {Wolf}, \citenamefont
+  {Trapp},\ and\ \citenamefont {Kreckel}}]{doi:10.1126/science.1246549}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {P.}~\bibnamefont
+  {Herwig}}, \bibinfo {author} {\bibfnamefont {K.}~\bibnamefont {Zawatzky}},
+  \bibinfo {author} {\bibfnamefont {M.}~\bibnamefont {Grieser}}, \bibinfo
+  {author} {\bibfnamefont {O.}~\bibnamefont {Heber}}, \bibinfo {author}
+  {\bibfnamefont {B.}~\bibnamefont {Jordon-Thaden}}, \bibinfo {author}
+  {\bibfnamefont {C.}~\bibnamefont {Krantz}}, \bibinfo {author} {\bibfnamefont
+  {O.}~\bibnamefont {Novotný}}, \bibinfo {author} {\bibfnamefont
+  {R.}~\bibnamefont {Repnow}}, \bibinfo {author} {\bibfnamefont
+  {V.}~\bibnamefont {Schurig}}, \bibinfo {author} {\bibfnamefont
+  {D.}~\bibnamefont {Schwalm}}, \bibinfo {author} {\bibfnamefont
+  {Z.}~\bibnamefont {Vager}}, \bibinfo {author} {\bibfnamefont
+  {A.}~\bibnamefont {Wolf}}, \bibinfo {author} {\bibfnamefont {O.}~\bibnamefont
+  {Trapp}},\ and\ \bibinfo {author} {\bibfnamefont {H.}~\bibnamefont
+  {Kreckel}},\ }\bibfield  {title} {\bibinfo {title} {Imaging the absolute
+  configuration of a chiral epoxide in the gas phase},\ }\href
+  {https://doi.org/10.1126/science.1246549} {\bibfield  {journal} {\bibinfo
+  {journal} {Science}\ }\textbf {\bibinfo {volume} {342}},\ \bibinfo {pages}
+  {1084} (\bibinfo {year} {2013})},\ \Eprint
+  {https://arxiv.org/abs/https://www.science.org/doi/pdf/10.1126/science.1246549}
+  {https://www.science.org/doi/pdf/10.1126/science.1246549} \BibitemShut
+  {NoStop}%
+\bibitem [{\citenamefont {Unwin}\ \emph {et~al.}(2023)\citenamefont {Unwin},
+  \citenamefont {Allum}, \citenamefont {Britton}, \citenamefont {Gabalski},
+  \citenamefont {Bromberger}, \citenamefont {Brouard}, \citenamefont
+  {Bucksbaum}, \citenamefont {Driver}, \citenamefont {Ekanayake}, \citenamefont
+  {Garg}, \citenamefont {Gougoula}, \citenamefont {Heathcote}, \citenamefont
+  {Howard}, \citenamefont {Hockett}, \citenamefont {Holland}, \citenamefont
+  {Kumar}, \citenamefont {Lam}, \citenamefont {Lee}, \citenamefont {McManus},
+  \citenamefont {Mikosch}, \citenamefont {Milesevic}, \citenamefont {Minns},
+  \citenamefont {Papadopoulou}, \citenamefont {Passow}, \citenamefont {Razmus},
+  \citenamefont {R{\"o}der}, \citenamefont {Rouz{\'e}e}, \citenamefont
+  {Schuurman}, \citenamefont {Simao}, \citenamefont {Stolow}, \citenamefont
+  {Tul-Noor}, \citenamefont {Vallance}, \citenamefont {Walmsley}, \citenamefont
+  {Rolles}, \citenamefont {Erk}, \citenamefont {Burt},\ and\ \citenamefont
+  {Forbes}}]{Unwin2023}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {J.}~\bibnamefont
+  {Unwin}}, \bibinfo {author} {\bibfnamefont {F.}~\bibnamefont {Allum}},
+  \bibinfo {author} {\bibfnamefont {M.}~\bibnamefont {Britton}}, \bibinfo
+  {author} {\bibfnamefont {I.}~\bibnamefont {Gabalski}}, \bibinfo {author}
+  {\bibfnamefont {H.}~\bibnamefont {Bromberger}}, \bibinfo {author}
+  {\bibfnamefont {M.}~\bibnamefont {Brouard}}, \bibinfo {author} {\bibfnamefont
+  {P.~H.}\ \bibnamefont {Bucksbaum}}, \bibinfo {author} {\bibfnamefont
+  {T.}~\bibnamefont {Driver}}, \bibinfo {author} {\bibfnamefont
+  {N.}~\bibnamefont {Ekanayake}}, \bibinfo {author} {\bibfnamefont
+  {D.}~\bibnamefont {Garg}}, \bibinfo {author} {\bibfnamefont {E.}~\bibnamefont
+  {Gougoula}}, \bibinfo {author} {\bibfnamefont {D.}~\bibnamefont {Heathcote}},
+  \bibinfo {author} {\bibfnamefont {A.~J.}\ \bibnamefont {Howard}}, \bibinfo
+  {author} {\bibfnamefont {P.}~\bibnamefont {Hockett}}, \bibinfo {author}
+  {\bibfnamefont {D.~M.~P.}\ \bibnamefont {Holland}}, \bibinfo {author}
+  {\bibfnamefont {S.}~\bibnamefont {Kumar}}, \bibinfo {author} {\bibfnamefont
+  {C.-s.}\ \bibnamefont {Lam}}, \bibinfo {author} {\bibfnamefont {J.~W.~L.}\
+  \bibnamefont {Lee}}, \bibinfo {author} {\bibfnamefont {J.}~\bibnamefont
+  {McManus}}, \bibinfo {author} {\bibfnamefont {J.}~\bibnamefont {Mikosch}},
+  \bibinfo {author} {\bibfnamefont {D.}~\bibnamefont {Milesevic}}, \bibinfo
+  {author} {\bibfnamefont {R.~S.}\ \bibnamefont {Minns}}, \bibinfo {author}
+  {\bibfnamefont {C.~C.}\ \bibnamefont {Papadopoulou}}, \bibinfo {author}
+  {\bibfnamefont {C.}~\bibnamefont {Passow}}, \bibinfo {author} {\bibfnamefont
+  {W.~O.}\ \bibnamefont {Razmus}}, \bibinfo {author} {\bibfnamefont
+  {A.}~\bibnamefont {R{\"o}der}}, \bibinfo {author} {\bibfnamefont
+  {A.}~\bibnamefont {Rouz{\'e}e}}, \bibinfo {author} {\bibfnamefont
+  {M.}~\bibnamefont {Schuurman}}, \bibinfo {author} {\bibfnamefont
+  {A.}~\bibnamefont {Simao}}, \bibinfo {author} {\bibfnamefont
+  {A.}~\bibnamefont {Stolow}}, \bibinfo {author} {\bibfnamefont
+  {A.}~\bibnamefont {Tul-Noor}}, \bibinfo {author} {\bibfnamefont
+  {C.}~\bibnamefont {Vallance}}, \bibinfo {author} {\bibfnamefont
+  {T.}~\bibnamefont {Walmsley}}, \bibinfo {author} {\bibfnamefont
+  {D.}~\bibnamefont {Rolles}}, \bibinfo {author} {\bibfnamefont
+  {B.}~\bibnamefont {Erk}}, \bibinfo {author} {\bibfnamefont {M.}~\bibnamefont
+  {Burt}},\ and\ \bibinfo {author} {\bibfnamefont {R.}~\bibnamefont {Forbes}},\
+  }\bibfield  {title} {\bibinfo {title} {X-ray induced coulomb explosion
+  imaging of transient excited-state structural rearrangements in cs2},\ }\href
+  {https://doi.org/10.1038/s42005-023-01414-7} {\bibfield  {journal} {\bibinfo
+  {journal} {Communications Physics}\ }\textbf {\bibinfo {volume} {6}},\
+  \bibinfo {pages} {309} (\bibinfo {year} {2023})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Mogyorosi}\ \emph {et~al.}(2020)\citenamefont
+  {Mogyorosi}, \citenamefont {Sarosi},\ and\ \citenamefont
+  {Chikan}}]{Mogyorosi2020}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {K.}~\bibnamefont
+  {Mogyorosi}}, \bibinfo {author} {\bibfnamefont {K.}~\bibnamefont {Sarosi}},\
+  and\ \bibinfo {author} {\bibfnamefont {V.}~\bibnamefont {Chikan}},\
+  }\bibfield  {title} {\bibinfo {title} {Direct production of ch(a2$\delta$)
+  radical from intense femtosecond near-ir laser pulses},\ }\href
+  {https://doi.org/10.1021/acs.jpca.0c05206} {\bibfield  {journal} {\bibinfo
+  {journal} {The Journal of Physical Chemistry A}\ }\textbf {\bibinfo {volume}
+  {124}},\ \bibinfo {pages} {8112} (\bibinfo {year} {2020})}\BibitemShut
+  {NoStop}%
+\bibitem [{\citenamefont {Pitzer}\ \emph {et~al.}(2013)\citenamefont {Pitzer},
+  \citenamefont {Kunitski}, \citenamefont {Johnson}, \citenamefont {Jahnke},
+  \citenamefont {Sann}, \citenamefont {Sturm}, \citenamefont {Schmidt},
+  \citenamefont {Schmidt-Böcking}, \citenamefont {Dörner}, \citenamefont
+  {Stohner}, \citenamefont {Kiedrowski}, \citenamefont {Reggelin},
+  \citenamefont {Marquardt}, \citenamefont {Schießer}, \citenamefont
+  {Berger},\ and\ \citenamefont {Schöffler}}]{doi:10.1126/science.1240362}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {M.}~\bibnamefont
+  {Pitzer}}, \bibinfo {author} {\bibfnamefont {M.}~\bibnamefont {Kunitski}},
+  \bibinfo {author} {\bibfnamefont {A.~S.}\ \bibnamefont {Johnson}}, \bibinfo
+  {author} {\bibfnamefont {T.}~\bibnamefont {Jahnke}}, \bibinfo {author}
+  {\bibfnamefont {H.}~\bibnamefont {Sann}}, \bibinfo {author} {\bibfnamefont
+  {F.}~\bibnamefont {Sturm}}, \bibinfo {author} {\bibfnamefont {L.~P.~H.}\
+  \bibnamefont {Schmidt}}, \bibinfo {author} {\bibfnamefont {H.}~\bibnamefont
+  {Schmidt-Böcking}}, \bibinfo {author} {\bibfnamefont {R.}~\bibnamefont
+  {Dörner}}, \bibinfo {author} {\bibfnamefont {J.}~\bibnamefont {Stohner}},
+  \bibinfo {author} {\bibfnamefont {J.}~\bibnamefont {Kiedrowski}}, \bibinfo
+  {author} {\bibfnamefont {M.}~\bibnamefont {Reggelin}}, \bibinfo {author}
+  {\bibfnamefont {S.}~\bibnamefont {Marquardt}}, \bibinfo {author}
+  {\bibfnamefont {A.}~\bibnamefont {Schießer}}, \bibinfo {author}
+  {\bibfnamefont {R.}~\bibnamefont {Berger}},\ and\ \bibinfo {author}
+  {\bibfnamefont {M.~S.}\ \bibnamefont {Schöffler}},\ }\bibfield  {title}
+  {\bibinfo {title} {Direct determination of absolute molecular stereochemistry
+  in gas phase by coulomb explosion imaging},\ }\href
+  {https://doi.org/10.1126/science.1240362} {\bibfield  {journal} {\bibinfo
+  {journal} {Science}\ }\textbf {\bibinfo {volume} {341}},\ \bibinfo {pages}
+  {1096} (\bibinfo {year} {2013})},\ \Eprint
+  {https://arxiv.org/abs/https://www.science.org/doi/pdf/10.1126/science.1240362}
+  {https://www.science.org/doi/pdf/10.1126/science.1240362} \BibitemShut
+  {NoStop}%
+\bibitem [{\citenamefont {Slater}\ \emph {et~al.}(2015)\citenamefont {Slater},
+  \citenamefont {Blake}, \citenamefont {Brouard}, \citenamefont {Lauer},
+  \citenamefont {Vallance}, \citenamefont {Bohun}, \citenamefont {Christensen},
+  \citenamefont {Nielsen}, \citenamefont {Johansson},\ and\ \citenamefont
+  {Stapelfeldt}}]{PhysRevA.91.053424}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {C.~S.}\ \bibnamefont
+  {Slater}}, \bibinfo {author} {\bibfnamefont {S.}~\bibnamefont {Blake}},
+  \bibinfo {author} {\bibfnamefont {M.}~\bibnamefont {Brouard}}, \bibinfo
+  {author} {\bibfnamefont {A.}~\bibnamefont {Lauer}}, \bibinfo {author}
+  {\bibfnamefont {C.}~\bibnamefont {Vallance}}, \bibinfo {author}
+  {\bibfnamefont {C.~S.}\ \bibnamefont {Bohun}}, \bibinfo {author}
+  {\bibfnamefont {L.}~\bibnamefont {Christensen}}, \bibinfo {author}
+  {\bibfnamefont {J.~H.}\ \bibnamefont {Nielsen}}, \bibinfo {author}
+  {\bibfnamefont {M.~P.}\ \bibnamefont {Johansson}},\ and\ \bibinfo {author}
+  {\bibfnamefont {H.}~\bibnamefont {Stapelfeldt}},\ }\bibfield  {title}
+  {\bibinfo {title} {Coulomb-explosion imaging using a pixel-imaging
+  mass-spectrometry camera},\ }\href
+  {https://doi.org/10.1103/PhysRevA.91.053424} {\bibfield  {journal} {\bibinfo
+  {journal} {Phys. Rev. A}\ }\textbf {\bibinfo {volume} {91}},\ \bibinfo
+  {pages} {053424} (\bibinfo {year} {2015})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Boll}\ \emph {et~al.}(2022)\citenamefont {Boll},
+  \citenamefont {Sch{\"a}fer}, \citenamefont {Richard}, \citenamefont {Fehre},
+  \citenamefont {Kastirke}, \citenamefont {Jurek}, \citenamefont
+  {Sch{\"o}ffler}, \citenamefont {Abdullah}, \citenamefont {Anders},
+  \citenamefont {Baumann}, \citenamefont {Eckart}, \citenamefont {Erk},
+  \citenamefont {De~Fanis}, \citenamefont {D{\"o}rner}, \citenamefont
+  {Grundmann}, \citenamefont {Grychtol}, \citenamefont {Hartung}, \citenamefont
+  {Hofmann}, \citenamefont {Ilchen}, \citenamefont {Inhester}, \citenamefont
+  {Janke}, \citenamefont {Jin}, \citenamefont {Kircher}, \citenamefont
+  {Kubicek}, \citenamefont {Kunitski}, \citenamefont {Li}, \citenamefont
+  {Mazza}, \citenamefont {Meister}, \citenamefont {Melzer}, \citenamefont
+  {Montano}, \citenamefont {Music}, \citenamefont {Nalin}, \citenamefont
+  {Ovcharenko}, \citenamefont {Passow}, \citenamefont {Pier}, \citenamefont
+  {Rennhack}, \citenamefont {Rist}, \citenamefont {Rivas}, \citenamefont
+  {Rolles}, \citenamefont {Schlichting}, \citenamefont {Schmidt}, \citenamefont
+  {Schmidt}, \citenamefont {Siebert}, \citenamefont {Strenger}, \citenamefont
+  {Trabert}, \citenamefont {Trinter}, \citenamefont {Vela-Perez}, \citenamefont
+  {Wagner}, \citenamefont {Walter}, \citenamefont {Weller}, \citenamefont
+  {Ziolkowski}, \citenamefont {Son}, \citenamefont {Rudenko}, \citenamefont
+  {Meyer}, \citenamefont {Santra},\ and\ \citenamefont {Jahnke}}]{Boll2022}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {R.}~\bibnamefont
+  {Boll}}, \bibinfo {author} {\bibfnamefont {J.~M.}\ \bibnamefont
+  {Sch{\"a}fer}}, \bibinfo {author} {\bibfnamefont {B.}~\bibnamefont
+  {Richard}}, \bibinfo {author} {\bibfnamefont {K.}~\bibnamefont {Fehre}},
+  \bibinfo {author} {\bibfnamefont {G.}~\bibnamefont {Kastirke}}, \bibinfo
+  {author} {\bibfnamefont {Z.}~\bibnamefont {Jurek}}, \bibinfo {author}
+  {\bibfnamefont {M.~S.}\ \bibnamefont {Sch{\"o}ffler}}, \bibinfo {author}
+  {\bibfnamefont {M.~M.}\ \bibnamefont {Abdullah}}, \bibinfo {author}
+  {\bibfnamefont {N.}~\bibnamefont {Anders}}, \bibinfo {author} {\bibfnamefont
+  {T.~M.}\ \bibnamefont {Baumann}}, \bibinfo {author} {\bibfnamefont
+  {S.}~\bibnamefont {Eckart}}, \bibinfo {author} {\bibfnamefont
+  {B.}~\bibnamefont {Erk}}, \bibinfo {author} {\bibfnamefont {A.}~\bibnamefont
+  {De~Fanis}}, \bibinfo {author} {\bibfnamefont {R.}~\bibnamefont
+  {D{\"o}rner}}, \bibinfo {author} {\bibfnamefont {S.}~\bibnamefont
+  {Grundmann}}, \bibinfo {author} {\bibfnamefont {P.}~\bibnamefont {Grychtol}},
+  \bibinfo {author} {\bibfnamefont {A.}~\bibnamefont {Hartung}}, \bibinfo
+  {author} {\bibfnamefont {M.}~\bibnamefont {Hofmann}}, \bibinfo {author}
+  {\bibfnamefont {M.}~\bibnamefont {Ilchen}}, \bibinfo {author} {\bibfnamefont
+  {L.}~\bibnamefont {Inhester}}, \bibinfo {author} {\bibfnamefont
+  {C.}~\bibnamefont {Janke}}, \bibinfo {author} {\bibfnamefont
+  {R.}~\bibnamefont {Jin}}, \bibinfo {author} {\bibfnamefont {M.}~\bibnamefont
+  {Kircher}}, \bibinfo {author} {\bibfnamefont {K.}~\bibnamefont {Kubicek}},
+  \bibinfo {author} {\bibfnamefont {M.}~\bibnamefont {Kunitski}}, \bibinfo
+  {author} {\bibfnamefont {X.}~\bibnamefont {Li}}, \bibinfo {author}
+  {\bibfnamefont {T.}~\bibnamefont {Mazza}}, \bibinfo {author} {\bibfnamefont
+  {S.}~\bibnamefont {Meister}}, \bibinfo {author} {\bibfnamefont
+  {N.}~\bibnamefont {Melzer}}, \bibinfo {author} {\bibfnamefont
+  {J.}~\bibnamefont {Montano}}, \bibinfo {author} {\bibfnamefont
+  {V.}~\bibnamefont {Music}}, \bibinfo {author} {\bibfnamefont
+  {G.}~\bibnamefont {Nalin}}, \bibinfo {author} {\bibfnamefont
+  {Y.}~\bibnamefont {Ovcharenko}}, \bibinfo {author} {\bibfnamefont
+  {C.}~\bibnamefont {Passow}}, \bibinfo {author} {\bibfnamefont
+  {A.}~\bibnamefont {Pier}}, \bibinfo {author} {\bibfnamefont {N.}~\bibnamefont
+  {Rennhack}}, \bibinfo {author} {\bibfnamefont {J.}~\bibnamefont {Rist}},
+  \bibinfo {author} {\bibfnamefont {D.~E.}\ \bibnamefont {Rivas}}, \bibinfo
+  {author} {\bibfnamefont {D.}~\bibnamefont {Rolles}}, \bibinfo {author}
+  {\bibfnamefont {I.}~\bibnamefont {Schlichting}}, \bibinfo {author}
+  {\bibfnamefont {L.~P.~H.}\ \bibnamefont {Schmidt}}, \bibinfo {author}
+  {\bibfnamefont {P.}~\bibnamefont {Schmidt}}, \bibinfo {author} {\bibfnamefont
+  {J.}~\bibnamefont {Siebert}}, \bibinfo {author} {\bibfnamefont
+  {N.}~\bibnamefont {Strenger}}, \bibinfo {author} {\bibfnamefont
+  {D.}~\bibnamefont {Trabert}}, \bibinfo {author} {\bibfnamefont
+  {F.}~\bibnamefont {Trinter}}, \bibinfo {author} {\bibfnamefont
+  {I.}~\bibnamefont {Vela-Perez}}, \bibinfo {author} {\bibfnamefont
+  {R.}~\bibnamefont {Wagner}}, \bibinfo {author} {\bibfnamefont
+  {P.}~\bibnamefont {Walter}}, \bibinfo {author} {\bibfnamefont
+  {M.}~\bibnamefont {Weller}}, \bibinfo {author} {\bibfnamefont
+  {P.}~\bibnamefont {Ziolkowski}}, \bibinfo {author} {\bibfnamefont {S.-K.}\
+  \bibnamefont {Son}}, \bibinfo {author} {\bibfnamefont {A.}~\bibnamefont
+  {Rudenko}}, \bibinfo {author} {\bibfnamefont {M.}~\bibnamefont {Meyer}},
+  \bibinfo {author} {\bibfnamefont {R.}~\bibnamefont {Santra}},\ and\ \bibinfo
+  {author} {\bibfnamefont {T.}~\bibnamefont {Jahnke}},\ }\bibfield  {title}
+  {\bibinfo {title} {X-ray multiphoton-induced coulomb explosion images complex
+  single molecules},\ }\href {https://doi.org/10.1038/s41567-022-01507-0}
+  {\bibfield  {journal} {\bibinfo  {journal} {Nature Physics}\ }\textbf
+  {\bibinfo {volume} {18}},\ \bibinfo {pages} {423} (\bibinfo {year}
+  {2022})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Singh}\ \emph {et~al.}(2024)\citenamefont {Singh},
+  \citenamefont {Cheng}, \citenamefont {Weinacht},\ and\ \citenamefont
+  {Matsika}}]{PhysRevA.109.052813}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {V.}~\bibnamefont
+  {Singh}}, \bibinfo {author} {\bibfnamefont {C.}~\bibnamefont {Cheng}},
+  \bibinfo {author} {\bibfnamefont {T.}~\bibnamefont {Weinacht}},\ and\
+  \bibinfo {author} {\bibfnamefont {S.}~\bibnamefont {Matsika}},\ }\bibfield
+  {title} {\bibinfo {title} {Quantum contributions to coulomb-explosion imaging
+  revealed by trajectory-surface-hopping molecular dynamics},\ }\href
+  {https://doi.org/10.1103/PhysRevA.109.052813} {\bibfield  {journal} {\bibinfo
+   {journal} {Phys. Rev. A}\ }\textbf {\bibinfo {volume} {109}},\ \bibinfo
+  {pages} {052813} (\bibinfo {year} {2024})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Zhou}\ \emph {et~al.}(2020)\citenamefont {Zhou},
+  \citenamefont {Ge}, \citenamefont {Cooper}, \citenamefont {Crane},
+  \citenamefont {Evans}, \citenamefont {Ashfold},\ and\ \citenamefont
+  {Vallance}}]{10.1063/5.0024833}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {W.}~\bibnamefont
+  {Zhou}}, \bibinfo {author} {\bibfnamefont {L.}~\bibnamefont {Ge}}, \bibinfo
+  {author} {\bibfnamefont {G.~A.}\ \bibnamefont {Cooper}}, \bibinfo {author}
+  {\bibfnamefont {S.~W.}\ \bibnamefont {Crane}}, \bibinfo {author}
+  {\bibfnamefont {M.~H.}\ \bibnamefont {Evans}}, \bibinfo {author}
+  {\bibfnamefont {M.~N.~R.}\ \bibnamefont {Ashfold}},\ and\ \bibinfo {author}
+  {\bibfnamefont {C.}~\bibnamefont {Vallance}},\ }\bibfield  {title} {\bibinfo
+  {title} {{Coulomb explosion imaging for gas-phase molecular structure
+  determination: An ab initio trajectory simulation study}},\ }\href
+  {https://doi.org/10.1063/5.0024833} {\bibfield  {journal} {\bibinfo
+  {journal} {The Journal of Chemical Physics}\ }\textbf {\bibinfo {volume}
+  {153}},\ \bibinfo {pages} {184201} (\bibinfo {year} {2020})},\ \Eprint
+  {https://arxiv.org/abs/https://pubs.aip.org/aip/jcp/article-pdf/doi/10.1063/5.0024833/15581766/184201\_1\_online.pdf}
+  {https://pubs.aip.org/aip/jcp/article-pdf/doi/10.1063/5.0024833/15581766/184201\_1\_online.pdf}
+  \BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Yatsuhashi}\ and\ \citenamefont
+  {Nakashima}(2018)}]{YATSUHASHI201852}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {T.}~\bibnamefont
+  {Yatsuhashi}}\ and\ \bibinfo {author} {\bibfnamefont {N.}~\bibnamefont
+  {Nakashima}},\ }\bibfield  {title} {\bibinfo {title} {Multiple ionization and
+  coulomb explosion of molecules, molecular complexes, clusters and solid
+  surfaces},\ }\href
+  {https://doi.org/https://doi.org/10.1016/j.jphotochemrev.2017.12.001}
+  {\bibfield  {journal} {\bibinfo  {journal} {Journal of Photochemistry and
+  Photobiology C: Photochemistry Reviews}\ }\textbf {\bibinfo {volume} {34}},\
+  \bibinfo {pages} {52} (\bibinfo {year} {2018})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Wu}\ \emph {et~al.}(2011)\citenamefont {Wu},
+  \citenamefont {Yang}, \citenamefont {Wu}, \citenamefont {Chen}, \citenamefont
+  {Dong}, \citenamefont {Liu}, \citenamefont {Deng}, \citenamefont {Liu},
+  \citenamefont {Liu},\ and\ \citenamefont {Gong}}]{C1CP21345H}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {C.}~\bibnamefont
+  {Wu}}, \bibinfo {author} {\bibfnamefont {Y.}~\bibnamefont {Yang}}, \bibinfo
+  {author} {\bibfnamefont {Z.}~\bibnamefont {Wu}}, \bibinfo {author}
+  {\bibfnamefont {B.}~\bibnamefont {Chen}}, \bibinfo {author} {\bibfnamefont
+  {H.}~\bibnamefont {Dong}}, \bibinfo {author} {\bibfnamefont {X.}~\bibnamefont
+  {Liu}}, \bibinfo {author} {\bibfnamefont {Y.}~\bibnamefont {Deng}}, \bibinfo
+  {author} {\bibfnamefont {H.}~\bibnamefont {Liu}}, \bibinfo {author}
+  {\bibfnamefont {Y.}~\bibnamefont {Liu}},\ and\ \bibinfo {author}
+  {\bibfnamefont {Q.}~\bibnamefont {Gong}},\ }\bibfield  {title} {\bibinfo
+  {title} {Coulomb explosion of nitrogen and oxygen molecules through
+  non-coulombic states},\ }\href {https://doi.org/10.1039/C1CP21345H}
+  {\bibfield  {journal} {\bibinfo  {journal} {Phys. Chem. Chem. Phys.}\
+  }\textbf {\bibinfo {volume} {13}},\ \bibinfo {pages} {18398} (\bibinfo {year}
+  {2011})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Minion}\ \emph {et~al.}(2022)\citenamefont {Minion},
+  \citenamefont {Lee},\ and\ \citenamefont {Burt}}]{WOS:000791982000001}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {L.}~\bibnamefont
+  {Minion}}, \bibinfo {author} {\bibfnamefont {J.~W.~L.}\ \bibnamefont {Lee}},\
+  and\ \bibinfo {author} {\bibfnamefont {M.}~\bibnamefont {Burt}},\ }\bibfield
+  {title} {\bibinfo {title} {Predicting coulomb explosion fragment angular
+  distributions using molecular ground-state vibrational motion},\ }\href
+  {https://doi.org/10.1039/d2cp01114j} {\bibfield  {journal} {\bibinfo
+  {journal} {PHYSICAL CHEMISTRY CHEMICAL PHYSICS}\ }\textbf {\bibinfo {volume}
+  {24}},\ \bibinfo {pages} {11636} (\bibinfo {year} {2022})}\BibitemShut
+  {NoStop}%
+\bibitem [{\citenamefont {Crane}\ \emph {et~al.}(2021)\citenamefont {Crane},
+  \citenamefont {Ge}, \citenamefont {Cooper}, \citenamefont {Carwithen},
+  \citenamefont {Bain}, \citenamefont {Smith}, \citenamefont {Hansen},\ and\
+  \citenamefont {Ashfold}}]{WOS:000720777300004}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {S.~W.}\ \bibnamefont
+  {Crane}}, \bibinfo {author} {\bibfnamefont {L.}~\bibnamefont {Ge}}, \bibinfo
+  {author} {\bibfnamefont {G.~A.}\ \bibnamefont {Cooper}}, \bibinfo {author}
+  {\bibfnamefont {B.~P.}\ \bibnamefont {Carwithen}}, \bibinfo {author}
+  {\bibfnamefont {M.}~\bibnamefont {Bain}}, \bibinfo {author} {\bibfnamefont
+  {J.~A.}\ \bibnamefont {Smith}}, \bibinfo {author} {\bibfnamefont {C.~S.}\
+  \bibnamefont {Hansen}},\ and\ \bibinfo {author} {\bibfnamefont {M.~N.~R.}\
+  \bibnamefont {Ashfold}},\ }\bibfield  {title} {\bibinfo {title} {Nonadiabatic
+  coupling effects in the 800 nm strong-field ionization-induced coulomb
+  explosion of methyl iodide revealed by multimass velocity map imaging and ab
+  initio simulation studies},\ }\href
+  {https://doi.org/10.1021/acs.jpca.1c06346} {\bibfield  {journal} {\bibinfo
+  {journal} {JOURNAL OF PHYSICAL CHEMISTRY A}\ }\textbf {\bibinfo {volume}
+  {125}},\ \bibinfo {pages} {9594} (\bibinfo {year} {2021})}\BibitemShut
+  {NoStop}%
+\bibitem [{\citenamefont {Hishikawa}\ \emph {et~al.}(2007)\citenamefont
+  {Hishikawa}, \citenamefont {Matsuda}, \citenamefont {Fushitani},\ and\
+  \citenamefont {Takahashi}}]{PhysRevLett.99.258302}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {A.}~\bibnamefont
+  {Hishikawa}}, \bibinfo {author} {\bibfnamefont {A.}~\bibnamefont {Matsuda}},
+  \bibinfo {author} {\bibfnamefont {M.}~\bibnamefont {Fushitani}},\ and\
+  \bibinfo {author} {\bibfnamefont {E.~J.}\ \bibnamefont {Takahashi}},\
+  }\bibfield  {title} {\bibinfo {title} {Visualizing recurrently migrating
+  hydrogen in acetylene dication by intense ultrashort laser pulses},\ }\href
+  {https://doi.org/10.1103/PhysRevLett.99.258302} {\bibfield  {journal}
+  {\bibinfo  {journal} {Phys. Rev. Lett.}\ }\textbf {\bibinfo {volume} {99}},\
+  \bibinfo {pages} {258302} (\bibinfo {year} {2007})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Ma}\ \emph {et~al.}(2019)\citenamefont {Ma},
+  \citenamefont {Wang}, \citenamefont {Luo}, \citenamefont {Li}, \citenamefont
+  {Hu}, \citenamefont {Yu}, \citenamefont {Yu}, \citenamefont {Tian},
+  \citenamefont {Qu},\ and\ \citenamefont {Ding}}]{PhysRevA.99.023423}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {P.}~\bibnamefont
+  {Ma}}, \bibinfo {author} {\bibfnamefont {C.}~\bibnamefont {Wang}}, \bibinfo
+  {author} {\bibfnamefont {S.}~\bibnamefont {Luo}}, \bibinfo {author}
+  {\bibfnamefont {X.}~\bibnamefont {Li}}, \bibinfo {author} {\bibfnamefont
+  {W.}~\bibnamefont {Hu}}, \bibinfo {author} {\bibfnamefont {J.}~\bibnamefont
+  {Yu}}, \bibinfo {author} {\bibfnamefont {X.}~\bibnamefont {Yu}}, \bibinfo
+  {author} {\bibfnamefont {X.}~\bibnamefont {Tian}}, \bibinfo {author}
+  {\bibfnamefont {Z.}~\bibnamefont {Qu}},\ and\ \bibinfo {author}
+  {\bibfnamefont {D.}~\bibnamefont {Ding}},\ }\bibfield  {title} {\bibinfo
+  {title} {Bond-breakage-dependent dissociative ionization of an asymmetric
+  molecule in an intense femtosecond laser field},\ }\href
+  {https://doi.org/10.1103/PhysRevA.99.023423} {\bibfield  {journal} {\bibinfo
+  {journal} {Phys. Rev. A}\ }\textbf {\bibinfo {volume} {99}},\ \bibinfo
+  {pages} {023423} (\bibinfo {year} {2019})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Corrales}\ \emph {et~al.}(2019)\citenamefont
+  {Corrales}, \citenamefont {González-Vázquez}, \citenamefont {de~Nalda},\
+  and\ \citenamefont {Bañares}}]{doi:10.1021/acs.jpclett.8b03726}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {M.~E.}\ \bibnamefont
+  {Corrales}}, \bibinfo {author} {\bibfnamefont {J.}~\bibnamefont
+  {González-Vázquez}}, \bibinfo {author} {\bibfnamefont {R.}~\bibnamefont
+  {de~Nalda}},\ and\ \bibinfo {author} {\bibfnamefont {L.}~\bibnamefont
+  {Bañares}},\ }\bibfield  {title} {\bibinfo {title} {Coulomb explosion
+  imaging for the visualization of a conical intersection},\ }\href
+  {https://doi.org/10.1021/acs.jpclett.8b03726} {\bibfield  {journal} {\bibinfo
+   {journal} {The Journal of Physical Chemistry Letters}\ }\textbf {\bibinfo
+  {volume} {10}},\ \bibinfo {pages} {138} (\bibinfo {year} {2019})},\ \bibinfo
+  {note} {pMID: 30561209}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Bittner}\ \emph {et~al.}(2022)\citenamefont
+  {Bittner}, \citenamefont {Gope}, \citenamefont {Livshits}, \citenamefont
+  {Baer},\ and\ \citenamefont {Strasser}}]{10.1063/5.0098531}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {D.~M.}\ \bibnamefont
+  {Bittner}}, \bibinfo {author} {\bibfnamefont {K.}~\bibnamefont {Gope}},
+  \bibinfo {author} {\bibfnamefont {E.}~\bibnamefont {Livshits}}, \bibinfo
+  {author} {\bibfnamefont {R.}~\bibnamefont {Baer}},\ and\ \bibinfo {author}
+  {\bibfnamefont {D.}~\bibnamefont {Strasser}},\ }\bibfield  {title} {\bibinfo
+  {title} {{Sequential and concerted C–C and C–O bond dissociation in the
+  Coulomb explosion of 2-propanol}},\ }\href
+  {https://doi.org/10.1063/5.0098531} {\bibfield  {journal} {\bibinfo
+  {journal} {The Journal of Chemical Physics}\ }\textbf {\bibinfo {volume}
+  {157}},\ \bibinfo {pages} {074309} (\bibinfo {year} {2022})}\BibitemShut
+  {NoStop}%
+\bibitem [{\citenamefont {Zhang}\ \emph {et~al.}(2022)\citenamefont {Zhang},
+  \citenamefont {Guo}, \citenamefont {Mi}, \citenamefont {Li},\ and\
+  \citenamefont {Liu}}]{doi:10.1021/acs.jpclett.1c03916}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {M.}~\bibnamefont
+  {Zhang}}, \bibinfo {author} {\bibfnamefont {Z.}~\bibnamefont {Guo}}, \bibinfo
+  {author} {\bibfnamefont {X.}~\bibnamefont {Mi}}, \bibinfo {author}
+  {\bibfnamefont {Z.}~\bibnamefont {Li}},\ and\ \bibinfo {author}
+  {\bibfnamefont {Y.}~\bibnamefont {Liu}},\ }\bibfield  {title} {\bibinfo
+  {title} {Ultrafast imaging of molecular dynamics using ultrafast
+  low-frequency lasers, x-ray free electron lasers, and electron pulses},\
+  }\href {https://doi.org/10.1021/acs.jpclett.1c03916} {\bibfield  {journal}
+  {\bibinfo  {journal} {The Journal of Physical Chemistry Letters}\ }\textbf
+  {\bibinfo {volume} {13}},\ \bibinfo {pages} {1668} (\bibinfo {year}
+  {2022})},\ \bibinfo {note} {pMID: 35147438}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Kranabetter}\ \emph {et~al.}(2024)\citenamefont
+  {Kranabetter}, \citenamefont {Kristensen}, \citenamefont {Schouder},\ and\
+  \citenamefont {Stapelfeldt}}]{10.1063/5.0200389}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {L.}~\bibnamefont
+  {Kranabetter}}, \bibinfo {author} {\bibfnamefont {H.~H.}\ \bibnamefont
+  {Kristensen}}, \bibinfo {author} {\bibfnamefont {C.~A.}\ \bibnamefont
+  {Schouder}},\ and\ \bibinfo {author} {\bibfnamefont {H.}~\bibnamefont
+  {Stapelfeldt}},\ }\bibfield  {title} {\bibinfo {title} {{Structure
+  determination of alkali trimers on helium nanodroplets through laser-induced
+  Coulomb explosion}},\ }\href {https://doi.org/10.1063/5.0200389} {\bibfield
+  {journal} {\bibinfo  {journal} {The Journal of Chemical Physics}\ }\textbf
+  {\bibinfo {volume} {160}},\ \bibinfo {pages} {131101} (\bibinfo {year}
+  {2024})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Kristensen}\ \emph {et~al.}(2023)\citenamefont
+  {Kristensen}, \citenamefont {Kranabetter}, \citenamefont {Schouder},
+  \citenamefont {Arlt}, \citenamefont {Jensen},\ and\ \citenamefont
+  {Stapelfeldt}}]{PhysRevA.107.023104}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {H.~H.}\ \bibnamefont
+  {Kristensen}}, \bibinfo {author} {\bibfnamefont {L.}~\bibnamefont
+  {Kranabetter}}, \bibinfo {author} {\bibfnamefont {C.~A.}\ \bibnamefont
+  {Schouder}}, \bibinfo {author} {\bibfnamefont {J.}~\bibnamefont {Arlt}},
+  \bibinfo {author} {\bibfnamefont {F.}~\bibnamefont {Jensen}},\ and\ \bibinfo
+  {author} {\bibfnamefont {H.}~\bibnamefont {Stapelfeldt}},\ }\bibfield
+  {title} {\bibinfo {title} {Laser-induced coulomb explosion imaging of
+  alkali-metal dimers on helium nanodroplets},\ }\href
+  {https://doi.org/10.1103/PhysRevA.107.023104} {\bibfield  {journal} {\bibinfo
+   {journal} {Phys. Rev. A}\ }\textbf {\bibinfo {volume} {107}},\ \bibinfo
+  {pages} {023104} (\bibinfo {year} {2023})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Rolles}(2023)}]{doi:10.1080/23746149.2022.2132182}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {D.}~\bibnamefont
+  {Rolles}},\ }\bibfield  {title} {\bibinfo {title} {Time-resolved experiments
+  on gas-phase atoms and molecules with xuv and x-ray free-electron lasers},\
+  }\href {https://doi.org/10.1080/23746149.2022.2132182} {\bibfield  {journal}
+  {\bibinfo  {journal} {Advances in Physics: X}\ }\textbf {\bibinfo {volume}
+  {8}},\ \bibinfo {pages} {2132182} (\bibinfo {year} {2023})}\BibitemShut
+  {NoStop}%
+\bibitem [{\citenamefont {Bhattacharyya}\ \emph
+  {et~al.}(2022{\natexlab{a}})\citenamefont {Bhattacharyya}, \citenamefont
+  {Borne}, \citenamefont {Ziaee}, \citenamefont {Pathak}, \citenamefont {Wang},
+  \citenamefont {Venkatachalam}, \citenamefont {Li}, \citenamefont {Marshall},
+  \citenamefont {Carnes}, \citenamefont {Fehrenbach}, \citenamefont {Severt},
+  \citenamefont {Ben-Itzhak}, \citenamefont {Rudenko},\ and\ \citenamefont
+  {Rolles}}]{WOS:000819572500001}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {S.}~\bibnamefont
+  {Bhattacharyya}}, \bibinfo {author} {\bibfnamefont {K.}~\bibnamefont
+  {Borne}}, \bibinfo {author} {\bibfnamefont {F.}~\bibnamefont {Ziaee}},
+  \bibinfo {author} {\bibfnamefont {S.}~\bibnamefont {Pathak}}, \bibinfo
+  {author} {\bibfnamefont {E.}~\bibnamefont {Wang}}, \bibinfo {author}
+  {\bibfnamefont {A.~S.}\ \bibnamefont {Venkatachalam}}, \bibinfo {author}
+  {\bibfnamefont {X.}~\bibnamefont {Li}}, \bibinfo {author} {\bibfnamefont
+  {N.}~\bibnamefont {Marshall}}, \bibinfo {author} {\bibfnamefont {K.~D.}\
+  \bibnamefont {Carnes}}, \bibinfo {author} {\bibfnamefont {C.~W.}\
+  \bibnamefont {Fehrenbach}}, \bibinfo {author} {\bibfnamefont
+  {T.}~\bibnamefont {Severt}}, \bibinfo {author} {\bibfnamefont
+  {I.}~\bibnamefont {Ben-Itzhak}}, \bibinfo {author} {\bibfnamefont
+  {A.}~\bibnamefont {Rudenko}},\ and\ \bibinfo {author} {\bibfnamefont
+  {D.}~\bibnamefont {Rolles}},\ }\bibfield  {title} {\bibinfo {title}
+  {Strong-field-induced coulomb explosion imaging of tribromomethane},\ }\href
+  {https://doi.org/10.1021/acs.jpclett.2c01007} {\bibfield  {journal} {\bibinfo
+   {journal} {JOURNAL OF PHYSICAL CHEMISTRY LETTERS}\ }\textbf {\bibinfo
+  {volume} {13}},\ \bibinfo {pages} {5845} (\bibinfo {year}
+  {2022}{\natexlab{a}})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Cheng}\ \emph {et~al.}(2023)\citenamefont {Cheng},
+  \citenamefont {Frasinski}, \citenamefont {Mogol}, \citenamefont {Allum},
+  \citenamefont {Howard}, \citenamefont {Rolles}, \citenamefont {Bucksbaum},
+  \citenamefont {Brouard}, \citenamefont {Forbes},\ and\ \citenamefont
+  {Weinacht}}]{WOS:000947237500006}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {C.}~\bibnamefont
+  {Cheng}}, \bibinfo {author} {\bibfnamefont {L.~J.}\ \bibnamefont
+  {Frasinski}}, \bibinfo {author} {\bibfnamefont {G.}~\bibnamefont {Mogol}},
+  \bibinfo {author} {\bibfnamefont {F.}~\bibnamefont {Allum}}, \bibinfo
+  {author} {\bibfnamefont {A.~J.}\ \bibnamefont {Howard}}, \bibinfo {author}
+  {\bibfnamefont {D.}~\bibnamefont {Rolles}}, \bibinfo {author} {\bibfnamefont
+  {P.~H.}\ \bibnamefont {Bucksbaum}}, \bibinfo {author} {\bibfnamefont
+  {M.}~\bibnamefont {Brouard}}, \bibinfo {author} {\bibfnamefont
+  {R.}~\bibnamefont {Forbes}},\ and\ \bibinfo {author} {\bibfnamefont
+  {T.}~\bibnamefont {Weinacht}},\ }\bibfield  {title} {\bibinfo {title}
+  {Multiparticle cumulant mapping for coulomb explosion imaging},\ }\bibfield
+  {journal} {\bibinfo  {journal} {PHYSICAL REVIEW LETTERS}\ }\textbf {\bibinfo
+  {volume} {130}},\ \href {https://doi.org/10.1103/PhysRevLett.130.093001}
+  {10.1103/PhysRevLett.130.093001} (\bibinfo {year} {2023})\BibitemShut
+  {NoStop}%
+\bibitem [{\citenamefont {Howard}\ \emph {et~al.}(2023)\citenamefont {Howard},
+  \citenamefont {Britton}, \citenamefont {Streeter}, \citenamefont {Cheng},
+  \citenamefont {Forbes}, \citenamefont {Reynolds}, \citenamefont {Allum},
+  \citenamefont {McCracken}, \citenamefont {Gabalski}, \citenamefont
+  {Lucchese}, \citenamefont {McCurdy}, \citenamefont {Weinacht},\ and\
+  \citenamefont {Bucksbaum}}]{WOS:000978312900001}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {A.~J.}\ \bibnamefont
+  {Howard}}, \bibinfo {author} {\bibfnamefont {M.}~\bibnamefont {Britton}},
+  \bibinfo {author} {\bibfnamefont {Z.~L.}\ \bibnamefont {Streeter}}, \bibinfo
+  {author} {\bibfnamefont {C.}~\bibnamefont {Cheng}}, \bibinfo {author}
+  {\bibfnamefont {R.}~\bibnamefont {Forbes}}, \bibinfo {author} {\bibfnamefont
+  {J.~L.}\ \bibnamefont {Reynolds}}, \bibinfo {author} {\bibfnamefont
+  {F.}~\bibnamefont {Allum}}, \bibinfo {author} {\bibfnamefont {G.~A.}\
+  \bibnamefont {McCracken}}, \bibinfo {author} {\bibfnamefont {I.}~\bibnamefont
+  {Gabalski}}, \bibinfo {author} {\bibfnamefont {R.~R.}\ \bibnamefont
+  {Lucchese}}, \bibinfo {author} {\bibfnamefont {C.~W.}\ \bibnamefont
+  {McCurdy}}, \bibinfo {author} {\bibfnamefont {T.}~\bibnamefont {Weinacht}},\
+  and\ \bibinfo {author} {\bibfnamefont {P.~H.}\ \bibnamefont {Bucksbaum}},\
+  }\bibfield  {title} {\bibinfo {title} {Filming enhanced ionization in an
+  ultrafast triatomic slingshot},\ }\bibfield  {journal} {\bibinfo  {journal}
+  {COMMUNICATIONS CHEMISTRY}\ }\textbf {\bibinfo {volume} {6}},\ \href
+  {https://doi.org/10.1038/s42004-023-00882-w} {10.1038/s42004-023-00882-w}
+  (\bibinfo {year} {2023})\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Allum}\ \emph {et~al.}(2018)\citenamefont {Allum},
+  \citenamefont {Burt}, \citenamefont {Amini}, \citenamefont {Boll},
+  \citenamefont {Köckert}, \citenamefont {Olshin}, \citenamefont {Bari},
+  \citenamefont {Bomme}, \citenamefont {Brauße}, \citenamefont {Cunha~de
+  Miranda}, \citenamefont {Düsterer}, \citenamefont {Erk}, \citenamefont
+  {Géléoc}, \citenamefont {Geneaux}, \citenamefont {Gentleman}, \citenamefont
+  {Goldsztejn}, \citenamefont {Guillemin}, \citenamefont {Holland},
+  \citenamefont {Ismail}, \citenamefont {Johnsson}, \citenamefont {Journel},
+  \citenamefont {Küpper}, \citenamefont {Lahl}, \citenamefont {Lee},
+  \citenamefont {Maclot}, \citenamefont {Mackenzie}, \citenamefont
+  {Manschwetus}, \citenamefont {Mereshchenko}, \citenamefont {Mason},
+  \citenamefont {Palaudoux}, \citenamefont {Piancastelli}, \citenamefont
+  {Penent}, \citenamefont {Rompotis}, \citenamefont {Rouzée}, \citenamefont
+  {Ruchon}, \citenamefont {Rudenko}, \citenamefont {Savelyev}, \citenamefont
+  {Simon}, \citenamefont {Schirmel}, \citenamefont {Stapelfeldt}, \citenamefont
+  {Techert}, \citenamefont {Travnikova}, \citenamefont {Trippel}, \citenamefont
+  {Underwood}, \citenamefont {Vallance}, \citenamefont {Wiese}, \citenamefont
+  {Ziaee}, \citenamefont {Brouard}, \citenamefont {Marchenko},\ and\
+  \citenamefont {Rolles}}]{10.1063/1.5041381}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {F.}~\bibnamefont
+  {Allum}}, \bibinfo {author} {\bibfnamefont {M.}~\bibnamefont {Burt}},
+  \bibinfo {author} {\bibfnamefont {K.}~\bibnamefont {Amini}}, \bibinfo
+  {author} {\bibfnamefont {R.}~\bibnamefont {Boll}}, \bibinfo {author}
+  {\bibfnamefont {H.}~\bibnamefont {Köckert}}, \bibinfo {author}
+  {\bibfnamefont {P.~K.}\ \bibnamefont {Olshin}}, \bibinfo {author}
+  {\bibfnamefont {S.}~\bibnamefont {Bari}}, \bibinfo {author} {\bibfnamefont
+  {C.}~\bibnamefont {Bomme}}, \bibinfo {author} {\bibfnamefont
+  {F.}~\bibnamefont {Brauße}}, \bibinfo {author} {\bibfnamefont
+  {B.}~\bibnamefont {Cunha~de Miranda}}, \bibinfo {author} {\bibfnamefont
+  {S.}~\bibnamefont {Düsterer}}, \bibinfo {author} {\bibfnamefont
+  {B.}~\bibnamefont {Erk}}, \bibinfo {author} {\bibfnamefont {M.}~\bibnamefont
+  {Géléoc}}, \bibinfo {author} {\bibfnamefont {R.}~\bibnamefont {Geneaux}},
+  \bibinfo {author} {\bibfnamefont {A.~S.}\ \bibnamefont {Gentleman}}, \bibinfo
+  {author} {\bibfnamefont {G.}~\bibnamefont {Goldsztejn}}, \bibinfo {author}
+  {\bibfnamefont {R.}~\bibnamefont {Guillemin}}, \bibinfo {author}
+  {\bibfnamefont {D.~M.~P.}\ \bibnamefont {Holland}}, \bibinfo {author}
+  {\bibfnamefont {I.}~\bibnamefont {Ismail}}, \bibinfo {author} {\bibfnamefont
+  {P.}~\bibnamefont {Johnsson}}, \bibinfo {author} {\bibfnamefont
+  {L.}~\bibnamefont {Journel}}, \bibinfo {author} {\bibfnamefont
+  {J.}~\bibnamefont {Küpper}}, \bibinfo {author} {\bibfnamefont
+  {J.}~\bibnamefont {Lahl}}, \bibinfo {author} {\bibfnamefont {J.~W.~L.}\
+  \bibnamefont {Lee}}, \bibinfo {author} {\bibfnamefont {S.}~\bibnamefont
+  {Maclot}}, \bibinfo {author} {\bibfnamefont {S.~R.}\ \bibnamefont
+  {Mackenzie}}, \bibinfo {author} {\bibfnamefont {B.}~\bibnamefont
+  {Manschwetus}}, \bibinfo {author} {\bibfnamefont {A.~S.}\ \bibnamefont
+  {Mereshchenko}}, \bibinfo {author} {\bibfnamefont {R.}~\bibnamefont {Mason}},
+  \bibinfo {author} {\bibfnamefont {J.}~\bibnamefont {Palaudoux}}, \bibinfo
+  {author} {\bibfnamefont {M.~N.}\ \bibnamefont {Piancastelli}}, \bibinfo
+  {author} {\bibfnamefont {F.}~\bibnamefont {Penent}}, \bibinfo {author}
+  {\bibfnamefont {D.}~\bibnamefont {Rompotis}}, \bibinfo {author}
+  {\bibfnamefont {A.}~\bibnamefont {Rouzée}}, \bibinfo {author} {\bibfnamefont
+  {T.}~\bibnamefont {Ruchon}}, \bibinfo {author} {\bibfnamefont
+  {A.}~\bibnamefont {Rudenko}}, \bibinfo {author} {\bibfnamefont
+  {E.}~\bibnamefont {Savelyev}}, \bibinfo {author} {\bibfnamefont
+  {M.}~\bibnamefont {Simon}}, \bibinfo {author} {\bibfnamefont
+  {N.}~\bibnamefont {Schirmel}}, \bibinfo {author} {\bibfnamefont
+  {H.}~\bibnamefont {Stapelfeldt}}, \bibinfo {author} {\bibfnamefont
+  {S.}~\bibnamefont {Techert}}, \bibinfo {author} {\bibfnamefont
+  {O.}~\bibnamefont {Travnikova}}, \bibinfo {author} {\bibfnamefont
+  {S.}~\bibnamefont {Trippel}}, \bibinfo {author} {\bibfnamefont {J.~G.}\
+  \bibnamefont {Underwood}}, \bibinfo {author} {\bibfnamefont {C.}~\bibnamefont
+  {Vallance}}, \bibinfo {author} {\bibfnamefont {J.}~\bibnamefont {Wiese}},
+  \bibinfo {author} {\bibfnamefont {F.}~\bibnamefont {Ziaee}}, \bibinfo
+  {author} {\bibfnamefont {M.}~\bibnamefont {Brouard}}, \bibinfo {author}
+  {\bibfnamefont {T.}~\bibnamefont {Marchenko}},\ and\ \bibinfo {author}
+  {\bibfnamefont {D.}~\bibnamefont {Rolles}},\ }\bibfield  {title} {\bibinfo
+  {title} {{Coulomb explosion imaging of CH3I and CH2ClI photodissociation
+  dynamics}},\ }\href {https://doi.org/10.1063/1.5041381} {\bibfield  {journal}
+  {\bibinfo  {journal} {The Journal of Chemical Physics}\ }\textbf {\bibinfo
+  {volume} {149}},\ \bibinfo {pages} {204313} (\bibinfo {year} {2018})},\
+  \Eprint
+  {https://arxiv.org/abs/https://pubs.aip.org/aip/jcp/article-pdf/doi/10.1063/1.5041381/15552547/204313\_1\_online.pdf}
+  {https://pubs.aip.org/aip/jcp/article-pdf/doi/10.1063/1.5041381/15552547/204313\_1\_online.pdf}
+  \BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Endo}\ \emph {et~al.}(2020)\citenamefont {Endo},
+  \citenamefont {Neville}, \citenamefont {Wanie}, \citenamefont {Beaulieu},
+  \citenamefont {Qu}, \citenamefont {Deschamps}, \citenamefont {Lassonde},
+  \citenamefont {Schmidt}, \citenamefont {Fujise}, \citenamefont {Fushitani},
+  \citenamefont {Hishikawa}, \citenamefont {Houston}, \citenamefont {Bowman},
+  \citenamefont {Schuurman}, \citenamefont {Légaré},\ and\ \citenamefont
+  {Ibrahim}}]{doi:10.1126/science.abc2960}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {T.}~\bibnamefont
+  {Endo}}, \bibinfo {author} {\bibfnamefont {S.~P.}\ \bibnamefont {Neville}},
+  \bibinfo {author} {\bibfnamefont {V.}~\bibnamefont {Wanie}}, \bibinfo
+  {author} {\bibfnamefont {S.}~\bibnamefont {Beaulieu}}, \bibinfo {author}
+  {\bibfnamefont {C.}~\bibnamefont {Qu}}, \bibinfo {author} {\bibfnamefont
+  {J.}~\bibnamefont {Deschamps}}, \bibinfo {author} {\bibfnamefont
+  {P.}~\bibnamefont {Lassonde}}, \bibinfo {author} {\bibfnamefont {B.~E.}\
+  \bibnamefont {Schmidt}}, \bibinfo {author} {\bibfnamefont {H.}~\bibnamefont
+  {Fujise}}, \bibinfo {author} {\bibfnamefont {M.}~\bibnamefont {Fushitani}},
+  \bibinfo {author} {\bibfnamefont {A.}~\bibnamefont {Hishikawa}}, \bibinfo
+  {author} {\bibfnamefont {P.~L.}\ \bibnamefont {Houston}}, \bibinfo {author}
+  {\bibfnamefont {J.~M.}\ \bibnamefont {Bowman}}, \bibinfo {author}
+  {\bibfnamefont {M.~S.}\ \bibnamefont {Schuurman}}, \bibinfo {author}
+  {\bibfnamefont {F.}~\bibnamefont {Légaré}},\ and\ \bibinfo {author}
+  {\bibfnamefont {H.}~\bibnamefont {Ibrahim}},\ }\bibfield  {title} {\bibinfo
+  {title} {Capturing roaming molecular fragments in real time},\ }\href
+  {https://doi.org/10.1126/science.abc2960} {\bibfield  {journal} {\bibinfo
+  {journal} {Science}\ }\textbf {\bibinfo {volume} {370}},\ \bibinfo {pages}
+  {1072} (\bibinfo {year} {2020})},\ \Eprint
+  {https://arxiv.org/abs/https://www.science.org/doi/pdf/10.1126/science.abc2960}
+  {https://www.science.org/doi/pdf/10.1126/science.abc2960} \BibitemShut
+  {NoStop}%
+\bibitem [{\citenamefont {Erattupuzha}\ \emph {et~al.}(2017)\citenamefont
+  {Erattupuzha}, \citenamefont {Covington}, \citenamefont {Russakoff},
+  \citenamefont {Lötstedt}, \citenamefont {Larimian}, \citenamefont {Hanus},
+  \citenamefont {Bubin}, \citenamefont {Koch}, \citenamefont {Gräfe},
+  \citenamefont {Baltuška}, \citenamefont {Xie}, \citenamefont {Yamanouchi},
+  \citenamefont {Varga},\ and\ \citenamefont {Kitzler}}]{Erattupuzha_2017}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {S.}~\bibnamefont
+  {Erattupuzha}}, \bibinfo {author} {\bibfnamefont {C.~L.}\ \bibnamefont
+  {Covington}}, \bibinfo {author} {\bibfnamefont {A.}~\bibnamefont
+  {Russakoff}}, \bibinfo {author} {\bibfnamefont {E.}~\bibnamefont
+  {Lötstedt}}, \bibinfo {author} {\bibfnamefont {S.}~\bibnamefont {Larimian}},
+  \bibinfo {author} {\bibfnamefont {V.}~\bibnamefont {Hanus}}, \bibinfo
+  {author} {\bibfnamefont {S.}~\bibnamefont {Bubin}}, \bibinfo {author}
+  {\bibfnamefont {M.}~\bibnamefont {Koch}}, \bibinfo {author} {\bibfnamefont
+  {S.}~\bibnamefont {Gräfe}}, \bibinfo {author} {\bibfnamefont
+  {A.}~\bibnamefont {Baltuška}}, \bibinfo {author} {\bibfnamefont
+  {X.}~\bibnamefont {Xie}}, \bibinfo {author} {\bibfnamefont {K.}~\bibnamefont
+  {Yamanouchi}}, \bibinfo {author} {\bibfnamefont {K.}~\bibnamefont {Varga}},\
+  and\ \bibinfo {author} {\bibfnamefont {M.}~\bibnamefont {Kitzler}},\
+  }\bibfield  {title} {\bibinfo {title} {Enhanced ionisation of polyatomic
+  molecules in intense laser pulses is due to energy upshift and field coupling
+  of multiple orbitals},\ }\href {https://doi.org/10.1088/1361-6455/aa7098}
+  {\bibfield  {journal} {\bibinfo  {journal} {Journal of Physics B: Atomic,
+  Molecular and Optical Physics}\ }\textbf {\bibinfo {volume} {50}},\ \bibinfo
+  {pages} {125601} (\bibinfo {year} {2017})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Légaré}\ \emph {et~al.}(2006)\citenamefont
+  {Légaré}, \citenamefont {Lee}, \citenamefont {Bandrauk}, \citenamefont
+  {Villeneuve},\ and\ \citenamefont {Corkum}}]{L_2006}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {F.}~\bibnamefont
+  {Légaré}}, \bibinfo {author} {\bibfnamefont {K.~F.}\ \bibnamefont {Lee}},
+  \bibinfo {author} {\bibfnamefont {A.~D.}\ \bibnamefont {Bandrauk}}, \bibinfo
+  {author} {\bibfnamefont {D.~M.}\ \bibnamefont {Villeneuve}},\ and\ \bibinfo
+  {author} {\bibfnamefont {P.~B.}\ \bibnamefont {Corkum}},\ }\bibfield  {title}
+  {\bibinfo {title} {Laser coulomb explosion imaging for probing ultra-fast
+  molecular dynamics},\ }\href {https://doi.org/10.1088/0953-4075/39/13/S23}
+  {\bibfield  {journal} {\bibinfo  {journal} {Journal of Physics B: Atomic,
+  Molecular and Optical Physics}\ }\textbf {\bibinfo {volume} {39}},\ \bibinfo
+  {pages} {S503} (\bibinfo {year} {2006})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Stapelfeldt}\ \emph {et~al.}(1995)\citenamefont
+  {Stapelfeldt}, \citenamefont {Constant},\ and\ \citenamefont
+  {Corkum}}]{PhysRevLett.74.3780}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {H.}~\bibnamefont
+  {Stapelfeldt}}, \bibinfo {author} {\bibfnamefont {E.}~\bibnamefont
+  {Constant}},\ and\ \bibinfo {author} {\bibfnamefont {P.~B.}\ \bibnamefont
+  {Corkum}},\ }\bibfield  {title} {\bibinfo {title} {Wave packet structure and
+  dynamics measured by coulomb explosion},\ }\href
+  {https://doi.org/10.1103/PhysRevLett.74.3780} {\bibfield  {journal} {\bibinfo
+   {journal} {Phys. Rev. Lett.}\ }\textbf {\bibinfo {volume} {74}},\ \bibinfo
+  {pages} {3780} (\bibinfo {year} {1995})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Hu}\ \emph {et~al.}(2020)\citenamefont {Hu},
+  \citenamefont {Peng}, \citenamefont {Zhu}, \citenamefont {Yan}, \citenamefont
+  {Liu}, \citenamefont {Feng}, \citenamefont {Guo}, \citenamefont {Gao},
+  \citenamefont {Zhang}, \citenamefont {Zhao}, \citenamefont {Dong},
+  \citenamefont {Hai}, \citenamefont {Xu}, \citenamefont {Zhang}, \citenamefont
+  {Ma}, \citenamefont {Wang},\ and\ \citenamefont {Wu}}]{PhysRevA.101.012707}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {X.}~\bibnamefont
+  {Hu}}, \bibinfo {author} {\bibfnamefont {Y.}~\bibnamefont {Peng}}, \bibinfo
+  {author} {\bibfnamefont {X.}~\bibnamefont {Zhu}}, \bibinfo {author}
+  {\bibfnamefont {S.}~\bibnamefont {Yan}}, \bibinfo {author} {\bibfnamefont
+  {L.}~\bibnamefont {Liu}}, \bibinfo {author} {\bibfnamefont {W.}~\bibnamefont
+  {Feng}}, \bibinfo {author} {\bibfnamefont {D.}~\bibnamefont {Guo}}, \bibinfo
+  {author} {\bibfnamefont {Y.}~\bibnamefont {Gao}}, \bibinfo {author}
+  {\bibfnamefont {S.}~\bibnamefont {Zhang}}, \bibinfo {author} {\bibfnamefont
+  {D.}~\bibnamefont {Zhao}}, \bibinfo {author} {\bibfnamefont {D.}~\bibnamefont
+  {Dong}}, \bibinfo {author} {\bibfnamefont {B.}~\bibnamefont {Hai}}, \bibinfo
+  {author} {\bibfnamefont {J.}~\bibnamefont {Xu}}, \bibinfo {author}
+  {\bibfnamefont {S.}~\bibnamefont {Zhang}}, \bibinfo {author} {\bibfnamefont
+  {X.}~\bibnamefont {Ma}}, \bibinfo {author} {\bibfnamefont {J.}~\bibnamefont
+  {Wang}},\ and\ \bibinfo {author} {\bibfnamefont {Y.}~\bibnamefont {Wu}},\
+  }\bibfield  {title} {\bibinfo {title} {Breakdown of the coulomb-explosion
+  imaging technique induced by the ultrafast rotation of fragments},\ }\href
+  {https://doi.org/10.1103/PhysRevA.101.012707} {\bibfield  {journal} {\bibinfo
+   {journal} {Phys. Rev. A}\ }\textbf {\bibinfo {volume} {101}},\ \bibinfo
+  {pages} {012707} (\bibinfo {year} {2020})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Zhang}\ \emph {et~al.}(2024)\citenamefont {Zhang},
+  \citenamefont {Zhao}, \citenamefont {Liu}, \citenamefont {Yin}, \citenamefont
+  {Zhao}, \citenamefont {Ma}, \citenamefont {Li}, \citenamefont {Wang},
+  \citenamefont {Wang}, \citenamefont {Luo},\ and\ \citenamefont
+  {Ding}}]{WOS:001171493100004}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {X.}~\bibnamefont
+  {Zhang}}, \bibinfo {author} {\bibfnamefont {X.}~\bibnamefont {Zhao}},
+  \bibinfo {author} {\bibfnamefont {H.}~\bibnamefont {Liu}}, \bibinfo {author}
+  {\bibfnamefont {Z.}~\bibnamefont {Yin}}, \bibinfo {author} {\bibfnamefont
+  {X.}~\bibnamefont {Zhao}}, \bibinfo {author} {\bibfnamefont {P.}~\bibnamefont
+  {Ma}}, \bibinfo {author} {\bibfnamefont {X.}~\bibnamefont {Li}}, \bibinfo
+  {author} {\bibfnamefont {C.}~\bibnamefont {Wang}}, \bibinfo {author}
+  {\bibfnamefont {Q.}~\bibnamefont {Wang}}, \bibinfo {author} {\bibfnamefont
+  {S.}~\bibnamefont {Luo}},\ and\ \bibinfo {author} {\bibfnamefont
+  {D.}~\bibnamefont {Ding}},\ }\bibfield  {title} {\bibinfo {title} {Ultrafast
+  coulomb explosion of the nh<sub>3 </sub>dimer, trimer, and tetramer in strong
+  laser fields},\ }\bibfield  {journal} {\bibinfo  {journal} {PHYSICAL REVIEW
+  A}\ }\textbf {\bibinfo {volume} {109}},\ \href
+  {https://doi.org/10.1103/PhysRevA.109.023112} {10.1103/PhysRevA.109.023112}
+  (\bibinfo {year} {2024})\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Dantus}(2024)}]{doi:10.1126/science.adk1833}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {M.}~\bibnamefont
+  {Dantus}},\ }\bibfield  {title} {\bibinfo {title} {Ultrafast studies of
+  elusive chemical reactions in the gas phase},\ }\href
+  {https://doi.org/10.1126/science.adk1833} {\bibfield  {journal} {\bibinfo
+  {journal} {Science}\ }\textbf {\bibinfo {volume} {385}},\ \bibinfo {pages}
+  {eadk1833} (\bibinfo {year} {2024})},\ \Eprint
+  {https://arxiv.org/abs/https://www.science.org/doi/pdf/10.1126/science.adk1833}
+  {https://www.science.org/doi/pdf/10.1126/science.adk1833} \BibitemShut
+  {NoStop}%
+\bibitem [{\citenamefont {Champenois}\ \emph {et~al.}(2023)\citenamefont
+  {Champenois}, \citenamefont {List}, \citenamefont {Ware}, \citenamefont
+  {Britton}, \citenamefont {Bucksbaum}, \citenamefont {Cheng}, \citenamefont
+  {Centurion}, \citenamefont {Cryan}, \citenamefont {Forbes}, \citenamefont
+  {Gabalski}, \citenamefont {Hegazy}, \citenamefont {Hoffmann}, \citenamefont
+  {Howard}, \citenamefont {Ji}, \citenamefont {Lin}, \citenamefont {Nunes},
+  \citenamefont {Shen}, \citenamefont {Yang}, \citenamefont {Wang},
+  \citenamefont {Martinez},\ and\ \citenamefont
+  {Wolf}}]{PhysRevLett.131.143001}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {E.~G.}\ \bibnamefont
+  {Champenois}}, \bibinfo {author} {\bibfnamefont {N.~H.}\ \bibnamefont
+  {List}}, \bibinfo {author} {\bibfnamefont {M.}~\bibnamefont {Ware}}, \bibinfo
+  {author} {\bibfnamefont {M.}~\bibnamefont {Britton}}, \bibinfo {author}
+  {\bibfnamefont {P.~H.}\ \bibnamefont {Bucksbaum}}, \bibinfo {author}
+  {\bibfnamefont {X.}~\bibnamefont {Cheng}}, \bibinfo {author} {\bibfnamefont
+  {M.}~\bibnamefont {Centurion}}, \bibinfo {author} {\bibfnamefont {J.~P.}\
+  \bibnamefont {Cryan}}, \bibinfo {author} {\bibfnamefont {R.}~\bibnamefont
+  {Forbes}}, \bibinfo {author} {\bibfnamefont {I.}~\bibnamefont {Gabalski}},
+  \bibinfo {author} {\bibfnamefont {K.}~\bibnamefont {Hegazy}}, \bibinfo
+  {author} {\bibfnamefont {M.~C.}\ \bibnamefont {Hoffmann}}, \bibinfo {author}
+  {\bibfnamefont {A.~J.}\ \bibnamefont {Howard}}, \bibinfo {author}
+  {\bibfnamefont {F.}~\bibnamefont {Ji}}, \bibinfo {author} {\bibfnamefont
+  {M.-F.}\ \bibnamefont {Lin}}, \bibinfo {author} {\bibfnamefont {J.~P.~F.}\
+  \bibnamefont {Nunes}}, \bibinfo {author} {\bibfnamefont {X.}~\bibnamefont
+  {Shen}}, \bibinfo {author} {\bibfnamefont {J.}~\bibnamefont {Yang}}, \bibinfo
+  {author} {\bibfnamefont {X.}~\bibnamefont {Wang}}, \bibinfo {author}
+  {\bibfnamefont {T.~J.}\ \bibnamefont {Martinez}},\ and\ \bibinfo {author}
+  {\bibfnamefont {T.~J.~A.}\ \bibnamefont {Wolf}},\ }\bibfield  {title}
+  {\bibinfo {title} {Femtosecond electronic and hydrogen structural dynamics in
+  ammonia imaged with ultrafast electron diffraction},\ }\href
+  {https://doi.org/10.1103/PhysRevLett.131.143001} {\bibfield  {journal}
+  {\bibinfo  {journal} {Phys. Rev. Lett.}\ }\textbf {\bibinfo {volume} {131}},\
+  \bibinfo {pages} {143001} (\bibinfo {year} {2023})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Crane}\ \emph {et~al.}(2023)\citenamefont {Crane},
+  \citenamefont {Lee}, \citenamefont {Ashfold},\ and\ \citenamefont
+  {Rolles}}]{D3CP01740K}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {S.~W.}\ \bibnamefont
+  {Crane}}, \bibinfo {author} {\bibfnamefont {J.~W.~L.}\ \bibnamefont {Lee}},
+  \bibinfo {author} {\bibfnamefont {M.~N.~R.}\ \bibnamefont {Ashfold}},\ and\
+  \bibinfo {author} {\bibfnamefont {D.}~\bibnamefont {Rolles}},\ }\bibfield
+  {title} {\bibinfo {title} {Molecular photodissociation dynamics revealed by
+  coulomb explosion imaging},\ }\href {https://doi.org/10.1039/D3CP01740K}
+  {\bibfield  {journal} {\bibinfo  {journal} {Phys. Chem. Chem. Phys.}\
+  }\textbf {\bibinfo {volume} {25}},\ \bibinfo {pages} {16672} (\bibinfo {year}
+  {2023})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Ekanayake}\ \emph {et~al.}(2017)\citenamefont
+  {Ekanayake}, \citenamefont {Nairat}, \citenamefont {Kaderiya}, \citenamefont
+  {Feizollah}, \citenamefont {Jochim}, \citenamefont {Severt}, \citenamefont
+  {Berry}, \citenamefont {Pandiri}, \citenamefont {Carnes}, \citenamefont
+  {Pathak}, \citenamefont {Rolles}, \citenamefont {Rudenko}, \citenamefont
+  {Ben-Itzhak}, \citenamefont {Mancuso}, \citenamefont {Fales}, \citenamefont
+  {Jackson}, \citenamefont {Levine},\ and\ \citenamefont
+  {Dantus}}]{Ekanayake2017}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {N.}~\bibnamefont
+  {Ekanayake}}, \bibinfo {author} {\bibfnamefont {M.}~\bibnamefont {Nairat}},
+  \bibinfo {author} {\bibfnamefont {B.}~\bibnamefont {Kaderiya}}, \bibinfo
+  {author} {\bibfnamefont {P.}~\bibnamefont {Feizollah}}, \bibinfo {author}
+  {\bibfnamefont {B.}~\bibnamefont {Jochim}}, \bibinfo {author} {\bibfnamefont
+  {T.}~\bibnamefont {Severt}}, \bibinfo {author} {\bibfnamefont
+  {B.}~\bibnamefont {Berry}}, \bibinfo {author} {\bibfnamefont {K.~R.}\
+  \bibnamefont {Pandiri}}, \bibinfo {author} {\bibfnamefont {K.~D.}\
+  \bibnamefont {Carnes}}, \bibinfo {author} {\bibfnamefont {S.}~\bibnamefont
+  {Pathak}}, \bibinfo {author} {\bibfnamefont {D.}~\bibnamefont {Rolles}},
+  \bibinfo {author} {\bibfnamefont {A.}~\bibnamefont {Rudenko}}, \bibinfo
+  {author} {\bibfnamefont {I.}~\bibnamefont {Ben-Itzhak}}, \bibinfo {author}
+  {\bibfnamefont {C.~A.}\ \bibnamefont {Mancuso}}, \bibinfo {author}
+  {\bibfnamefont {B.~S.}\ \bibnamefont {Fales}}, \bibinfo {author}
+  {\bibfnamefont {J.~E.}\ \bibnamefont {Jackson}}, \bibinfo {author}
+  {\bibfnamefont {B.~G.}\ \bibnamefont {Levine}},\ and\ \bibinfo {author}
+  {\bibfnamefont {M.}~\bibnamefont {Dantus}},\ }\bibfield  {title} {\bibinfo
+  {title} {Mechanisms and time-resolved dynamics for trihydrogen cation (h3+)
+  formation from organic molecules in strong laser fields},\ }\href
+  {https://doi.org/10.1038/s41598-017-04666-w} {\bibfield  {journal} {\bibinfo
+  {journal} {Scientific Reports}\ }\textbf {\bibinfo {volume} {7}},\ \bibinfo
+  {pages} {4703} (\bibinfo {year} {2017})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Ekanayake}\ \emph {et~al.}(2018)\citenamefont
+  {Ekanayake}, \citenamefont {Severt}, \citenamefont {Nairat}, \citenamefont
+  {Weingartz}, \citenamefont {Farris}, \citenamefont {Kaderiya}, \citenamefont
+  {Feizollah}, \citenamefont {Jochim}, \citenamefont {Ziaee}, \citenamefont
+  {Borne}, \citenamefont {Raju~P.}, \citenamefont {Carnes}, \citenamefont
+  {Rolles}, \citenamefont {Rudenko}, \citenamefont {Levine}, \citenamefont
+  {Jackson}, \citenamefont {Ben-Itzhak},\ and\ \citenamefont
+  {Dantus}}]{Ekanayake2018}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {N.}~\bibnamefont
+  {Ekanayake}}, \bibinfo {author} {\bibfnamefont {T.}~\bibnamefont {Severt}},
+  \bibinfo {author} {\bibfnamefont {M.}~\bibnamefont {Nairat}}, \bibinfo
+  {author} {\bibfnamefont {N.~P.}\ \bibnamefont {Weingartz}}, \bibinfo {author}
+  {\bibfnamefont {B.~M.}\ \bibnamefont {Farris}}, \bibinfo {author}
+  {\bibfnamefont {B.}~\bibnamefont {Kaderiya}}, \bibinfo {author}
+  {\bibfnamefont {P.}~\bibnamefont {Feizollah}}, \bibinfo {author}
+  {\bibfnamefont {B.}~\bibnamefont {Jochim}}, \bibinfo {author} {\bibfnamefont
+  {F.}~\bibnamefont {Ziaee}}, \bibinfo {author} {\bibfnamefont
+  {K.}~\bibnamefont {Borne}}, \bibinfo {author} {\bibfnamefont
+  {K.}~\bibnamefont {Raju~P.}}, \bibinfo {author} {\bibfnamefont {K.~D.}\
+  \bibnamefont {Carnes}}, \bibinfo {author} {\bibfnamefont {D.}~\bibnamefont
+  {Rolles}}, \bibinfo {author} {\bibfnamefont {A.}~\bibnamefont {Rudenko}},
+  \bibinfo {author} {\bibfnamefont {B.~G.}\ \bibnamefont {Levine}}, \bibinfo
+  {author} {\bibfnamefont {J.~E.}\ \bibnamefont {Jackson}}, \bibinfo {author}
+  {\bibfnamefont {I.}~\bibnamefont {Ben-Itzhak}},\ and\ \bibinfo {author}
+  {\bibfnamefont {M.}~\bibnamefont {Dantus}},\ }\bibfield  {title} {\bibinfo
+  {title} {H2 roaming chemistry and the formation of h3+ from organic molecules
+  in strong laser fields},\ }\href {https://doi.org/10.1038/s41467-018-07577-0}
+  {\bibfield  {journal} {\bibinfo  {journal} {Nature Communications}\ }\textbf
+  {\bibinfo {volume} {9}},\ \bibinfo {pages} {5186} (\bibinfo {year}
+  {2018})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Ditmire}\ \emph {et~al.}(1995)\citenamefont
+  {Ditmire}, \citenamefont {Donnelly}, \citenamefont {Falcone},\ and\
+  \citenamefont {Perry}}]{PhysRevLett.75.3122}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {T.}~\bibnamefont
+  {Ditmire}}, \bibinfo {author} {\bibfnamefont {T.}~\bibnamefont {Donnelly}},
+  \bibinfo {author} {\bibfnamefont {R.~W.}\ \bibnamefont {Falcone}},\ and\
+  \bibinfo {author} {\bibfnamefont {M.~D.}\ \bibnamefont {Perry}},\ }\bibfield
+  {title} {\bibinfo {title} {Strong x-ray emission from high-temperature
+  plasmas produced by intense irradiation of clusters},\ }\href
+  {https://doi.org/10.1103/PhysRevLett.75.3122} {\bibfield  {journal} {\bibinfo
+   {journal} {Phys. Rev. Lett.}\ }\textbf {\bibinfo {volume} {75}},\ \bibinfo
+  {pages} {3122} (\bibinfo {year} {1995})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {McPherson}\ \emph {et~al.}(1994)\citenamefont
+  {McPherson}, \citenamefont {Thompson}, \citenamefont {Borisov}, \citenamefont
+  {Boyer},\ and\ \citenamefont {Rhodes}}]{McPherson1994}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {A.}~\bibnamefont
+  {McPherson}}, \bibinfo {author} {\bibfnamefont {B.~D.}\ \bibnamefont
+  {Thompson}}, \bibinfo {author} {\bibfnamefont {A.~B.}\ \bibnamefont
+  {Borisov}}, \bibinfo {author} {\bibfnamefont {K.}~\bibnamefont {Boyer}},\
+  and\ \bibinfo {author} {\bibfnamefont {C.~K.}\ \bibnamefont {Rhodes}},\
+  }\bibfield  {title} {\bibinfo {title} {Multiphoton-induced x-ray emission at
+  4--5 kev from xe atoms with multiple core vacancies},\ }\href
+  {https://doi.org/10.1038/370631a0} {\bibfield  {journal} {\bibinfo  {journal}
+  {Nature}\ }\textbf {\bibinfo {volume} {370}},\ \bibinfo {pages} {631}
+  (\bibinfo {year} {1994})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Shao}\ \emph {et~al.}(1996)\citenamefont {Shao},
+  \citenamefont {Ditmire}, \citenamefont {Tisch}, \citenamefont {Springate},
+  \citenamefont {Marangos},\ and\ \citenamefont
+  {Hutchinson}}]{PhysRevLett.77.3343}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {Y.~L.}\ \bibnamefont
+  {Shao}}, \bibinfo {author} {\bibfnamefont {T.}~\bibnamefont {Ditmire}},
+  \bibinfo {author} {\bibfnamefont {J.~W.~G.}\ \bibnamefont {Tisch}}, \bibinfo
+  {author} {\bibfnamefont {E.}~\bibnamefont {Springate}}, \bibinfo {author}
+  {\bibfnamefont {J.~P.}\ \bibnamefont {Marangos}},\ and\ \bibinfo {author}
+  {\bibfnamefont {M.~H.~R.}\ \bibnamefont {Hutchinson}},\ }\bibfield  {title}
+  {\bibinfo {title} {Multi-kev electron generation in the interaction of
+  intense laser pulses with xe clusters},\ }\href
+  {https://doi.org/10.1103/PhysRevLett.77.3343} {\bibfield  {journal} {\bibinfo
+   {journal} {Phys. Rev. Lett.}\ }\textbf {\bibinfo {volume} {77}},\ \bibinfo
+  {pages} {3343} (\bibinfo {year} {1996})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Hishikawa}\ \emph {et~al.}(1998)\citenamefont
+  {Hishikawa}, \citenamefont {Iwamae}, \citenamefont {Hoshina}, \citenamefont
+  {Kono},\ and\ \citenamefont {Yamanouchi}}]{Hishikawa1998}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {A.}~\bibnamefont
+  {Hishikawa}}, \bibinfo {author} {\bibfnamefont {A.}~\bibnamefont {Iwamae}},
+  \bibinfo {author} {\bibfnamefont {K.}~\bibnamefont {Hoshina}}, \bibinfo
+  {author} {\bibfnamefont {M.}~\bibnamefont {Kono}},\ and\ \bibinfo {author}
+  {\bibfnamefont {K.}~\bibnamefont {Yamanouchi}},\ }\bibfield  {title}
+  {\bibinfo {title} {Coulomb explosion dynamics of n2o in intense laser-field:
+  Identification of new two-body and three-body fragmentation pathways},\
+  }\href {https://doi.org/10.1163/156856798X00401} {\bibfield  {journal}
+  {\bibinfo  {journal} {Research on Chemical Intermediates}\ }\textbf {\bibinfo
+  {volume} {24}},\ \bibinfo {pages} {765} (\bibinfo {year} {1998})}\BibitemShut
+  {NoStop}%
+\bibitem [{\citenamefont {Pitzer}\ \emph {et~al.}(2016)\citenamefont {Pitzer},
+  \citenamefont {Kastirke}, \citenamefont {Kunitski}, \citenamefont {Jahnke},
+  \citenamefont {Bauer}, \citenamefont {Goihl}, \citenamefont {Trinter},
+  \citenamefont {Schober}, \citenamefont {Henrichs}, \citenamefont {Becht},
+  \citenamefont {Zeller}, \citenamefont {Gassert}, \citenamefont {Waitz},
+  \citenamefont {Kuhlins}, \citenamefont {Sann}, \citenamefont {Sturm},
+  \citenamefont {Wiegandt}, \citenamefont {Wallauer}, \citenamefont {Schmidt},
+  \citenamefont {Johnson}, \citenamefont {Mazenauer}, \citenamefont {Spenger},
+  \citenamefont {Marquardt}, \citenamefont {Marquardt}, \citenamefont
+  {Schmidt-Böcking}, \citenamefont {Stohner}, \citenamefont {Dörner},
+  \citenamefont {Schöffler},\ and\ \citenamefont
+  {Berger}}]{https://doi.org/10.1002/cphc.201501118}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {M.}~\bibnamefont
+  {Pitzer}}, \bibinfo {author} {\bibfnamefont {G.}~\bibnamefont {Kastirke}},
+  \bibinfo {author} {\bibfnamefont {M.}~\bibnamefont {Kunitski}}, \bibinfo
+  {author} {\bibfnamefont {T.}~\bibnamefont {Jahnke}}, \bibinfo {author}
+  {\bibfnamefont {T.}~\bibnamefont {Bauer}}, \bibinfo {author} {\bibfnamefont
+  {C.}~\bibnamefont {Goihl}}, \bibinfo {author} {\bibfnamefont
+  {F.}~\bibnamefont {Trinter}}, \bibinfo {author} {\bibfnamefont
+  {C.}~\bibnamefont {Schober}}, \bibinfo {author} {\bibfnamefont
+  {K.}~\bibnamefont {Henrichs}}, \bibinfo {author} {\bibfnamefont
+  {J.}~\bibnamefont {Becht}}, \bibinfo {author} {\bibfnamefont
+  {S.}~\bibnamefont {Zeller}}, \bibinfo {author} {\bibfnamefont
+  {H.}~\bibnamefont {Gassert}}, \bibinfo {author} {\bibfnamefont
+  {M.}~\bibnamefont {Waitz}}, \bibinfo {author} {\bibfnamefont
+  {A.}~\bibnamefont {Kuhlins}}, \bibinfo {author} {\bibfnamefont
+  {H.}~\bibnamefont {Sann}}, \bibinfo {author} {\bibfnamefont {F.}~\bibnamefont
+  {Sturm}}, \bibinfo {author} {\bibfnamefont {F.}~\bibnamefont {Wiegandt}},
+  \bibinfo {author} {\bibfnamefont {R.}~\bibnamefont {Wallauer}}, \bibinfo
+  {author} {\bibfnamefont {L.~P.~H.}\ \bibnamefont {Schmidt}}, \bibinfo
+  {author} {\bibfnamefont {A.~S.}\ \bibnamefont {Johnson}}, \bibinfo {author}
+  {\bibfnamefont {M.}~\bibnamefont {Mazenauer}}, \bibinfo {author}
+  {\bibfnamefont {B.}~\bibnamefont {Spenger}}, \bibinfo {author} {\bibfnamefont
+  {S.}~\bibnamefont {Marquardt}}, \bibinfo {author} {\bibfnamefont
+  {S.}~\bibnamefont {Marquardt}}, \bibinfo {author} {\bibfnamefont
+  {H.}~\bibnamefont {Schmidt-Böcking}}, \bibinfo {author} {\bibfnamefont
+  {J.}~\bibnamefont {Stohner}}, \bibinfo {author} {\bibfnamefont
+  {R.}~\bibnamefont {Dörner}}, \bibinfo {author} {\bibfnamefont
+  {M.}~\bibnamefont {Schöffler}},\ and\ \bibinfo {author} {\bibfnamefont
+  {R.}~\bibnamefont {Berger}},\ }\bibfield  {title} {\bibinfo {title} {Absolute
+  configuration from different multifragmentation pathways in light-induced
+  coulomb explosion imaging},\ }\href
+  {https://doi.org/https://doi.org/10.1002/cphc.201501118} {\bibfield
+  {journal} {\bibinfo  {journal} {ChemPhysChem}\ }\textbf {\bibinfo {volume}
+  {17}},\ \bibinfo {pages} {2465} (\bibinfo {year} {2016})},\ \Eprint
+  {https://arxiv.org/abs/https://chemistry-europe.onlinelibrary.wiley.com/doi/pdf/10.1002/cphc.201501118}
+  {https://chemistry-europe.onlinelibrary.wiley.com/doi/pdf/10.1002/cphc.201501118}
+  \BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Luzon}\ \emph {et~al.}(2019)\citenamefont {Luzon},
+  \citenamefont {Livshits}, \citenamefont {Gope}, \citenamefont {Baer},\ and\
+  \citenamefont {Strasser}}]{Luzon2019}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {I.}~\bibnamefont
+  {Luzon}}, \bibinfo {author} {\bibfnamefont {E.}~\bibnamefont {Livshits}},
+  \bibinfo {author} {\bibfnamefont {K.}~\bibnamefont {Gope}}, \bibinfo {author}
+  {\bibfnamefont {R.}~\bibnamefont {Baer}},\ and\ \bibinfo {author}
+  {\bibfnamefont {D.}~\bibnamefont {Strasser}},\ }\bibfield  {title} {\bibinfo
+  {title} {Making sense of coulomb explosion imaging},\ }\href
+  {https://doi.org/10.1021/acs.jpclett.9b00576} {\bibfield  {journal} {\bibinfo
+   {journal} {The Journal of Physical Chemistry Letters}\ }\textbf {\bibinfo
+  {volume} {10}},\ \bibinfo {pages} {1361} (\bibinfo {year}
+  {2019})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Bhattacharyya}\ \emph
+  {et~al.}(2022{\natexlab{b}})\citenamefont {Bhattacharyya}, \citenamefont
+  {Borne}, \citenamefont {Ziaee}, \citenamefont {Pathak}, \citenamefont {Wang},
+  \citenamefont {Venkatachalam}, \citenamefont {Li}, \citenamefont {Marshall},
+  \citenamefont {Carnes}, \citenamefont {Fehrenbach}, \citenamefont {Severt},
+  \citenamefont {Ben-Itzhak}, \citenamefont {Rudenko},\ and\ \citenamefont
+  {Rolles}}]{Bhattacharyya2022}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {S.}~\bibnamefont
+  {Bhattacharyya}}, \bibinfo {author} {\bibfnamefont {K.}~\bibnamefont
+  {Borne}}, \bibinfo {author} {\bibfnamefont {F.}~\bibnamefont {Ziaee}},
+  \bibinfo {author} {\bibfnamefont {S.}~\bibnamefont {Pathak}}, \bibinfo
+  {author} {\bibfnamefont {E.}~\bibnamefont {Wang}}, \bibinfo {author}
+  {\bibfnamefont {A.~S.}\ \bibnamefont {Venkatachalam}}, \bibinfo {author}
+  {\bibfnamefont {X.}~\bibnamefont {Li}}, \bibinfo {author} {\bibfnamefont
+  {N.}~\bibnamefont {Marshall}}, \bibinfo {author} {\bibfnamefont {K.~D.}\
+  \bibnamefont {Carnes}}, \bibinfo {author} {\bibfnamefont {C.~W.}\
+  \bibnamefont {Fehrenbach}}, \bibinfo {author} {\bibfnamefont
+  {T.}~\bibnamefont {Severt}}, \bibinfo {author} {\bibfnamefont
+  {I.}~\bibnamefont {Ben-Itzhak}}, \bibinfo {author} {\bibfnamefont
+  {A.}~\bibnamefont {Rudenko}},\ and\ \bibinfo {author} {\bibfnamefont
+  {D.}~\bibnamefont {Rolles}},\ }\bibfield  {title} {\bibinfo {title}
+  {Strong-field-induced coulomb explosion imaging of tribromomethane},\ }\href
+  {https://doi.org/10.1021/acs.jpclett.2c01007} {\bibfield  {journal} {\bibinfo
+   {journal} {The Journal of Physical Chemistry Letters}\ }\textbf {\bibinfo
+  {volume} {13}},\ \bibinfo {pages} {5845} (\bibinfo {year}
+  {2022}{\natexlab{b}})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Cornaggia}\ \emph {et~al.}(1992)\citenamefont
+  {Cornaggia}, \citenamefont {Normand},\ and\ \citenamefont
+  {Morellec}}]{Cornaggia_1992}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {C.}~\bibnamefont
+  {Cornaggia}}, \bibinfo {author} {\bibfnamefont {D.}~\bibnamefont {Normand}},\
+  and\ \bibinfo {author} {\bibfnamefont {J.}~\bibnamefont {Morellec}},\
+  }\bibfield  {title} {\bibinfo {title} {Role of the molecular electronic
+  configuration in the coulomb fragmentation of n2, c2h2 and c2h4 in an intense
+  laser field},\ }\href {https://doi.org/10.1088/0953-4075/25/17/003}
+  {\bibfield  {journal} {\bibinfo  {journal} {Journal of Physics B: Atomic,
+  Molecular and Optical Physics}\ }\textbf {\bibinfo {volume} {25}},\ \bibinfo
+  {pages} {L415} (\bibinfo {year} {1992})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Wu}\ \emph {et~al.}(2019)\citenamefont {Wu},
+  \citenamefont {Xue}, \citenamefont {Wen}, \citenamefont {Wang}, \citenamefont
+  {Fan}, \citenamefont {Chen}, \citenamefont {Zhu}, \citenamefont {Qu},\ and\
+  \citenamefont {Guo}}]{C9RA02003A}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {H.}~\bibnamefont
+  {Wu}}, \bibinfo {author} {\bibfnamefont {Y.}~\bibnamefont {Xue}}, \bibinfo
+  {author} {\bibfnamefont {J.}~\bibnamefont {Wen}}, \bibinfo {author}
+  {\bibfnamefont {H.}~\bibnamefont {Wang}}, \bibinfo {author} {\bibfnamefont
+  {Q.}~\bibnamefont {Fan}}, \bibinfo {author} {\bibfnamefont {G.}~\bibnamefont
+  {Chen}}, \bibinfo {author} {\bibfnamefont {J.}~\bibnamefont {Zhu}}, \bibinfo
+  {author} {\bibfnamefont {F.}~\bibnamefont {Qu}},\ and\ \bibinfo {author}
+  {\bibfnamefont {J.}~\bibnamefont {Guo}},\ }\bibfield  {title} {\bibinfo
+  {title} {Theoretical and experimental studies on hydrogen migration in
+  dissociative ionization of the methanol monocation to molecular ions h3+ and
+  h2o+},\ }\href {https://doi.org/10.1039/C9RA02003A} {\bibfield  {journal}
+  {\bibinfo  {journal} {RSC Adv.}\ }\textbf {\bibinfo {volume} {9}},\ \bibinfo
+  {pages} {16683} (\bibinfo {year} {2019})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Xu}\ \emph {et~al.}(2009)\citenamefont {Xu},
+  \citenamefont {Okino},\ and\ \citenamefont {Yamanouchi}}]{XU2009255}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {H.}~\bibnamefont
+  {Xu}}, \bibinfo {author} {\bibfnamefont {T.}~\bibnamefont {Okino}},\ and\
+  \bibinfo {author} {\bibfnamefont {K.}~\bibnamefont {Yamanouchi}},\ }\bibfield
+   {title} {\bibinfo {title} {Ultrafast hydrogen migration in allene in intense
+  laser fields: Evidence of two-body coulomb explosion},\ }\href
+  {https://doi.org/https://doi.org/10.1016/j.cplett.2008.12.097} {\bibfield
+  {journal} {\bibinfo  {journal} {Chemical Physics Letters}\ }\textbf {\bibinfo
+  {volume} {469}},\ \bibinfo {pages} {255} (\bibinfo {year}
+  {2009})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Xu}\ \emph {et~al.}(2010)\citenamefont {Xu},
+  \citenamefont {Okino}, \citenamefont {Nakai}, \citenamefont {Yamanouchi},
+  \citenamefont {Roither}, \citenamefont {Xie}, \citenamefont {Kartashov},
+  \citenamefont {Schöffler}, \citenamefont {Baltuska},\ and\ \citenamefont
+  {Kitzler}}]{XU2010119}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {H.}~\bibnamefont
+  {Xu}}, \bibinfo {author} {\bibfnamefont {T.}~\bibnamefont {Okino}}, \bibinfo
+  {author} {\bibfnamefont {K.}~\bibnamefont {Nakai}}, \bibinfo {author}
+  {\bibfnamefont {K.}~\bibnamefont {Yamanouchi}}, \bibinfo {author}
+  {\bibfnamefont {S.}~\bibnamefont {Roither}}, \bibinfo {author} {\bibfnamefont
+  {X.}~\bibnamefont {Xie}}, \bibinfo {author} {\bibfnamefont {D.}~\bibnamefont
+  {Kartashov}}, \bibinfo {author} {\bibfnamefont {M.}~\bibnamefont
+  {Schöffler}}, \bibinfo {author} {\bibfnamefont {A.}~\bibnamefont
+  {Baltuska}},\ and\ \bibinfo {author} {\bibfnamefont {M.}~\bibnamefont
+  {Kitzler}},\ }\bibfield  {title} {\bibinfo {title} {Hydrogen migration and
+  c–c bond breaking in 1,3-butadiene in intense laser fields studied by
+  coincidence momentum imaging},\ }\href
+  {https://doi.org/https://doi.org/10.1016/j.cplett.2009.11.008} {\bibfield
+  {journal} {\bibinfo  {journal} {Chemical Physics Letters}\ }\textbf {\bibinfo
+  {volume} {484}},\ \bibinfo {pages} {119} (\bibinfo {year}
+  {2010})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Kraus}\ \emph {et~al.}(2011)\citenamefont {Kraus},
+  \citenamefont {Schwarzer}, \citenamefont {Schirmel}, \citenamefont {Urbasch},
+  \citenamefont {Frenking},\ and\ \citenamefont {Weitzel}}]{10.1063/1.3561311}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {P.~M.}\ \bibnamefont
+  {Kraus}}, \bibinfo {author} {\bibfnamefont {M.~C.}\ \bibnamefont
+  {Schwarzer}}, \bibinfo {author} {\bibfnamefont {N.}~\bibnamefont {Schirmel}},
+  \bibinfo {author} {\bibfnamefont {G.}~\bibnamefont {Urbasch}}, \bibinfo
+  {author} {\bibfnamefont {G.}~\bibnamefont {Frenking}},\ and\ \bibinfo
+  {author} {\bibfnamefont {K.-M.}\ \bibnamefont {Weitzel}},\ }\bibfield
+  {title} {\bibinfo {title} {{Unusual mechanism for H3+ formation from ethane
+  as obtained by femtosecond laser pulse ionization and quantum chemical
+  calculations}},\ }\href {https://doi.org/10.1063/1.3561311} {\bibfield
+  {journal} {\bibinfo  {journal} {The Journal of Chemical Physics}\ }\textbf
+  {\bibinfo {volume} {134}},\ \bibinfo {pages} {114302} (\bibinfo {year}
+  {2011})},\ \Eprint
+  {https://arxiv.org/abs/https://pubs.aip.org/aip/jcp/article-pdf/doi/10.1063/1.3561311/13524871/114302\_1\_online.pdf}
+  {https://pubs.aip.org/aip/jcp/article-pdf/doi/10.1063/1.3561311/13524871/114302\_1\_online.pdf}
+  \BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Severt}\ \emph {et~al.}(2024)\citenamefont {Severt},
+  \citenamefont {Weckwerth}, \citenamefont {Kaderiya}, \citenamefont
+  {Feizollah}, \citenamefont {Jochim}, \citenamefont {Borne}, \citenamefont
+  {Ziaee}, \citenamefont {P}, \citenamefont {Carnes}, \citenamefont {Dantus},
+  \citenamefont {Rolles}, \citenamefont {Rudenko}, \citenamefont {Wells},\ and\
+  \citenamefont {Ben-Itzhak}}]{Severt2024}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {T.}~\bibnamefont
+  {Severt}}, \bibinfo {author} {\bibfnamefont {E.}~\bibnamefont {Weckwerth}},
+  \bibinfo {author} {\bibfnamefont {B.}~\bibnamefont {Kaderiya}}, \bibinfo
+  {author} {\bibfnamefont {P.}~\bibnamefont {Feizollah}}, \bibinfo {author}
+  {\bibfnamefont {B.}~\bibnamefont {Jochim}}, \bibinfo {author} {\bibfnamefont
+  {K.}~\bibnamefont {Borne}}, \bibinfo {author} {\bibfnamefont
+  {F.}~\bibnamefont {Ziaee}}, \bibinfo {author} {\bibfnamefont {K.~R.}\
+  \bibnamefont {P}}, \bibinfo {author} {\bibfnamefont {K.~D.}\ \bibnamefont
+  {Carnes}}, \bibinfo {author} {\bibfnamefont {M.}~\bibnamefont {Dantus}},
+  \bibinfo {author} {\bibfnamefont {D.}~\bibnamefont {Rolles}}, \bibinfo
+  {author} {\bibfnamefont {A.}~\bibnamefont {Rudenko}}, \bibinfo {author}
+  {\bibfnamefont {E.}~\bibnamefont {Wells}},\ and\ \bibinfo {author}
+  {\bibfnamefont {I.}~\bibnamefont {Ben-Itzhak}},\ }\bibfield  {title}
+  {\bibinfo {title} {Initial-site characterization of hydrogen migration
+  following strong-field double-ionization of ethanol},\ }\href
+  {https://doi.org/10.1038/s41467-023-44311-x} {\bibfield  {journal} {\bibinfo
+  {journal} {Nature Communications}\ }\textbf {\bibinfo {volume} {15}},\
+  \bibinfo {pages} {74} (\bibinfo {year} {2024})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Kwon}\ \emph {et~al.}(2023)\citenamefont {Kwon},
+  \citenamefont {Sandhu}, \citenamefont {Shaik}, \citenamefont {Stamm},
+  \citenamefont {Sandhu}, \citenamefont {Das}, \citenamefont {Hetherington},
+  \citenamefont {Levine},\ and\ \citenamefont
+  {Dantus}}]{doi:10.1021/acs.jpca.3c05442}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {S.}~\bibnamefont
+  {Kwon}}, \bibinfo {author} {\bibfnamefont {S.}~\bibnamefont {Sandhu}},
+  \bibinfo {author} {\bibfnamefont {M.}~\bibnamefont {Shaik}}, \bibinfo
+  {author} {\bibfnamefont {J.}~\bibnamefont {Stamm}}, \bibinfo {author}
+  {\bibfnamefont {J.}~\bibnamefont {Sandhu}}, \bibinfo {author} {\bibfnamefont
+  {R.}~\bibnamefont {Das}}, \bibinfo {author} {\bibfnamefont {C.~V.}\
+  \bibnamefont {Hetherington}}, \bibinfo {author} {\bibfnamefont {B.~G.}\
+  \bibnamefont {Levine}},\ and\ \bibinfo {author} {\bibfnamefont
+  {M.}~\bibnamefont {Dantus}},\ }\bibfield  {title} {\bibinfo {title} {What is
+  the mechanism of h3+ formation from cyclopropane?},\ }\href
+  {https://doi.org/10.1021/acs.jpca.3c05442} {\bibfield  {journal} {\bibinfo
+  {journal} {The Journal of Physical Chemistry A}\ }\textbf {\bibinfo {volume}
+  {127}},\ \bibinfo {pages} {8633} (\bibinfo {year} {2023})},\ \bibinfo {note}
+  {pMID: 37813385}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Michie}\ \emph {et~al.}(2019)\citenamefont {Michie},
+  \citenamefont {Ekanayake}, \citenamefont {Weingartz}, \citenamefont {Stamm},\
+  and\ \citenamefont {Dantus}}]{10.1063/1.5070067}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {M.~J.}\ \bibnamefont
+  {Michie}}, \bibinfo {author} {\bibfnamefont {N.}~\bibnamefont {Ekanayake}},
+  \bibinfo {author} {\bibfnamefont {N.~P.}\ \bibnamefont {Weingartz}}, \bibinfo
+  {author} {\bibfnamefont {J.}~\bibnamefont {Stamm}},\ and\ \bibinfo {author}
+  {\bibfnamefont {M.}~\bibnamefont {Dantus}},\ }\bibfield  {title} {\bibinfo
+  {title} {{Quantum coherent control of H3+ formation in strong fields}},\
+  }\href {https://doi.org/10.1063/1.5070067} {\bibfield  {journal} {\bibinfo
+  {journal} {The Journal of Chemical Physics}\ }\textbf {\bibinfo {volume}
+  {150}},\ \bibinfo {pages} {044303} (\bibinfo {year} {2019})},\ \Eprint
+  {https://arxiv.org/abs/https://pubs.aip.org/aip/jcp/article-pdf/doi/10.1063/1.5070067/15557309/044303\_1\_online.pdf}
+  {https://pubs.aip.org/aip/jcp/article-pdf/doi/10.1063/1.5070067/15557309/044303\_1\_online.pdf}
+  \BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Roither}\ \emph {et~al.}(2011)\citenamefont
+  {Roither}, \citenamefont {Xie}, \citenamefont {Kartashov}, \citenamefont
+  {Zhang}, \citenamefont {Sch\"offler}, \citenamefont {Xu}, \citenamefont
+  {Iwasaki}, \citenamefont {Okino}, \citenamefont {Yamanouchi}, \citenamefont
+  {Baltuska},\ and\ \citenamefont {Kitzler}}]{PhysRevLett.106.163001}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {S.}~\bibnamefont
+  {Roither}}, \bibinfo {author} {\bibfnamefont {X.}~\bibnamefont {Xie}},
+  \bibinfo {author} {\bibfnamefont {D.}~\bibnamefont {Kartashov}}, \bibinfo
+  {author} {\bibfnamefont {L.}~\bibnamefont {Zhang}}, \bibinfo {author}
+  {\bibfnamefont {M.}~\bibnamefont {Sch\"offler}}, \bibinfo {author}
+  {\bibfnamefont {H.}~\bibnamefont {Xu}}, \bibinfo {author} {\bibfnamefont
+  {A.}~\bibnamefont {Iwasaki}}, \bibinfo {author} {\bibfnamefont
+  {T.}~\bibnamefont {Okino}}, \bibinfo {author} {\bibfnamefont
+  {K.}~\bibnamefont {Yamanouchi}}, \bibinfo {author} {\bibfnamefont
+  {A.}~\bibnamefont {Baltuska}},\ and\ \bibinfo {author} {\bibfnamefont
+  {M.}~\bibnamefont {Kitzler}},\ }\bibfield  {title} {\bibinfo {title} {High
+  energy proton ejection from hydrocarbon molecules driven by highly efficient
+  field ionization},\ }\href {https://doi.org/10.1103/PhysRevLett.106.163001}
+  {\bibfield  {journal} {\bibinfo  {journal} {Phys. Rev. Lett.}\ }\textbf
+  {\bibinfo {volume} {106}},\ \bibinfo {pages} {163001} (\bibinfo {year}
+  {2011})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Markevitch}\ \emph {et~al.}(2004)\citenamefont
+  {Markevitch}, \citenamefont {Romanov}, \citenamefont {Smith},\ and\
+  \citenamefont {Levis}}]{PhysRevLett.92.063001}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {A.~N.}\ \bibnamefont
+  {Markevitch}}, \bibinfo {author} {\bibfnamefont {D.~A.}\ \bibnamefont
+  {Romanov}}, \bibinfo {author} {\bibfnamefont {S.~M.}\ \bibnamefont {Smith}},\
+  and\ \bibinfo {author} {\bibfnamefont {R.~J.}\ \bibnamefont {Levis}},\
+  }\bibfield  {title} {\bibinfo {title} {Coulomb explosion of large polyatomic
+  molecules assisted by nonadiabatic charge localization},\ }\href
+  {https://doi.org/10.1103/PhysRevLett.92.063001} {\bibfield  {journal}
+  {\bibinfo  {journal} {Phys. Rev. Lett.}\ }\textbf {\bibinfo {volume} {92}},\
+  \bibinfo {pages} {063001} (\bibinfo {year} {2004})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Cornaggia}\ \emph {et~al.}(1995)\citenamefont
+  {Cornaggia}, \citenamefont {Schmidt},\ and\ \citenamefont
+  {Normand}}]{PhysRevA.51.1431}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {C.}~\bibnamefont
+  {Cornaggia}}, \bibinfo {author} {\bibfnamefont {M.}~\bibnamefont {Schmidt}},\
+  and\ \bibinfo {author} {\bibfnamefont {D.}~\bibnamefont {Normand}},\
+  }\bibfield  {title} {\bibinfo {title} {Laser-induced nuclear motions in the
+  coulomb explosion of ${\mathrm{c}}_{2}$${\mathrm{h}}_{2}^{+}$ ions},\ }\href
+  {https://doi.org/10.1103/PhysRevA.51.1431} {\bibfield  {journal} {\bibinfo
+  {journal} {Phys. Rev. A}\ }\textbf {\bibinfo {volume} {51}},\ \bibinfo
+  {pages} {1431} (\bibinfo {year} {1995})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Shimizu}\ \emph {et~al.}(2000)\citenamefont
+  {Shimizu}, \citenamefont {Kou}, \citenamefont {Kawato}, \citenamefont
+  {Shimizu}, \citenamefont {Sakabe},\ and\ \citenamefont
+  {Nakashima}}]{SHIMIZU2000609}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {S.}~\bibnamefont
+  {Shimizu}}, \bibinfo {author} {\bibfnamefont {J.}~\bibnamefont {Kou}},
+  \bibinfo {author} {\bibfnamefont {S.}~\bibnamefont {Kawato}}, \bibinfo
+  {author} {\bibfnamefont {K.}~\bibnamefont {Shimizu}}, \bibinfo {author}
+  {\bibfnamefont {S.}~\bibnamefont {Sakabe}},\ and\ \bibinfo {author}
+  {\bibfnamefont {N.}~\bibnamefont {Nakashima}},\ }\bibfield  {title} {\bibinfo
+  {title} {Coulomb explosion of benzene irradiated by an intense femtosecond
+  laser pulse},\ }\href
+  {https://doi.org/https://doi.org/10.1016/S0009-2614(99)01376-7} {\bibfield
+  {journal} {\bibinfo  {journal} {Chemical Physics Letters}\ }\textbf {\bibinfo
+  {volume} {317}},\ \bibinfo {pages} {609} (\bibinfo {year}
+  {2000})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Palaniyappan}\ \emph {et~al.}(2010)\citenamefont
+  {Palaniyappan}, \citenamefont {Mitchell}, \citenamefont {Ekanayake},
+  \citenamefont {Watts}, \citenamefont {White}, \citenamefont {Sauer},
+  \citenamefont {Howard}, \citenamefont {Videtto}, \citenamefont {Mancuso},
+  \citenamefont {Wells}, \citenamefont {Stanev}, \citenamefont {Wen},
+  \citenamefont {Decamp},\ and\ \citenamefont {Walker}}]{PhysRevA.82.043433}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {S.}~\bibnamefont
+  {Palaniyappan}}, \bibinfo {author} {\bibfnamefont {R.}~\bibnamefont
+  {Mitchell}}, \bibinfo {author} {\bibfnamefont {N.}~\bibnamefont {Ekanayake}},
+  \bibinfo {author} {\bibfnamefont {A.~M.}\ \bibnamefont {Watts}}, \bibinfo
+  {author} {\bibfnamefont {S.~L.}\ \bibnamefont {White}}, \bibinfo {author}
+  {\bibfnamefont {R.}~\bibnamefont {Sauer}}, \bibinfo {author} {\bibfnamefont
+  {L.~E.}\ \bibnamefont {Howard}}, \bibinfo {author} {\bibfnamefont
+  {M.}~\bibnamefont {Videtto}}, \bibinfo {author} {\bibfnamefont
+  {C.}~\bibnamefont {Mancuso}}, \bibinfo {author} {\bibfnamefont {S.~J.}\
+  \bibnamefont {Wells}}, \bibinfo {author} {\bibfnamefont {T.}~\bibnamefont
+  {Stanev}}, \bibinfo {author} {\bibfnamefont {B.~L.}\ \bibnamefont {Wen}},
+  \bibinfo {author} {\bibfnamefont {M.~F.}\ \bibnamefont {Decamp}},\ and\
+  \bibinfo {author} {\bibfnamefont {B.~C.}\ \bibnamefont {Walker}},\ }\bibfield
+   {title} {\bibinfo {title} {Ionization of ethane, butane, and octane in
+  strong laser fields},\ }\href {https://doi.org/10.1103/PhysRevA.82.043433}
+  {\bibfield  {journal} {\bibinfo  {journal} {Phys. Rev. A}\ }\textbf {\bibinfo
+  {volume} {82}},\ \bibinfo {pages} {043433} (\bibinfo {year}
+  {2010})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Lam}\ \emph {et~al.}(2024)\citenamefont {Lam},
+  \citenamefont {Venkatachalam}, \citenamefont {Bhattacharyya}, \citenamefont
+  {Chen}, \citenamefont {Borne}, \citenamefont {Wang}, \citenamefont {Boll},
+  \citenamefont {Jahnke}, \citenamefont {Kumarappan}, \citenamefont {Rudenko},\
+  and\ \citenamefont {Rolles}}]{PhysRevLett.132.123201}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {H.~V.~S.}\
+  \bibnamefont {Lam}}, \bibinfo {author} {\bibfnamefont {A.~S.}\ \bibnamefont
+  {Venkatachalam}}, \bibinfo {author} {\bibfnamefont {S.}~\bibnamefont
+  {Bhattacharyya}}, \bibinfo {author} {\bibfnamefont {K.}~\bibnamefont {Chen}},
+  \bibinfo {author} {\bibfnamefont {K.}~\bibnamefont {Borne}}, \bibinfo
+  {author} {\bibfnamefont {E.}~\bibnamefont {Wang}}, \bibinfo {author}
+  {\bibfnamefont {R.}~\bibnamefont {Boll}}, \bibinfo {author} {\bibfnamefont
+  {T.}~\bibnamefont {Jahnke}}, \bibinfo {author} {\bibfnamefont
+  {V.}~\bibnamefont {Kumarappan}}, \bibinfo {author} {\bibfnamefont
+  {A.}~\bibnamefont {Rudenko}},\ and\ \bibinfo {author} {\bibfnamefont
+  {D.}~\bibnamefont {Rolles}},\ }\bibfield  {title} {\bibinfo {title}
+  {Differentiating three-dimensional molecular structures using laser-induced
+  coulomb explosion imaging},\ }\href
+  {https://doi.org/10.1103/PhysRevLett.132.123201} {\bibfield  {journal}
+  {\bibinfo  {journal} {Phys. Rev. Lett.}\ }\textbf {\bibinfo {volume} {132}},\
+  \bibinfo {pages} {123201} (\bibinfo {year} {2024})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Ding}\ \emph {et~al.}(2024)\citenamefont {Ding},
+  \citenamefont {Greenman},\ and\ \citenamefont
+  {Rolles}}]{WOS:001290426300001}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {Y.}~\bibnamefont
+  {Ding}}, \bibinfo {author} {\bibfnamefont {L.}~\bibnamefont {Greenman}},\
+  and\ \bibinfo {author} {\bibfnamefont {D.}~\bibnamefont {Rolles}},\
+  }\bibfield  {title} {\bibinfo {title} {Surface hopping molecular dynamics
+  simulation of ultrafast methyl iodide photodissociation mapped by coulomb
+  explosion imaging},\ }\href {https://doi.org/10.1039/d4cp01679c} {\bibfield
+  {journal} {\bibinfo  {journal} {PHYSICAL CHEMISTRY CHEMICAL PHYSICS}\
+  }\textbf {\bibinfo {volume} {26}},\ \bibinfo {pages} {22423} (\bibinfo {year}
+  {2024})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Corrales}\ \emph {et~al.}(2012)\citenamefont
+  {Corrales}, \citenamefont {Gitzinger}, \citenamefont
+  {Gonz{\'a}lez-V{\'a}zquez}, \citenamefont {Loriot}, \citenamefont
+  {de~Nalda},\ and\ \citenamefont {Ba{\~{n}}ares}}]{Corrales2012}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {M.~E.}\ \bibnamefont
+  {Corrales}}, \bibinfo {author} {\bibfnamefont {G.}~\bibnamefont {Gitzinger}},
+  \bibinfo {author} {\bibfnamefont {J.}~\bibnamefont
+  {Gonz{\'a}lez-V{\'a}zquez}}, \bibinfo {author} {\bibfnamefont
+  {V.}~\bibnamefont {Loriot}}, \bibinfo {author} {\bibfnamefont
+  {R.}~\bibnamefont {de~Nalda}},\ and\ \bibinfo {author} {\bibfnamefont
+  {L.}~\bibnamefont {Ba{\~{n}}ares}},\ }\bibfield  {title} {\bibinfo {title}
+  {Velocity map imaging and theoretical study of the coulomb explosion of ch3i
+  under intense femtosecond ir pulses},\ }\href
+  {https://doi.org/10.1021/jp207367a} {\bibfield  {journal} {\bibinfo
+  {journal} {The Journal of Physical Chemistry A}\ }\textbf {\bibinfo {volume}
+  {116}},\ \bibinfo {pages} {2669} (\bibinfo {year} {2012})}\BibitemShut
+  {NoStop}%
+\bibitem [{\citenamefont {Russakoff}\ and\ \citenamefont
+  {Varga}(2015)}]{PhysRevA.92.053413}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {A.}~\bibnamefont
+  {Russakoff}}\ and\ \bibinfo {author} {\bibfnamefont {K.}~\bibnamefont
+  {Varga}},\ }\bibfield  {title} {\bibinfo {title} {Time-dependent
+  density-functional study of the ionization and fragmentation of
+  ${\mathrm{c}}_{2}{\mathrm{h}}_{2}$ and ${\mathrm{h}}_{2}$ by strong
+  circularly polarized laser pulses},\ }\href
+  {https://doi.org/10.1103/PhysRevA.92.053413} {\bibfield  {journal} {\bibinfo
+  {journal} {Phys. Rev. A}\ }\textbf {\bibinfo {volume} {92}},\ \bibinfo
+  {pages} {053413} (\bibinfo {year} {2015})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Ohmura}\ \emph {et~al.}(2021)\citenamefont {Ohmura},
+  \citenamefont {Nagaya}, \citenamefont {Shimojo},\ and\ \citenamefont
+  {Yao}}]{OhmuraNagayaShimojoYao+2021+169+187}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {S.}~\bibnamefont
+  {Ohmura}}, \bibinfo {author} {\bibfnamefont {K.}~\bibnamefont {Nagaya}},
+  \bibinfo {author} {\bibfnamefont {F.}~\bibnamefont {Shimojo}},\ and\ \bibinfo
+  {author} {\bibfnamefont {M.}~\bibnamefont {Yao}},\ }\bibfield  {title}
+  {\bibinfo {title} {Dissociation mechanism from highly charged bromophenol: ab
+  initio molecular dynamics simulations},\ }\href
+  {https://doi.org/doi:10.1515/zpch-2020-1634} {\bibfield  {journal} {\bibinfo
+  {journal} {Zeitschrift für Physikalische Chemie}\ }\textbf {\bibinfo
+  {volume} {235}},\ \bibinfo {pages} {169} (\bibinfo {year}
+  {2021})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Covington}\ \emph {et~al.}(2017)\citenamefont
+  {Covington}, \citenamefont {Hartig}, \citenamefont {Russakoff}, \citenamefont
+  {Kulpins},\ and\ \citenamefont {Varga}}]{PhysRevA.95.052701}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {C.}~\bibnamefont
+  {Covington}}, \bibinfo {author} {\bibfnamefont {K.}~\bibnamefont {Hartig}},
+  \bibinfo {author} {\bibfnamefont {A.}~\bibnamefont {Russakoff}}, \bibinfo
+  {author} {\bibfnamefont {R.}~\bibnamefont {Kulpins}},\ and\ \bibinfo {author}
+  {\bibfnamefont {K.}~\bibnamefont {Varga}},\ }\bibfield  {title} {\bibinfo
+  {title} {Time-dependent density-functional-theory investigation of the
+  collisions of protons and $\ensuremath{\alpha}$ particles with uracil and
+  adenine},\ }\href {https://doi.org/10.1103/PhysRevA.95.052701} {\bibfield
+  {journal} {\bibinfo  {journal} {Phys. Rev. A}\ }\textbf {\bibinfo {volume}
+  {95}},\ \bibinfo {pages} {052701} (\bibinfo {year} {2017})}\BibitemShut
+  {NoStop}%
+\bibitem [{\citenamefont {Russakoff}\ \emph {et~al.}(2015)\citenamefont
+  {Russakoff}, \citenamefont {Bubin}, \citenamefont {Xie}, \citenamefont
+  {Erattupuzha}, \citenamefont {Kitzler},\ and\ \citenamefont
+  {Varga}}]{PhysRevA.91.023422}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {A.}~\bibnamefont
+  {Russakoff}}, \bibinfo {author} {\bibfnamefont {S.}~\bibnamefont {Bubin}},
+  \bibinfo {author} {\bibfnamefont {X.}~\bibnamefont {Xie}}, \bibinfo {author}
+  {\bibfnamefont {S.}~\bibnamefont {Erattupuzha}}, \bibinfo {author}
+  {\bibfnamefont {M.}~\bibnamefont {Kitzler}},\ and\ \bibinfo {author}
+  {\bibfnamefont {K.}~\bibnamefont {Varga}},\ }\bibfield  {title} {\bibinfo
+  {title} {Time-dependent density-functional study of the alignment-dependent
+  ionization of acetylene and ethylene by strong laser pulses},\ }\href
+  {https://doi.org/10.1103/PhysRevA.91.023422} {\bibfield  {journal} {\bibinfo
+  {journal} {Phys. Rev. A}\ }\textbf {\bibinfo {volume} {91}},\ \bibinfo
+  {pages} {023422} (\bibinfo {year} {2015})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Xie}\ \emph {et~al.}(2014)\citenamefont {Xie},
+  \citenamefont {Roither}, \citenamefont {Sch\"offler}, \citenamefont {Xu},
+  \citenamefont {Bubin}, \citenamefont {L\"otstedt}, \citenamefont
+  {Erattuphuza}, \citenamefont {Iwasaki}, \citenamefont {Kartashov},
+  \citenamefont {Varga}, \citenamefont {G.~Paulus}, \citenamefont
+  {Baltu\ifmmode~\check{s}\else \v{s}\fi{}ka}, \citenamefont {Yamanouchi},\
+  and\ \citenamefont {Kitzler}}]{PhysRevA.89.023429}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {X.}~\bibnamefont
+  {Xie}}, \bibinfo {author} {\bibfnamefont {S.}~\bibnamefont {Roither}},
+  \bibinfo {author} {\bibfnamefont {M.}~\bibnamefont {Sch\"offler}}, \bibinfo
+  {author} {\bibfnamefont {H.}~\bibnamefont {Xu}}, \bibinfo {author}
+  {\bibfnamefont {S.}~\bibnamefont {Bubin}}, \bibinfo {author} {\bibfnamefont
+  {E.}~\bibnamefont {L\"otstedt}}, \bibinfo {author} {\bibfnamefont
+  {S.}~\bibnamefont {Erattuphuza}}, \bibinfo {author} {\bibfnamefont
+  {A.}~\bibnamefont {Iwasaki}}, \bibinfo {author} {\bibfnamefont
+  {D.}~\bibnamefont {Kartashov}}, \bibinfo {author} {\bibfnamefont
+  {K.}~\bibnamefont {Varga}}, \bibinfo {author} {\bibfnamefont
+  {G.}~\bibnamefont {G.~Paulus}}, \bibinfo {author} {\bibfnamefont
+  {A.}~\bibnamefont {Baltu\ifmmode~\check{s}\else \v{s}\fi{}ka}}, \bibinfo
+  {author} {\bibfnamefont {K.}~\bibnamefont {Yamanouchi}},\ and\ \bibinfo
+  {author} {\bibfnamefont {M.}~\bibnamefont {Kitzler}},\ }\bibfield  {title}
+  {\bibinfo {title} {Role of proton dynamics in efficient photoionization of
+  hydrocarbon molecules},\ }\href {https://doi.org/10.1103/PhysRevA.89.023429}
+  {\bibfield  {journal} {\bibinfo  {journal} {Phys. Rev. A}\ }\textbf {\bibinfo
+  {volume} {89}},\ \bibinfo {pages} {023429} (\bibinfo {year}
+  {2014})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Bubin}\ \emph {et~al.}(2012)\citenamefont {Bubin},
+  \citenamefont {Atkinson}, \citenamefont {Varga}, \citenamefont {Xie},
+  \citenamefont {Roither}, \citenamefont {Kartashov}, \citenamefont
+  {Baltu\ifmmode~\check{s}\else \v{s}\fi{}ka},\ and\ \citenamefont
+  {Kitzler}}]{PhysRevA.86.043407}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {S.}~\bibnamefont
+  {Bubin}}, \bibinfo {author} {\bibfnamefont {M.}~\bibnamefont {Atkinson}},
+  \bibinfo {author} {\bibfnamefont {K.}~\bibnamefont {Varga}}, \bibinfo
+  {author} {\bibfnamefont {X.}~\bibnamefont {Xie}}, \bibinfo {author}
+  {\bibfnamefont {S.}~\bibnamefont {Roither}}, \bibinfo {author} {\bibfnamefont
+  {D.}~\bibnamefont {Kartashov}}, \bibinfo {author} {\bibfnamefont
+  {A.}~\bibnamefont {Baltu\ifmmode~\check{s}\else \v{s}\fi{}ka}},\ and\
+  \bibinfo {author} {\bibfnamefont {M.}~\bibnamefont {Kitzler}},\ }\bibfield
+  {title} {\bibinfo {title} {Strong laser-pulse-driven ionization and coulomb
+  explosion of hydrocarbon molecules},\ }\href
+  {https://doi.org/10.1103/PhysRevA.86.043407} {\bibfield  {journal} {\bibinfo
+  {journal} {Phys. Rev. A}\ }\textbf {\bibinfo {volume} {86}},\ \bibinfo
+  {pages} {043407} (\bibinfo {year} {2012})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Runge}\ and\ \citenamefont
+  {Gross}(1984)}]{PhysRevLett.52.997}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {E.}~\bibnamefont
+  {Runge}}\ and\ \bibinfo {author} {\bibfnamefont {E.~K.~U.}\ \bibnamefont
+  {Gross}},\ }\bibfield  {title} {\bibinfo {title} {Density-functional theory
+  for time-dependent systems},\ }\href
+  {https://doi.org/10.1103/PhysRevLett.52.997} {\bibfield  {journal} {\bibinfo
+  {journal} {Phys. Rev. Lett.}\ }\textbf {\bibinfo {volume} {52}},\ \bibinfo
+  {pages} {997} (\bibinfo {year} {1984})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Ullrich}(1911)}]{ullrich}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {C.~A.}\ \bibnamefont
+  {Ullrich}},\ }\href@noop {} {\emph {\bibinfo {title} {Time-Dependent
+  Density-Functional Theory: Concepts and Applications}}}\ (\bibinfo
+  {publisher} {Oxford University Press},\ \bibinfo {address} {Oxford},\
+  \bibinfo {year} {1911})\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Li}\ \emph {et~al.}(2020)\citenamefont {Li},
+  \citenamefont {Sierra-Costa}, \citenamefont {Michie}, \citenamefont
+  {Ben-Itzhak},\ and\ \citenamefont {Dantus}}]{Li2020}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {S.}~\bibnamefont
+  {Li}}, \bibinfo {author} {\bibfnamefont {D.}~\bibnamefont {Sierra-Costa}},
+  \bibinfo {author} {\bibfnamefont {M.~J.}\ \bibnamefont {Michie}}, \bibinfo
+  {author} {\bibfnamefont {I.}~\bibnamefont {Ben-Itzhak}},\ and\ \bibinfo
+  {author} {\bibfnamefont {M.}~\bibnamefont {Dantus}},\ }\bibfield  {title}
+  {\bibinfo {title} {Control of electron recollision and molecular
+  nonsequential double ionization},\ }\href
+  {https://doi.org/10.1038/s42005-020-0297-3} {\bibfield  {journal} {\bibinfo
+  {journal} {Communications Physics}\ }\textbf {\bibinfo {volume} {3}},\
+  \bibinfo {pages} {35} (\bibinfo {year} {2020})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Mogyorosi}\ \emph {et~al.}(2024)\citenamefont
+  {Mogyorosi}, \citenamefont {Toth}, \citenamefont {Sarosi}, \citenamefont
+  {Gilicze}, \citenamefont {Csontos}, \citenamefont {Somoskoi}, \citenamefont
+  {Toth}, \citenamefont {Prabhash}, \citenamefont {Toth}, \citenamefont
+  {Taylor}, \citenamefont {Skoufis}, \citenamefont {Barron}, \citenamefont
+  {Varga}, \citenamefont {Covington},\ and\ \citenamefont
+  {Chikan}}]{submitted}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {K.}~\bibnamefont
+  {Mogyorosi}}, \bibinfo {author} {\bibfnamefont {B.}~\bibnamefont {Toth}},
+  \bibinfo {author} {\bibfnamefont {K.}~\bibnamefont {Sarosi}}, \bibinfo
+  {author} {\bibfnamefont {B.}~\bibnamefont {Gilicze}}, \bibinfo {author}
+  {\bibfnamefont {J.}~\bibnamefont {Csontos}}, \bibinfo {author} {\bibfnamefont
+  {T.}~\bibnamefont {Somoskoi}}, \bibinfo {author} {\bibfnamefont
+  {S.}~\bibnamefont {Toth}}, \bibinfo {author} {\bibfnamefont {P.~G.}\
+  \bibnamefont {Prabhash}}, \bibinfo {author} {\bibfnamefont {L.}~\bibnamefont
+  {Toth}}, \bibinfo {author} {\bibfnamefont {S.}~\bibnamefont {Taylor}},
+  \bibinfo {author} {\bibfnamefont {N.}~\bibnamefont {Skoufis}}, \bibinfo
+  {author} {\bibfnamefont {L.}~\bibnamefont {Barron}}, \bibinfo {author}
+  {\bibfnamefont {K.}~\bibnamefont {Varga}}, \bibinfo {author} {\bibfnamefont
+  {C.}~\bibnamefont {Covington}},\ and\ \bibinfo {author} {\bibfnamefont
+  {V.}~\bibnamefont {Chikan}},\ }\bibfield  {title} {\bibinfo {title} {Ch(a)
+  radical formation in coulomb explosion from butane seeded plasma generated
+  with chirp-controlled ultrashort laser pulses},\ }\href@noop {} {\bibfield
+  {journal} {\bibinfo  {journal} {submitted for publication}\ } (\bibinfo
+  {year} {2024})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Varga}\ and\ \citenamefont
+  {Driscoll}(2011)}]{Varga_Driscoll_2011a}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {K.}~\bibnamefont
+  {Varga}}\ and\ \bibinfo {author} {\bibfnamefont {J.~A.}\ \bibnamefont
+  {Driscoll}},\ }\bibinfo {title} {Monte carlo calculations},\ in\ \href@noop
+  {} {\emph {\bibinfo {booktitle} {Computational Nanoscience: Applications for
+  Molecules, Clusters, and Solids}}}\ (\bibinfo  {publisher} {Cambridge
+  University Press},\ \bibinfo {year} {2011})\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Troullier}\ and\ \citenamefont
+  {Martins}(1991)}]{PhysRevB.43.1993}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {N.}~\bibnamefont
+  {Troullier}}\ and\ \bibinfo {author} {\bibfnamefont {J.~L.}\ \bibnamefont
+  {Martins}},\ }\bibfield  {title} {\bibinfo {title} {Efficient
+  pseudopotentials for plane-wave calculations},\ }\href
+  {https://doi.org/10.1103/PhysRevB.43.1993} {\bibfield  {journal} {\bibinfo
+  {journal} {Phys. Rev. B}\ }\textbf {\bibinfo {volume} {43}},\ \bibinfo
+  {pages} {1993} (\bibinfo {year} {1991})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Perdew}\ and\ \citenamefont
+  {Zunger}(1981)}]{PhysRevB.23.5048}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {J.~P.}\ \bibnamefont
+  {Perdew}}\ and\ \bibinfo {author} {\bibfnamefont {A.}~\bibnamefont
+  {Zunger}},\ }\bibfield  {title} {\bibinfo {title} {Self-interaction
+  correction to density-functional approximations for many-electron systems},\
+  }\href {https://doi.org/10.1103/PhysRevB.23.5048} {\bibfield  {journal}
+  {\bibinfo  {journal} {Phys. Rev. B}\ }\textbf {\bibinfo {volume} {23}},\
+  \bibinfo {pages} {5048} (\bibinfo {year} {1981})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Manolopoulos}(2002)}]{10.1063/1.1517042}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {D.~E.}\ \bibnamefont
+  {Manolopoulos}},\ }\bibfield  {title} {\bibinfo {title} {{Derivation and
+  reflection properties of a transmission-free absorbing potential}},\ }\href
+  {https://doi.org/10.1063/1.1517042} {\bibfield  {journal} {\bibinfo
+  {journal} {The Journal of Chemical Physics}\ }\textbf {\bibinfo {volume}
+  {117}},\ \bibinfo {pages} {9552} (\bibinfo {year} {2002})},\ \Eprint
+  {https://arxiv.org/abs/https://pubs.aip.org/aip/jcp/article-pdf/117/21/9552/19225128/9552\_1\_online.pdf}
+  {https://pubs.aip.org/aip/jcp/article-pdf/117/21/9552/19225128/9552\_1\_online.pdf}
+  \BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Boerner}\ \emph {et~al.}(2023)\citenamefont
+  {Boerner}, \citenamefont {Deems}, \citenamefont {Furlani}, \citenamefont
+  {Knuth},\ and\ \citenamefont {Towns}}]{aces}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {T.~J.}\ \bibnamefont
+  {Boerner}}, \bibinfo {author} {\bibfnamefont {S.}~\bibnamefont {Deems}},
+  \bibinfo {author} {\bibfnamefont {T.~R.}\ \bibnamefont {Furlani}}, \bibinfo
+  {author} {\bibfnamefont {S.~L.}\ \bibnamefont {Knuth}},\ and\ \bibinfo
+  {author} {\bibfnamefont {J.}~\bibnamefont {Towns}},\ }\bibfield  {title}
+  {\bibinfo {title} {Access: Advancing innovation: Nsf’s advanced
+  cyberinfrastructure coordination ecosystem: Services \& support},\ }in\ \href
+  {https://doi.org/10.1145/3569951.3597559} {\emph {\bibinfo {booktitle}
+  {Practice and Experience in Advanced Research Computing 2023: Computing for
+  the Common Good}}},\ \bibinfo {series and number} {PEARC '23}\ (\bibinfo
+  {publisher} {Association for Computing Machinery},\ \bibinfo {address} {New
+  York, NY, USA},\ \bibinfo {year} {2023})\ p.\ \bibinfo {pages}
+  {173–176}\BibitemShut {NoStop}%
+\end{thebibliography}%
+
+\end{document}

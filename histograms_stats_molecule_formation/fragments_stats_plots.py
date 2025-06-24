@@ -393,8 +393,8 @@ def plot_fragment_counts_and_averages_two_ax(fragments_data, fig_name='frag_char
     # Set y-axis limits for the other fragments
     non_hydrogen_counts = [count for frag, count in zip(sorted_fragments, sorted_counts) if frag != "H"]
     max_count = max(non_hydrogen_counts) if non_hydrogen_counts else 0
-    ax2.set_ylim(0, max_count * 1.25)  # A little over the highest bar
-
+    ax2.set_ylim(0, max_count * 1.5)  # A little over the highest bar
+    #1.5 for c2h6
     plt.rcParams['font.family'] = 'Times New Roman'
 
     # Add both legends to the top right without overlapping
@@ -494,7 +494,7 @@ def plot_hydrogen_boxplot(fragments_data, fig_name):
 def main():
     print("-= GENERATING STATISTIC PLOTS =-")
 
-    input_file_path = 'histograms_stats_molecule_formation\\moleculeFormations_7.5.csv'
+    input_file_path = 'c:\\Users\\sammy\\Research\\TDDFT-output-and-scripts\\histograms_stats_molecule_formation\\c2h6\\moleculeFormations_8.5.csv'
     print("READING IN DATA FROM FILE:",input_file_path)
     fragments_data = process_fragments(input_file_path,line_skip_num=9)
     
@@ -510,9 +510,9 @@ def main():
     plot_charge_states(fragments_data, fig_name=os.path.join(output_file_directory, "frag_charge_states.png"))
     #plot_fragment_counts_and_averages_log(fragments_data, fig_name=os.path.join(output_file_directory, "frag_charge_averages_log.png"), log_scale=True)
     plot_fragment_counts_and_averages_two_ax(fragments_data, fig_name=os.path.join(output_file_directory, "frag_charge_averages_two_axes.png"),
-                                              hydrogen_charge_scale_factor=6,
+                                              hydrogen_charge_scale_factor=9,
                                               fragment_freq_color='#194fa6',fragment_charge_color='#b0dce4',
-                                              hydrogen_freq_color='tab:blue',hydrogen_charge_color='#b3e897',
+                                              hydrogen_freq_color='#330987',hydrogen_charge_color='#b3e897',
                                               inner_num_font_size=10,
                                               include_seperate_charge_leg_for_h=False)
     plot_hydrogen(fragments_data, fig_name=os.path.join(output_file_directory, 'hydrogen_charge_distribution.png'))
