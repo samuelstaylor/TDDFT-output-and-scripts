@@ -1,0 +1,33 @@
+### INSTRUCTIONS FROM CODY:
+
+First compile the program ft_column_Gabor.f90
+
+Load the modules from wherever cluster you are. (see your job submission script for those)
+
+Ifort ft_column_Gabor.f90 -o ft_column_Gabor
+
+Then call the program (for z it would be)
+
+./ft_column_Gabor dp_x.dat 1 4
+
+### SAM INSTRUCTIONS TERMINAL LOG IN ACES
+
+first load all modules from job output
+
+then compile gabor with fftw3.f
+
+./ft_column_Gabor dp_x.dat 1 4 0
+
+### GABOR OUTPUTS:
+
+FFT_NO_WINDOW: Raw spectrum, may have artifacts.
+
+WINDOW: Shows you the smoothed dipole used in the windowed FFT.
+
+FFT: Spectrum with reduced edge effects, typically used for HHG spectra, absorption spectra, or general frequency-domain analysis.
+
+📝 Summary table
+File name Contains FFT? Window applied? Columns
+dp_x.dat_C04_FFT_NO_WINDOW FFT of raw dipole ✅ ❌ 1. Frequency 2. FFT magnitude
+dp_x.dat_C04_WINDOW Time-domain windowed data ❌ ✅ 1. Time 2. Windowed dipole 3. Original dipole
+dp_x.dat_C04_FFT FFT of windowed dipole ✅ ✅ 1. Frequency 2. FFT magnitude
