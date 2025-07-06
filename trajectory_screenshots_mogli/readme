@@ -1,0 +1,13 @@
+### PREREQS: you must download mogli:
+
+https://github.com/sciapp/mogli
+
+### STEP 1: Extract the last frames of the trajectory
+
+- Use `traj_extract_last_frame.py` in the cluster/ACES to get the last frames of the trajectory file
+
+- Download the directory containing the trajectory last frames.
+
+### STEP 2: Take screenshots using script and analyzise
+
+- Use `mogli_export_screenshots.py` to generate screenshots of all the last frames using mogli

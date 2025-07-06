@@ -1,3 +1,5 @@
+# RUN THIS FILE IN ACES / CLUSTER TO GET XYZ FILES OF THE LAST FRAME
+
 def filter_last_time_step(input_file, output_file):
     with open(input_file, 'r') as infile:
         lines = infile.readlines()
