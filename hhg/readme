@@ -31,3 +31,6 @@ File name Contains FFT? Window applied? Columns
 dp_x.dat_C04_FFT_NO_WINDOW FFT of raw dipole ✅ ❌ 1. Frequency 2. FFT magnitude
 dp_x.dat_C04_WINDOW Time-domain windowed data ❌ ✅ 1. Time 2. Windowed dipole 3. Original dipole
 dp_x.dat_C04_FFT FFT of windowed dipole ✅ ✅ 1. Frequency 2. FFT magnitude
+
+NOTE: harmonic spectra should come from dipole acceleration. accelerating charges creates radiation.
+we are only mapping dipole moment which should still be informative but not as

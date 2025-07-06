@@ -235,8 +235,8 @@ logical                  :: divfreq=.FALSE.,tok_set=.FALSE.,ignore_check_spacing
   do i=1,N_include
      ! NOTE OLD WAS getval=conjg(FTDM(i))*FTDM(i)
 	 getval=abs(FTDM(i))
-	 if(scale_option==0) R1=FTX(i)*2*pi ! BUG ?
-	 if(scale_option==1) R1=2*pi*bohr2nm*c_speed_AU/FTX(i)
+	 if(scale_option==0) R1=FTX(i)*2*pi ! BUG ?            ! ATOMIC UNITS OF FREQUENCY
+	 if(scale_option==1) R1=2*pi*bohr2nm*c_speed_AU/FTX(i) ! WAVELENGTH IN nm
      write(1234,*) R1,getval
 	 !write(1235,*) FTX(i),real(FTDM(i)),imag(FTDM(i))
   end do  
