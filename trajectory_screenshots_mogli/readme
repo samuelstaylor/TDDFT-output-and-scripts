@@ -2,6 +2,8 @@
 
 https://github.com/sciapp/mogli
 
+- Use command `pip install mogli`
+
 ### STEP 1: Extract the last frames of the trajectory
 
 - Use `traj_extract_last_frame.py` in the cluster/ACES to get the last frames of the trajectory file

@@ -1,7 +1,11 @@
 """
 Example for exporting a molecule to an HTML5 file using mogli
 """
-from mogli import mogli
+
+import os
+os.environ["GR3_USE_OPENGL"] = "yes"
+
+import mogli
 
 # Visual settings 
 mogli.ATOM_RADII += .2          # the size of the atoms
@@ -79,13 +83,18 @@ def determine_bonds(all_molecules, r_num):
 def main():
     all_molecules = []
     r_num = []
-    start = 36
-    end = 83
+    start = 1
+    end = 65
     for r_val in range(start, end+1): #(-1, 84)
         r_num.append(r_val)
-        molecules = mogli.read(f'C4H10/kinked/lframe_traj/traj_last_frame_r{r_val}.xyz')
+        file_path = f'trajectory_screenshots_mogli/last_frame/trajectory_r{r_val}.xyz'
+        if os.path.exists(file_path):
+            molecules = mogli.read(file_path)
+        else:
+            print(f"File {file_path} does not exist. Skipping...")
+            continue
         print("Finished:", r_val)
-        mogli.export(molecules[0], f'C4H10/kinked/lframe_image/C4H10r{r_val}.png', width=1920, height=1080,
+        mogli.export(molecules[0], f'trajectory_screenshots_mogli/last_frame_pics/r{r_val}.png', width=1920, height=1080,
                     bonds_param=1.8, camera=((0, 0, 75), #bonds param = 1.8 seems to produce most accurate results
                                             (0, 0, 0),
                                             (0, 1, 0)))
