@@ -1,3 +1,5 @@
+import os
+
 # RUN THIS FILE IN ACES / CLUSTER TO GET XYZ FILES OF THE LAST FRAME
 
 def filter_last_time_step(input_file, output_file):
@@ -12,10 +14,16 @@ def filter_last_time_step(input_file, output_file):
 
     # Write the last time step data to the output file
     with open(output_file, 'w') as outfile:
-        outfile.writelines(lines[start_index-2:])
+        outfile.writelines(lines[start_index - 2:])
+
 
 # Example usage
-for i in range(3):
-    input_filename = f"C4H10/kinked/pulse_7_5r{i+1}/trajectory.xyz"
-    output_filename = f"C4H10/kinked/lframe_traj/lframe_traj_r{i+1}.xyz"
-    filter_last_time_step(input_filename, output_filename)
+for i in range(65):
+    input_filename = f"r{i + 1}/trajectory.xyz"
+    output_filename = f"last_frame/trajectory_r{i + 1}.xyz"
+
+    # Check if the input file exists
+    if os.path.isfile(input_filename):
+        filter_last_time_step(input_filename, output_filename)
+    else:
+        print(f"File not found: {input_filename}. Skipping...")
