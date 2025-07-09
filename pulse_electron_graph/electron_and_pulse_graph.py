@@ -5,9 +5,9 @@ info_input_file  = "_FIGURES/CE_theory_paper/C3H8_7.5_traj_dens/C3H8_7.50_r47_in
 pulse_input_file = "_FIGURES/CE_theory_paper/C3H8_7.5_traj_dens/pulse_7.5.dat"
 output_file      = "_FIGURES/CE_theory_paper/C3H8_7.5_traj_dens/C3H8_7.5_r47_info.png"
 '''
-info_input_file  = "_FIGURES/CE_theory_paper/C4H10_7.5_traj_dens/C4H10_7.5_r4_info.txt"
-pulse_input_file = "_FIGURES/CE_theory_paper/C4H10_7.5_traj_dens/pulse_7.5.dat"
-output_file      = "_FIGURES/CE_theory_paper/C4H10_7.5_traj_dens/C4H10_7.5_r4_info.png"
+info_input_file  = r"C:\Users\Hirom\OneDrive\Vanderbilt\Kalman research\TDDFT-output-and-scripts\pulse_electron_graph\h2 circular\info.txt"
+pulse_input_file = r"C:\Users\Hirom\OneDrive\Vanderbilt\Kalman research\TDDFT-output-and-scripts\pulse_electron_graph\h2 circular\pulse.dat"
+output_file      = r"C:\Users\Hirom\OneDrive\Vanderbilt\Kalman research\TDDFT-output-and-scripts\pulse_electron_graph\h2 circular\fig.png"
 
 pulse_color = 'tab:blue'
 electron_color = 'tab:green'

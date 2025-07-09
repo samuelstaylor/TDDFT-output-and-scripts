@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 
 # Lists to store data
-file_name = "info"
+file_name = "h2 circular/info"
 time_info = []
 electron_num = []
 
