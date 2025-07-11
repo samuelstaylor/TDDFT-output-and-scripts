@@ -1,0 +1,18 @@
+below is a file called RHCP_pulse_strong.dat. the file represents an electric field laser pulse as follows: first row is number of rows / time steps in the file. then each corresponding row consists of 4 columns <time> <e-field-x> <e-field-y> <e-field-z>. currently, the electric field in this file (RHCP_pulse_strong.dat) is right handed circularly polarized where the e-field propogates in the x-y plane and thus propagates in the z- direction. I want you to write a python script that changes the direction of propagation of the laser that is given but keeping the same e-field strength, helicity, wavelength, etc. i want to be able to specify specific angles for the light direction to be. allow for a polar and azimuthal angle to be preset to get an exact angle for the user to set. thank you!
+
+6000			
+0.02	-2.25867E-05	1.89303E-05	0
+0.04	-2.39357E-05	1.82136E-05	0
+0.06	-2.52762E-05	1.74178E-05	0
+0.08	-2.6604E-05	1.65419E-05	0
+0.1	-2.79152E-05	1.5585E-05	0
+0.12	-2.92053E-05	1.45462E-05	0
+0.14	-3.047E-05	1.3425E-05	0
+0.16	-3.17049E-05	1.22212E-05	0
+0.18	-3.29053E-05	1.09346E-05	0
+0.2	-3.40666E-05	9.56531E-06	0
+0.22	-3.51839E-05	8.1136E-06	0
+0.24	-3.62525E-05	6.58008E-06	0
+0.26	-3.72675E-05	4.96555E-06	0
+0.28	-3.82238E-05	3.27109E-06	0
+0.3	-3.91166E-05	1.49804E-06	0
