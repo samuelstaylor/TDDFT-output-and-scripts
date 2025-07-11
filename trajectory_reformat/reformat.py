@@ -1,7 +1,5 @@
 # script for reformatting XYZ files for VisIt
 
-# Script for reformatting XYZ files for VisIt — one space between columns, no alignment
-
 def reformat_xyz(input_file: str, output_file: str):
     with open(input_file, 'r') as f:
         lines = f.readlines()
