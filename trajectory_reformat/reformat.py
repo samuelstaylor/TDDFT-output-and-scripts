@@ -1,6 +1,6 @@
-# script for reformatting XYZ files for VisIt
+# Script for reformatting XYZ files for VisIt — floating-point, aligned columns
 
-def reformat_xyz(input_file: str, output_file: str):
+def reformat_xyz(input_file: str, output_file: str, precision: int = 9, width: int = 13):
     with open(input_file, 'r') as f:
         lines = f.readlines()
 
@@ -27,8 +27,18 @@ def reformat_xyz(input_file: str, output_file: str):
             if len(parts) != 4:
                 continue
             element, x, y, z = parts
-            # Exactly one space between columns, no formatting
-            atom_data.append(f"{element} {x} {y} {z}")
+            x_float = float(x)
+            y_float = float(y)
+            z_float = float(z)
+
+            # Right-align float columns with consistent width
+            formatted_line = (
+                f"{element:<2} "
+                f"{x_float:>{width}.{precision}f} "
+                f"{y_float:>{width}.{precision}f} "
+                f"{z_float:>{width}.{precision}f}"
+            )
+            atom_data.append(formatted_line)
 
         # Append to output
         output_lines.append(str(num_atoms))
@@ -42,8 +52,8 @@ def reformat_xyz(input_file: str, output_file: str):
 
 
 def main():
-    # change this accordingly
-    reformat_xyz("trajectory.xyz", "trajectory_reformatted.xyz")
+    # Adjust filenames and formatting settings as needed
+    reformat_xyz("trajectory.xyz", "trajectory_reformatted.xyz", precision=9, width=13)
 
 
 if __name__ == '__main__':

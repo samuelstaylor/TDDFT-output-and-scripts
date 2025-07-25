@@ -620,7 +620,7 @@ def plot_hydrogen_boxplot(fragments_data, fig_name):
 def main():
     print("-= GENERATING STATISTIC PLOTS =-")
 
-    input_file_path = r'C:\Users\Hirom\OneDrive\Vanderbilt\Kalman research\TDDFT-output-and-scripts\histograms_stats_molecule_formation\cyclobutane_8.50\moleculeFormations.csv'
+    input_file_path = r'C:\Users\Hirom\OneDrive\Vanderbilt\Kalman research\TDDFT-output-and-scripts\histograms_stats_molecule_formation\cyclobutane_rotated_8.00\moleculeFormations.csv'
     print("READING IN DATA FROM FILE:", input_file_path)
     fragments_data, fragments_speed_data = process_fragments(input_file_path, line_skip_num=9)
 
