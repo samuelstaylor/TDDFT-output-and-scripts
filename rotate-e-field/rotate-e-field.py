@@ -63,4 +63,4 @@ def rotate_e_field(input_file, output_file, theta_deg, phi_deg, epsilon=1e-15):
 # Example usage:
 input_file = "RHCP_pulse_strong.dat"
 output_file = "RHCP_pulse_rotated.dat"
-rotate_e_field(input_file, output_file, theta_deg=90, phi_deg=0)
+rotate_e_field(input_file, output_file, theta_deg=180, phi_deg=0)
