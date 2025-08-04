@@ -1,5 +1,9 @@
 import numpy as np
 
+input_file =  r'rotate-or-flip-molecule\cyclopentane-dft-og.inp'
+output_file = r'rotate-or-flip-molecule\cyclopentane-dft-18-z.inp'
+    
+
 def read_dft_file(file_path):
     with open(file_path, 'r') as f:
         lines = f.readlines()
@@ -16,10 +20,13 @@ def read_dft_file(file_path):
     return header, data, footer
 
 def write_dft_file(file_path, header, data, footer):
+    epsilon = 1e-10  # Define a small epsilon for comparison
     with open(file_path, 'w') as f:
         f.write(header + '\n')
         for atom in data:
-            f.write(f"{atom[0]:10.7f} {atom[1]:10.7f} {atom[2]:10.7f} {atom[3]} {atom[4]}\n")
+            # Replace values close to zero with 0.0
+            atom = [0.0 if abs(x) < epsilon else x for x in atom]
+            f.write(f"{atom[0]:10.10f} {atom[1]:10.10f} {atom[2]:10.10f} {atom[3]} {atom[4]}\n")
         f.write(footer + '\n')
 
 def rotate_molecule(data, axis, angle):
@@ -56,15 +63,13 @@ def flip_molecule(data, flip_planes):
 
 # Example usage
 if __name__ == "__main__":
-    input_file = 'molecule_flip_rotate\c2h6_dft.inp'
-    output_file = 'molecule_flip_rotate\c2h6_dft_rotated_flipped.inp'
-    
     # Read the dft.inp file
     header, data, footer = read_dft_file(input_file)
     
     # Rotate the molecule 45 degrees around the z-axis
     #data = rotate_molecule(data, axis=[0, 0, 1], angle=45)
-    data = rotate_molecule(data, axis=[0, 1, 0], angle=90)
+    # magic rotation number = 3.2775
+    data = rotate_molecule(data, axis=[0, 0, 1], angle=18)
 
     
     # Flip the molecule along the yz-plane
