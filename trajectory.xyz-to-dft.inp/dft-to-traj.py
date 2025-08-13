@@ -1,7 +1,7 @@
 # dft-to-traj.py
 
-dft_file = r"trajectory.xyz-to-dft.inp\dft\cyclopentane-dft-18-z.inp"
-xyz_file = r"trajectory.xyz-to-dft.inp\trajectory\cyclopentane-trajectory-18-z.xyz"
+dft_file = r"trajectory.xyz-to-dft.inp\dft\cyclopentane-dft.inp"
+xyz_file = r"trajectory.xyz-to-dft.inp\trajectory\cyclopentane-trajectory.xyz"
 
 # Mapping of atomic numbers to element symbols
 ELEMENTS = {

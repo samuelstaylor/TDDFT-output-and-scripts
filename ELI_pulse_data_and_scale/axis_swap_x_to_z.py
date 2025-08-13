@@ -1,9 +1,13 @@
 # Read the original data file
-with open('pulse7_5.dat', 'r') as file:
+
+input_file = r"ELI_pulse_data_and_scale\pulse6.dat"
+output_file= r"ELI_pulse_data_and_scale\z-axis\pulse_6.0.dat"
+
+with open(input_file, 'r') as file:
     lines = file.readlines()
 
 # Open a new file to write the modified data
-with open('pulse7_5_z.dat', 'w') as new_file:
+with open(output_file, 'w') as new_file:
     # Write the first line (number of entries) as is
     new_file.write(lines[0])
     

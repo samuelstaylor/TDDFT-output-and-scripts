@@ -1,5 +1,5 @@
 # Open the input file
-mult_num = 5.5
+mult_num = 9.25
 
 with open('pulse1.dat', 'r') as infile:
     # Read the content of the file
