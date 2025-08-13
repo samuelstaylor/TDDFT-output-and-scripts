@@ -1,0 +1,5 @@
+for all table each cell should contain:
+
+(process) | (ke loss) | (fragments + charges)
+
+each will be vertical line separated

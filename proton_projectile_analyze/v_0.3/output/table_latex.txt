@@ -1,0 +1,16 @@
+\begin{table}[ht]
+\renewcommand{\arraystretch}{0.5}
+\begin{ruledtabular}
+\begin{tabular}{lccc}
+    \textrm{Incident point} & \textrm{Effect} & \textrm{KE loss} & \textrm{Fragment products} \\
+    \textrm{} & \textrm{(S/Abs/Abst)} & \textrm{(eV)} & \textrm{} \\
+    \colrule
+    \textrm{\textbf{x$_{0}$y$_{0}$z$_{0}$.$_{005146}$}} & Scattering & 3.13 & C2H2[+0.65], H[+0.63] \\
+    \textrm{\textbf{x$_{0}$.$_{602596}$y$_{0}$z$_{0}$.$_{005146}$}} & Scattering & 2.21 & C2H2[+0.74], H[+0.50] \\
+    \textrm{\textbf{x$_{1}$.$_{6696011}$y$_{0}$z$_{0}$.$_{004853}$}} & Abstraction & - & C2H2[+0.61], H[+0.54] \\
+    \textrm{\textbf{x$_{1}$.$_{13609855}$y$_{10}$z$_{0}$.$_{0049995}$}} & Scattering & 3.30 & C2H2[+0.66], H[+0.56] \\
+\end{tabular}
+\end{ruledtabular}
+\caption{Insert caption here.}
+\label{insert-label-here}
+\end{table}
