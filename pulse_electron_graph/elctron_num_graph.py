@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 
 # Lists to store data
-file_name = "h2 circular/info"
+file_name = "pyridazine_center/info"
 time_info = []
 electron_num = []
 
@@ -24,7 +24,7 @@ ax1.tick_params(axis='y', labelcolor='tab:blue', which='both', direction='in', w
 ax1.set_ylabel('Number of Electrons', color='tab:blue', fontsize=12, weight='bold')
 
 fig.tight_layout()
-plt.title('Number of Electrons in Butane', fontsize=14, weight='bold')
+plt.title('Number of Electrons in Pyridazine_center', fontsize=14, weight='bold')
 ax1.grid(False)  # Setting dashed grid lines
 
 # Save the plot as a PNG image
