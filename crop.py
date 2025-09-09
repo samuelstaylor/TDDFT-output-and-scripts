@@ -2,6 +2,10 @@ from PIL import Image
 import numpy as np
 
 image_file_name = "histograms_stats_molecule_formation\\ch4\\frag_charge_averages_two_axes" # no png
+image_file_name = r"_FIGURES\ppp\page_3"
+image_file_name = r"_FIGURES\ppp\snapshots\page_4"  # no png
+image_file_name = r"_FIGURES\ppp\snapshots\c4h10-ip3-v-0.5-uncropped"
+
 # Open the image file
 with Image.open(image_file_name+".png") as img:
     # Convert the image to RGBA if it's not already
