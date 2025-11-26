@@ -13,7 +13,7 @@ import matplotlib as mpl
 EPSILON = 1e-10
 
 # Set global font to Times New Roman
-mpl.rcParams['font.family'] = 'Times New Roman'
+plt.rcParams["font.family"] = "serif"
 mpl.rcParams['font.weight'] = 'bold'
 mpl.rcParams['axes.labelweight'] = 'bold'
 mpl.rcParams['axes.labelsize'] = 14  # increase label font size
@@ -101,64 +101,65 @@ class NewtonPlot:
         self.nitrogen_x_momentum_norm = []
         self.nitrogen_y_momentum_norm = []
         self.nitrogen_z_momentum_norm = []
-        
 
     def process_data(self, input_file):
+        import csv, os
+
+        # Initialize dictionaries for velocity storage
+        self.fragments_x_vel_data = {}
+        self.fragments_y_vel_data = {}
+        self.fragments_z_vel_data = {}
+        self.fragments_speed_data = {}
+
+        # Read the CSV file
         with open(input_file, mode='r') as file:
             csv_reader = csv.reader(file)
-            
-            # Edit the csv_reader so that every row only contains elements with no spaces
-            lines = list(csv_reader)
-            line_skip_num = 9 # this is the number of the info block size. how many lines to skip for every read
-            
-            for i in range(0, len(lines),line_skip_num):
-                fragments_line = lines[i]
-                x_vel_line = lines[i + 4]
-                y_vel_line = lines[i + 5]
-                z_vel_line = lines[i + 6]
+            lines = [line for line in csv_reader if line]
 
-                fragments = [frag.split('[')[0].strip() for frag in fragments_line[1:] if frag.strip()]
-                x_velocities = [float(x_vel.strip()) for x_vel in x_vel_line[1:] if x_vel.strip()]
-                y_velocities = [float(y_vel.strip()) for y_vel in y_vel_line[1:] if y_vel.strip()]
-                z_velocities = [float(z_vel.strip()) for z_vel in z_vel_line[1:] if z_vel.strip()]
+        # Expecting exactly 4 rows: X, Y, Z, and Speed
+        if len(lines) < 4:
+            raise ValueError("Input CSV appears incomplete. Expected 4 rows (X, Y, Z, Speed).")
 
-                for fragment, x_vel, y_vel, z_vel in zip(fragments, x_velocities, y_velocities, z_velocities):
-                    # if it is not in one, its not in any
-                    if fragment not in self.fragments_x_vel_data:
-                        self.fragments_x_vel_data[fragment] = []
-                        self.fragments_y_vel_data[fragment] = []
-                        self.fragments_z_vel_data[fragment] = []
+        # Extract numeric data
+        x_velocities = [float(v.strip()) for v in lines[0][1:] if v.strip()]
+        y_velocities = [float(v.strip()) for v in lines[1][1:] if v.strip()]
+        z_velocities = [float(v.strip()) for v in lines[2][1:] if v.strip()]
+        speeds = [float(v.strip()) for v in lines[3][1:] if v.strip()]
 
-                    self.fragments_x_vel_data[fragment].append(x_vel)
-                    self.fragments_y_vel_data[fragment].append(y_vel)
-                    self.fragments_z_vel_data[fragment].append(z_vel)
+        # Store by atom index (since we have no atom labels)
+        num_atoms = len(x_velocities)
+        atom_indices = [f"Atom_{i + 1}" for i in range(num_atoms)]
 
+        for atom, x, y, z, s in zip(atom_indices, x_velocities, y_velocities, z_velocities, speeds):
+            self.fragments_x_vel_data[atom] = [x]
+            self.fragments_y_vel_data[atom] = [y]
+            self.fragments_z_vel_data[atom] = [z]
+            self.fragments_speed_data[atom] = [s]
 
-        # Read the CSV file and extract velocities
-        self.carbon_x_velocities = self.fragments_x_vel_data['C']
-        self.carbon_y_velocities = self.fragments_y_vel_data['C']
-        self.carbon_z_velocities = self.fragments_z_vel_data['C']
+        # If specific elements exist (e.g. N, C, H), assign them manually if known
+        # For example, if first two are nitrogen, next four carbon, etc.
+        # Otherwise, keep generic "Atom_#" indexing
+        self.nitrogen_x_velocities = x_velocities[0:2]  # Example: first 2 atoms
+        self.nitrogen_y_velocities = y_velocities[0:2]
+        self.nitrogen_z_velocities = z_velocities[0:2]
 
-        self.hydrogen_x_velocities = self.fragments_x_vel_data['H']
-        self.hydrogen_y_velocities = self.fragments_y_vel_data['H']
-        self.hydrogen_z_velocities = self.fragments_z_vel_data['H']
-        
-        self.oxygen_x_velocities = self.fragments_x_vel_data.get('O', [])
-        self.oxygen_y_velocities = self.fragments_y_vel_data.get('O', [])
-        self.oxygen_z_velocities = self.fragments_z_vel_data.get('O', [])
+        # Modify as appropriate for your molecular structure
+        self.carbon_x_velocities = x_velocities[2:6]
+        self.carbon_y_velocities = y_velocities[2:6]
+        self.carbon_z_velocities = z_velocities[2:6]
 
-        self.nitrogen_x_velocities = self.fragments_x_vel_data.get('N', [])
-        self.nitrogen_y_velocities = self.fragments_y_vel_data.get('N', [])
-        self.nitrogen_z_velocities = self.fragments_z_vel_data.get('N', [])
-        
-        # Check if the folder exists
+        self.hydrogen_x_velocities = x_velocities[6:]
+        self.hydrogen_y_velocities = y_velocities[6:]
+        self.hydrogen_z_velocities = z_velocities[6:]
+
+        # Make sure the images folder exists
         if not os.path.exists('images'):
-            # If the folder does not exist, create it
             os.makedirs('images')
             print("Folder 'images' created.")
         else:
             print("Folder 'images' already exists.")
-        
+
+        # Continue pipeline
         self.normalize_vel_data()
         self.calculate_momentum()
 
@@ -322,7 +323,7 @@ class NewtonPlot:
         self.nitrogen_y_momentum_norm = [val / n_absolute_max_val for val in self.nitrogen_y_momentum]
         self.nitrogen_z_momentum_norm = [val / n_absolute_max_val for val in self.nitrogen_z_momentum]
 
-    def plot_x_y_velocities(self, normalize=False, graph_name_tag='', graph_xy_title='', alpha=0.03,
+    def plot_x_y_velocities(self, normalize=False, graph_name_tag='', graph_xy_title='', alpha=0.9,
                             lim_2d_left=-1,lim_2d_right=1,lim_2d_bottom=-1,lim_2d_top=1):
         if normalize:
             carbon_x_vel = self.carbon_x_velocities_norm
@@ -372,7 +373,7 @@ class NewtonPlot:
             plt.show()
         plt.close()
 
-    def plot_x_z_velocities(self, normalize=False, graph_name_tag='', graph_xz_title='', alpha=0.03,
+    def plot_x_z_velocities(self, normalize=False, graph_name_tag='', graph_xz_title='', alpha=0.9,
                             lim_2d_left=-1,lim_2d_right=1,lim_2d_bottom=-1,lim_2d_top=1):
         if normalize:
             carbon_x_vel = self.carbon_x_velocities_norm
@@ -421,7 +422,7 @@ class NewtonPlot:
             plt.show()
         plt.close()
 
-    def plot_y_z_velocities(self, normalize=False, graph_name_tag='', graph_yz_title='', alpha=0.03,
+    def plot_y_z_velocities(self, normalize=False, graph_name_tag='', graph_yz_title='', alpha=0.9,
                             lim_2d_left=-1,lim_2d_right=1,lim_2d_bottom=-1,lim_2d_top=1):
         if normalize:
             carbon_y_vel = self.carbon_y_velocities_norm
@@ -482,7 +483,7 @@ class NewtonPlot:
         ax1 = plt.subplot(111, projection='3d')  # Create a 3D subplot
 
         # Scatter plot of the carbon velocities in 3D space
-        ax1.scatter(X, Y, Z, c='b', marker='.', alpha=0.2)  # Plot with blue dots, slightly transparent
+        ax1.scatter(X, Y, Z, c='b', marker='.', alpha=0.9)  # Plot with blue dots, slightly transparent
         ax1.set_xlabel('X velocity (Å/fs)')  # Set the label for the X-axis
         ax1.set_ylabel('Y velocity (Å/fs)')  # Set the label for the Y-axis
         ax1.set_zlabel('Z velocity (Å/fs)')  # Set the label for the Z-axis
@@ -503,9 +504,9 @@ class NewtonPlot:
         cz = np.ones_like(Z) * ax1.get_zlim3d()[0]  # Constant Z for XY projection at the bottom edge of the plot
 
         # Scatter plots for the projections onto the XY, XZ, and YZ planes
-        ax2.scatter(X, Y, cz, c=Z, marker='.', lw=0, alpha=0.2)  # XY projection, color by Z
-        ax2.scatter(X, cy, Z, c=-Y, marker='.', lw=0, alpha=0.2)  # XZ projection, color by negative Y
-        ax2.scatter(cx, Y, Z, c=X, marker='.', lw=0, alpha=0.2)  # YZ projection, color by X
+        ax2.scatter(X, Y, cz, c=Z, marker='.', lw=0, alpha=0.9)  # XY projection, color by Z
+        ax2.scatter(X, cy, Z, c=-Y, marker='.', lw=0, alpha=0.9)  # XZ projection, color by negative Y
+        ax2.scatter(cx, Y, Z, c=X, marker='.', lw=0, alpha=0.9)  # YZ projection, color by X
         
         # Set the limits of the second plot to be the same as the first plot
         ax2.set_xlim3d(ax1.get_xlim3d())
@@ -531,7 +532,7 @@ class NewtonPlot:
     def plot_3d_projections_1_limits(self,graph_name_tag="",
                                      graph_scatter_title="3D Scatter Plot of Velocities",
                                      graph_projection_title="3D Projection of Velocities",
-                                     alpha=0.03, lim_3d_x_lower=-1, lim_3d_x_upper=1,
+                                     alpha=0.9, lim_3d_x_lower=-1, lim_3d_x_upper=1,
                                      lim_3d_y_lower=-1,lim_3d_y_upper=1,
                                      lim_3d_z_lower=-1,lim_3d_z_upper=1):
         # Convert the carbon velocities lists to NumPy arrays for easier manipulation
@@ -680,7 +681,7 @@ class NewtonPlot:
                                     graph_xy_title="Carbon and Hydrogen X,Y Velocities",
                                     graph_xz_title="Carbon and Hydrogen X,Z Velocities",
                                     graph_yz_title="Carbon and Hydrogen Y,Z Velocities",
-                                    alpha=0.03, lim_2d_left=-1,lim_2d_right=1,
+                                    alpha=0.9, lim_2d_left=-1,lim_2d_right=1,
                                     lim_2d_bottom=-1,lim_2d_top=1):
         # Plot all of the 2-D NORMALIZED velocity projections
         self.plot_x_y_velocities(normalize=normalize,graph_name_tag=graph_name_tag,graph_xy_title=graph_xy_title,
@@ -714,13 +715,12 @@ def main():
 
     if (data_mode.lower().startswith('c')):
         #CLASSICAL INPUT FILE:
-        input_file = 'newton_plot\\atom_info.csv'
- 
+        input_file = '/home/viveirosmisa/MISA_FILES_LINUX/Kalman_research/TDDFT-output-and-scripts/newton_plot/pyridazine_nn_xy/moleculeFormations.csv'
         graph_name_tag="classical"
         
     if (data_mode.lower().startswith('q')):
         #QUANTUM INPUT FILE:
-        input_file = 'newton_plot\\moleculeFormations_14.csv'
+        input_file = 'newton_plot\\pyridazine_cc\\moleculeFormations.csv'
         graph_name_tag="quantum"
 
     if user_input_mode:
