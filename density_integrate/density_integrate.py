@@ -288,7 +288,7 @@ def main():
         target_time_fs=target_time_fs,
         mode="cody",
         maximum_density_distance=10.0,
-        density_radius=1.0
+        density_radius=3.0
     )
 
     # Output in moleculeFormations.csv style
