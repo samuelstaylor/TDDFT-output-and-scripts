@@ -1,0 +1,4 @@
+C2H2_run,C[0], C[1], H[2], H[3],
+Densities,3.741809368134, 3.741813421249, 1.258163928986, 1.258127927780,
+Density Sum,9.999915122986
+# Grid-integrated electrons (sanity check): 10.000000000000

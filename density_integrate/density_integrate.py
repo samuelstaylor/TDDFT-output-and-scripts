@@ -116,15 +116,18 @@ def bov_filename_for_time(base_path: str, time_fs: float) -> str:
       ending = "00" + std::to_string(uint32_t(step * 2)) + ".bov"
     Example: time 0.0 -> dens00000.bov, time 0.5 -> dens00001.bov
     """
-    index = int(round(time_fs * 2.0))
+    index = int(round(time_fs * 2.0)) # 2 since 0.5 fs per step. 
     return f"{base_path}dens{index:05d}.bov"
 
 
 def read_bov_header(filename: str):
     """Parse BOV header to extract grid info and byte offset."""
     params = {}
+    first_line = None
     with open(filename, "r") as f:
-        for line in f:
+        for i, line in enumerate(f):
+            if i == 0:
+                first_line = line.strip()
             if ":" in line:
                 key, val = line.split(":", 1)
                 params[key.strip()] = val.strip()
@@ -139,7 +142,7 @@ def read_bov_header(filename: str):
         base_dir = filename[:max(filename.rfind("/"), filename.rfind("\\")) + 1]
         if not (data_file.startswith(base_dir)):
             data_file = base_dir + data_file
-    return data_file, (nx, ny, nz), (ox, oy, oz), (sx, sy, sz), byte_offset
+    return first_line, data_file, (nx, ny, nz), (ox, oy, oz), (sx, sy, sz), byte_offset
 
 
 def read_dat_binary(filename: str, grid_size: Tuple[int, int, int], byte_offset: int) -> np.ndarray:
@@ -255,7 +258,7 @@ def compute_atom_charges(base_path: str, target_time_fs: float,
 
     # Find matching BOV and DAT
     bov_path = bov_filename_for_time(base_path, time_fs)
-    data_file, grid_size, origin, size, byte_offset = read_bov_header(bov_path)
+    first_line, data_file, grid_size, origin, size, byte_offset = read_bov_header(bov_path)
     densities = read_dat_binary(data_file, grid_size, byte_offset)
     (gx, gy, gz), (dx, dy, dz) = generate_grid_coords(*grid_size, *origin, *size)
     voxel_volume = dx * dy * dz  # matches BOV::GetGridVolume
@@ -271,7 +274,7 @@ def compute_atom_charges(base_path: str, target_time_fs: float,
     total_electrons = float(np.sum(per_atom_electrons))
     grid_total_electrons = float(np.sum(densities) * voxel_volume)
 
-    return atoms, time_fs, per_atom_electrons, total_electrons, grid_total_electrons
+    return atoms, first_line, per_atom_electrons, total_electrons, grid_total_electrons
 
 
 def main():
@@ -283,7 +286,9 @@ def main():
 
     base_path = "./data/c2h2-traj-dens/"
 
-    atoms, time_fs, per_atom_electrons, total_electrons, grid_total_electrons = compute_atom_charges(
+    print(f"TARGET TIME = {target_time_fs} fs")
+
+    atoms, first_line, per_atom_electrons, total_electrons, grid_total_electrons = compute_atom_charges(
         base_path=base_path,
         target_time_fs=target_time_fs,
         mode="cody",
@@ -291,12 +296,25 @@ def main():
         density_radius=3.0
     )
 
+    bov_path = bov_filename_for_time(base_path, target_time_fs)
+    print(f"Corresponding BOV file: {bov_path}")
+    print(f"First line in the BOV file: {first_line}")
+    
+    print("---OUTPUT---")
+
     # Output in moleculeFormations.csv style
     print("C2H2_run,", ", ".join([f"{a.symbol}[{i}]" for i, a in enumerate(atoms)]) + ",")
     print("Densities,", ", ".join([f"{e:.12f}" for e in per_atom_electrons]) + ",")
-    print("Time[fs],", ", ".join([f"{time_fs:.6f}" for _ in atoms]) + ",")
     print("Density Sum,", f"{total_electrons:.12f}")
     print(f"# Grid-integrated electrons (sanity check): {grid_total_electrons:.12f}")
+    
+    # Write output to charge_stats.csv
+    with open("charge_stats.csv", "w") as f:
+        f.write("C2H2_run," + ", ".join([f"{a.symbol}[{i}]" for i, a in enumerate(atoms)]) + ",\n")
+        f.write("Densities," + ", ".join([f"{e:.12f}" for e in per_atom_electrons]) + ",\n")
+        f.write("Density Sum," + f"{total_electrons:.12f}\n")
+        f.write(f"# Grid-integrated electrons (sanity check): {grid_total_electrons:.12f}\n")
+
 
 if __name__ == "__main__":
     main()
