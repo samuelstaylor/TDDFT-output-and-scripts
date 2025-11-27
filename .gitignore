@@ -2,3 +2,5 @@ mogli/
 *.zip
 */traj_dens/
 proton_projectile_analyze/C2H2/v_0.5/traj_dens/
+*.bov
+*.dat
