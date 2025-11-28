@@ -290,12 +290,6 @@ def main():
     # base_path = "./data/c2h2-traj-dens/" # for test data in github repo
     output_file = "charge_stats.csv"
     
-    '''
-    dt = 0.001 # fs
-    trajectory_output_frequency=500
-    td_density_output_frequency=500
-    '''
-
     print(f"TARGET TIME = {target_time_fs} fs")
 
     atoms, first_line, per_atom_electrons, total_electrons, grid_total_electrons = compute_atom_charges(
