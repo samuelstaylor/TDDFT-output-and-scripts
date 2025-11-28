@@ -1,29 +1,32 @@
 import numpy as np
 import struct
 import sys
-from dataclasses import dataclass
 from typing import List, Tuple, Optional
 
+# CONSTANTS FROM CONTROL.INP
+time_step = 0.001 # fs
+td_density_output_frequency=500
+
+
 # ----------------------------
-# Data structures
+# Data structures (NO DATACLASS)
 # ----------------------------
 
-@dataclass
 class Atom:
-    symbol: str
-    pos: np.ndarray  # shape (3,)
+    def __init__(self, symbol: str, pos: np.ndarray):
+        self.symbol = symbol
+        self.pos = pos
 
 
-@dataclass
 class Molecule:
-    atoms: List[Atom]
-    density_sum: float = 0.0  # accumulates raw density (per-volume unit)
+    def __init__(self, atoms: List[Atom], density_sum: float = 0.0):
+        self.atoms = atoms
+        self.density_sum = density_sum
 
-    # Axis-aligned bounding box
-    min_bounds: np.ndarray = None
-    max_bounds: np.ndarray = None
+        # Axis-aligned bounding box
+        self.min_bounds = None
+        self.max_bounds = None
 
-    def __post_init__(self):
         self.recalculate_aabb()
 
     def recalculate_aabb(self):
@@ -35,11 +38,9 @@ class Molecule:
         self.density_sum += amount
 
     def contains_point(self, pt: np.ndarray, radius: float) -> bool:
-        # Equivalent to bounds.Contains(pt, radius)
         return np.all(pt >= (self.min_bounds - radius)) and np.all(pt <= (self.max_bounds + radius))
 
     def get_electron_density(self, voxel_volume: float) -> float:
-        # Mirrors Molecule::GetElectronDensity(volume) => densitySum * volume
         return self.density_sum * voxel_volume
 
 
@@ -116,7 +117,8 @@ def bov_filename_for_time(base_path: str, time_fs: float) -> str:
       ending = "00" + std::to_string(uint32_t(step * 2)) + ".bov"
     Example: time 0.0 -> dens00000.bov, time 0.5 -> dens00001.bov
     """
-    index = int(round(time_fs * 2.0)) # 2 since 0.5 fs per step. 
+    dens_time_step = td_density_output_frequency * time_step
+    index = int(round(time_fs / dens_time_step))
     return f"{base_path}dens{index:05d}.bov"
 
 
@@ -284,7 +286,15 @@ def main():
     if len(sys.argv) >= 2:
         target_time_fs = float(sys.argv[1])
 
-    base_path = "./data/c2h2-traj-dens/"
+    base_path = "./" # 
+    base_path = "./data/c2h2-traj-dens/" # for test data in github repo
+    output_file = "charge_stats.csv"
+    
+    '''
+    dt = 0.001 # fs
+    trajectory_output_frequency=500
+    td_density_output_frequency=500
+    '''
 
     print(f"TARGET TIME = {target_time_fs} fs")
 
@@ -309,7 +319,8 @@ def main():
     print(f"# Grid-integrated electrons (sanity check): {grid_total_electrons:.12f}")
     
     # Write output to charge_stats.csv
-    with open("charge_stats.csv", "w") as f:
+    print(f"Writing output to {output_file}")
+    with open(output_file, "w") as f:
         f.write("C2H2_run," + ", ".join([f"{a.symbol}[{i}]" for i, a in enumerate(atoms)]) + ",\n")
         f.write("Densities," + ", ".join([f"{e:.12f}" for e in per_atom_electrons]) + ",\n")
         f.write("Density Sum," + f"{total_electrons:.12f}\n")
