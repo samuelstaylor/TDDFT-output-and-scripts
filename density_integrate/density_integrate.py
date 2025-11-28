@@ -287,7 +287,7 @@ def main():
         target_time_fs = float(sys.argv[1])
 
     base_path = "./"  
-    # base_path = "./data/c2h2-traj-dens/" # for test data in github repo
+    #base_path = "./data/c2h2-traj-dens/" # for test data in github repo
     output_file = "charge_stats.csv"
     
     print(f"TARGET TIME = {target_time_fs} fs")
@@ -308,7 +308,7 @@ def main():
 
     # Output in moleculeFormations.csv style
     print("C2H2_run,", ", ".join([f"{a.symbol}[{i}]" for i, a in enumerate(atoms)]) + ",")
-    print("Time, {target_time_fs}")
+    print(f"Time[fs], {target_time_fs}")
     print("Densities,", ", ".join([f"{e:.12f}" for e in per_atom_electrons]) + ",")
     print("Density Sum,", f"{total_electrons:.12f}")
     print(f"# Grid-integrated electrons (sanity check): {grid_total_electrons:.12f}")
@@ -317,7 +317,7 @@ def main():
     print(f"Writing output to {output_file}")
     with open(output_file, "w") as f:
         f.write("C2H2_run," + ", ".join([f"{a.symbol}[{i}]" for i, a in enumerate(atoms)]) + ",\n")
-        f.write("Time, {target_time_fs}\n")
+        f.write(f"Time[fs], {target_time_fs}\n")
         f.write("Densities," + ", ".join([f"{e:.12f}" for e in per_atom_electrons]) + ",\n")
         f.write("Density Sum," + f"{total_electrons:.12f}\n")
         f.write(f"# Grid-integrated electrons (sanity check): {grid_total_electrons:.12f}\n")
