@@ -1,0 +1,38 @@
+input_file= pyridazine_c/moleculeFormations.csv
+Folder 'images' already exists.
+Overall max momentum value across all elements:  71.56454167794483
+input_file= pyridazine_cc/moleculeFormations.csv
+Folder 'images' already exists.
+Overall max momentum value across all elements:  81.52564091573099
+input_file= pyridazine_cn/moleculeFormations.csv
+Folder 'images' already exists.
+Overall max momentum value across all elements:  115.52356183821911
+input_file= pyridazine_n/moleculeFormations.csv
+Folder 'images' already exists.
+Overall max momentum value across all elements:  43.75976915556577
+input_file= pyridazine_nn/moleculeFormations.csv
+Folder 'images' already exists.
+Overall max momentum value across all elements:  115.44735543880553
+input_file= pyridazine_center/moleculeFormations.csv
+Folder 'images' already exists.
+Overall max momentum value across all elements:  87.5696847917792
+input_file= pyridazine_c_xy/moleculeFormations.csv
+Folder 'images' already exists.
+Overall max momentum value across all elements:  309.31324334996106
+input_file= pyridazine_cc_xy/moleculeFormations.csv
+Folder 'images' already exists.
+Overall max momentum value across all elements:  188.01285337285762
+input_file= pyridazine_cn_xy/moleculeFormations.csv
+Folder 'images' already exists.
+Overall max momentum value across all elements:  201.92635427646258
+input_file= pyridazine_n_xy/moleculeFormations.csv
+Folder 'images' already exists.
+Overall max momentum value across all elements:  293.05303142259584
+input_file= pyridazine_nn_xy/moleculeFormations.csv
+Folder 'images' already exists.
+Overall max momentum value across all elements:  189.25647448498492
+input_file= pyridazine_h_xy/moleculeFormations.csv
+Folder 'images' already exists.
+Overall max momentum value across all elements:  259.52782896923435
+Generating Plots...
+FINSIHED: ALL PLOTS GENERATED

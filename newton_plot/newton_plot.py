@@ -29,10 +29,38 @@ class NewtonPlot:
         self.show_plot = SHOW_PLOT
         self.show_title = SHOW_TITLE
         self.show_legend = SHOW_LEGEND
+        ''' 
+        # g/mol masses
         self.h_mass = 1.00794  # in g/mol
         self.c_mass = 12.0107  # in g/mol
         self.o_mass = 15.9994  # in g/mol
         self.n_mass = 14.0067  # in g/mol
+        '''
+        # NOTE: WE CALCULATE MASSES VIA MOST COMMON NUMBER OF NUCLEONS:
+        self.h_mass = 1.0   
+        self.c_mass = 12.0  
+        self.n_mass = 14.0  
+        self.o_mass = 16.0  
+        '''
+          !Conversion of the mass from SI units to units corresponding
+          !to Angstrom,eV,femtosec (called here "nano"):
+          !M(nano) = M(kilogram) / ( q * 10^{-10}),
+          !where q is the elementary charge in SI units, q=1.602176487d-19
+        '''
+        mass_convfactor = 1.66053886 / 1.602176487e-2
+        # nano unit masses: 
+        # print("EXPECTED MASSES FROM MONITOR.OUT FILE:")
+        # print("h_mass = 103.64269314108340")  # Mass of H atom in nano units (eV_fs^2/A^2)
+        # print("c_mass = 1243.7123176930008")  # Mass of C atom in nano units (eV_fs^2/A^2)
+        
+        # print("CALCULATED MASSES IN NANO UNITS:")
+        self.h_mass = self.h_mass * mass_convfactor
+        self.c_mass = self.c_mass * mass_convfactor
+        self.n_mass = self.n_mass * mass_convfactor
+        self.o_mass = self.o_mass * mass_convfactor
+        # print("h_mass = ", self.h_mass)
+        # print("c_mass = ", self.c_mass)
+        
         self.axis_subdivide = 5  # Number of sub-divisions on each axis
         
         # Dictionary for fragments and data
@@ -129,13 +157,13 @@ class NewtonPlot:
         # Store by atom index (since we have no atom labels)
         num_atoms = len(x_velocities)
         atom_indices = [f"Atom_{i + 1}" for i in range(num_atoms)]
-
         for atom, x, y, z, s in zip(atom_indices, x_velocities, y_velocities, z_velocities, speeds):
             self.fragments_x_vel_data[atom] = [x]
             self.fragments_y_vel_data[atom] = [y]
             self.fragments_z_vel_data[atom] = [z]
             self.fragments_speed_data[atom] = [s]
 
+        # THE MOLECULE IS C4H4N2... HERE IS HOW WE ASSIGN THE VELOCITIES:
         # If specific elements exist (e.g. N, C, H), assign them manually if known
         # For example, if first two are nitrogen, next four carbon, etc.
         # Otherwise, keep generic "Atom_#" indexing
@@ -250,7 +278,10 @@ class NewtonPlot:
 
 
     def calculate_momentum(self):
-        # Momentums in A/fs * g/mol
+        VERBOSE = True
+        MAX_MOMENTUM_TO_INCLUDE = 500 # eV_fs/A
+        
+        # Momentums in A/fs * ev_fs^2/A^2 = eV_fs/A
         self.carbon_x_momentum = [vel * self.c_mass for vel in self.carbon_x_velocities]
         self.carbon_y_momentum = [vel * self.c_mass for vel in self.carbon_y_velocities]
         self.carbon_z_momentum = [vel * self.c_mass for vel in self.carbon_z_velocities]
@@ -271,10 +302,13 @@ class NewtonPlot:
         c_maximums.append(abs(min(self.carbon_x_momentum, default=1)))
         c_maximums.append(abs(max(self.carbon_y_momentum, default=1)))
         c_maximums.append(abs(min(self.carbon_y_momentum, default=1)))
-        c_maximums.append(abs(max(self.carbon_z_momentum, default=1)))
-        c_maximums.append(abs(min(self.carbon_z_momentum, default=1)))
+        # c_maximums.append(abs(max(self.carbon_z_momentum, default=1)))
+        # c_maximums.append(abs(min(self.carbon_z_momentum, default=1)))
         
-        c_absolute_max_val = max(c_maximums)
+        # Remove elements greater than MAX_MOMENTUM_TO_INCLUDE
+        c_maximums = [val for val in c_maximums if val <= MAX_MOMENTUM_TO_INCLUDE]
+        
+        c_absolute_max_val = max(c_maximums, default=1)
         
         h_maximums = []
         
@@ -282,48 +316,78 @@ class NewtonPlot:
         h_maximums.append(abs(min(self.hydrogen_x_momentum, default=1)))
         h_maximums.append(abs(max(self.hydrogen_y_momentum, default=1)))
         h_maximums.append(abs(min(self.hydrogen_y_momentum, default=1)))
-        h_maximums.append(abs(max(self.hydrogen_z_momentum, default=1)))
-        h_maximums.append(abs(min(self.hydrogen_z_momentum, default=1)))
+        # h_maximums.append(abs(max(self.hydrogen_z_momentum, default=1)))
+        # h_maximums.append(abs(min(self.hydrogen_z_momentum, default=1)))
         
-        h_absolute_max_val = max(h_maximums)
-
+        # Remove elements greater than MAX_MOMENTUM_TO_INCLUDE
+        h_maximums = [val for val in h_maximums if val <= MAX_MOMENTUM_TO_INCLUDE]
+        
+        h_absolute_max_val = max(h_maximums, default=1)
+        
         o_maximums = []
         
         o_maximums.append(abs(max(self.oxygen_x_momentum, default=1)))
         o_maximums.append(abs(min(self.oxygen_x_momentum, default=1)))
         o_maximums.append(abs(max(self.oxygen_y_momentum, default=1)))
         o_maximums.append(abs(min(self.oxygen_y_momentum, default=1)))
-        o_maximums.append(abs(max(self.oxygen_z_momentum, default=1)))
-        o_maximums.append(abs(min(self.oxygen_z_momentum, default=1)))
+        # o_maximums.append(abs(max(self.oxygen_z_momentum, default=1)))
+        # o_maximums.append(abs(min(self.oxygen_z_momentum, default=1)))
         
-        o_absolute_max_val = max(o_maximums)
-
+        # Remove elements greater than MAX_MOMENTUM_TO_INCLUDE
+        o_maximums = [val for val in o_maximums if val <= MAX_MOMENTUM_TO_INCLUDE]
+        
+        o_absolute_max_val = max(o_maximums, default=1)
+        
         n_maximums = []
         
         n_maximums.append(abs(max(self.nitrogen_x_momentum, default=1)))
         n_maximums.append(abs(min(self.nitrogen_x_momentum, default=1)))
         n_maximums.append(abs(max(self.nitrogen_y_momentum, default=1)))
         n_maximums.append(abs(min(self.nitrogen_y_momentum, default=1)))
-        n_maximums.append(abs(max(self.nitrogen_z_momentum, default=1)))
-        n_maximums.append(abs(min(self.nitrogen_z_momentum, default=1)))
+        # n_maximums.append(abs(max(self.nitrogen_z_momentum, default=1)))
+        # n_maximums.append(abs(min(self.nitrogen_z_momentum, default=1)))
         
         n_absolute_max_val = max(n_maximums)
+        
+        # Remove elements greater than MAX_MOMENTUM_TO_INCLUDE
+        n_maximums = [val for val in n_maximums if val <= MAX_MOMENTUM_TO_INCLUDE]
+        
+        n_absolute_max_val = max(n_maximums, default=1)
+        
+        maximums_list = [c_absolute_max_val, h_absolute_max_val, o_absolute_max_val, n_absolute_max_val]
+        
+        max_overall = max(maximums_list)
 
+        VERBOSE = False
+        if VERBOSE:
+                
+            print("Carbon absolute max momentum value: ", c_absolute_max_val)
+            print("Hydrogen absolute max momentum value: ", h_absolute_max_val)
+            print("Oxygen absolute max momentum value: ", o_absolute_max_val)
+            print("Nitrogen absolute max momentum value: ", n_absolute_max_val)
+            print("Carbon momentum (x-y) values: ", self.carbon_x_momentum, self.carbon_y_momentum)
+            print("Hydrogen momentum (x-y) values: ", self.hydrogen_x_momentum, self.hydrogen_y_momentum)
+            print("Nitrogen momentum (x-y) values: ", self.nitrogen_x_momentum, self.nitrogen_y_momentum)
+            print("Overall max momentum value across all elements: ", max_overall)
+        print("Overall max momentum value across all elements: ", max_overall)
+        max_overall = 309.31324334996106 # calculated amongst each simulation by printing the max value
+
+            
         # Create the normalized lists of momentum
-        self.carbon_x_momentum_norm = [val / c_absolute_max_val for val in self.carbon_x_momentum]
-        self.carbon_y_momentum_norm = [val / c_absolute_max_val for val in self.carbon_y_momentum]
-        self.carbon_z_momentum_norm = [val / c_absolute_max_val for val in self.carbon_z_momentum]
-        self.hydrogen_x_momentum_norm = [val / h_absolute_max_val for val in self.hydrogen_x_momentum]
-        self.hydrogen_y_momentum_norm = [val / h_absolute_max_val for val in self.hydrogen_y_momentum]
-        self.hydrogen_z_momentum_norm = [val / h_absolute_max_val for val in self.hydrogen_z_momentum]
-        self.oxygen_x_momentum_norm = [val / o_absolute_max_val for val in self.oxygen_x_momentum]
-        self.oxygen_y_momentum_norm = [val / o_absolute_max_val for val in self.oxygen_y_momentum]
-        self.oxygen_z_momentum_norm = [val / o_absolute_max_val for val in self.oxygen_z_momentum]
-        self.nitrogen_x_momentum_norm = [val / n_absolute_max_val for val in self.nitrogen_x_momentum]
-        self.nitrogen_y_momentum_norm = [val / n_absolute_max_val for val in self.nitrogen_y_momentum]
-        self.nitrogen_z_momentum_norm = [val / n_absolute_max_val for val in self.nitrogen_z_momentum]
+        self.carbon_x_momentum_norm = [val / max_overall for val in self.carbon_x_momentum]
+        self.carbon_y_momentum_norm = [val / max_overall for val in self.carbon_y_momentum]
+        self.carbon_z_momentum_norm = [val / max_overall for val in self.carbon_z_momentum]
+        self.hydrogen_x_momentum_norm = [val / max_overall for val in self.hydrogen_x_momentum]
+        self.hydrogen_y_momentum_norm = [val / max_overall for val in self.hydrogen_y_momentum]
+        self.hydrogen_z_momentum_norm = [val / max_overall for val in self.hydrogen_z_momentum]
+        self.oxygen_x_momentum_norm = [val / max_overall for val in self.oxygen_x_momentum]
+        self.oxygen_y_momentum_norm = [val / max_overall for val in self.oxygen_y_momentum]
+        self.oxygen_z_momentum_norm = [val / max_overall for val in self.oxygen_z_momentum]
+        self.nitrogen_x_momentum_norm = [val / max_overall for val in self.nitrogen_x_momentum]
+        self.nitrogen_y_momentum_norm = [val / max_overall for val in self.nitrogen_y_momentum]
+        self.nitrogen_z_momentum_norm = [val / max_overall for val in self.nitrogen_z_momentum]
 
-    def plot_x_y_velocities(self, normalize=False, graph_name_tag='', graph_xy_title='', alpha=0.9,
+    def plot_x_y_velocities(self, momentum=True, normalize=False, graph_name_tag='', graph_xy_title='', alpha=0.9,
                             lim_2d_left=-1,lim_2d_right=1,lim_2d_bottom=-1,lim_2d_top=1):
         if normalize:
             carbon_x_vel = self.carbon_x_velocities_norm
@@ -334,6 +398,16 @@ class NewtonPlot:
             oxygen_y_vel = self.oxygen_y_velocities_norm
             nitrogen_x_vel = self.nitrogen_x_velocities_norm
             nitrogen_y_vel = self.nitrogen_y_velocities_norm
+            
+            if momentum:
+                carbon_x_vel = self.carbon_x_momentum_norm
+                carbon_y_vel = self.carbon_y_momentum_norm
+                hydrogen_x_vel = self.hydrogen_x_momentum_norm
+                hydrogen_y_vel = self.hydrogen_y_momentum_norm
+                oxygen_x_vel = self.oxygen_x_momentum_norm
+                oxygen_y_vel = self.oxygen_y_momentum_norm
+                nitrogen_x_vel = self.nitrogen_x_momentum_norm
+                nitrogen_y_vel = self.nitrogen_y_momentum_norm
         else:
             carbon_x_vel = self.carbon_x_velocities
             carbon_y_vel = self.carbon_y_velocities
@@ -343,15 +417,37 @@ class NewtonPlot:
             oxygen_y_vel = self.oxygen_y_velocities
             nitrogen_x_vel = self.nitrogen_x_velocities
             nitrogen_y_vel = self.nitrogen_y_velocities
+            
+            if momentum:
+                carbon_x_vel = self.carbon_x_momentum
+                carbon_y_vel = self.carbon_y_momentum
+                hydrogen_x_vel = self.hydrogen_x_momentum
+                hydrogen_y_vel = self.hydrogen_y_momentum
+                oxygen_x_vel = self.oxygen_x_momentum
+                oxygen_y_vel = self.oxygen_y_momentum
+                nitrogen_x_vel = self.nitrogen_x_momentum
+                nitrogen_y_vel = self.nitrogen_y_momentum
 
-        plt.scatter(hydrogen_x_vel, hydrogen_y_vel, color='r', alpha=alpha, label='Hydrogen')
-        plt.scatter(carbon_x_vel, carbon_y_vel, color='b', alpha=alpha, label='Carbon')
-        plt.scatter(oxygen_x_vel, oxygen_y_vel, color='g', alpha=alpha, label='Oxygen')
-        plt.scatter(nitrogen_x_vel, nitrogen_y_vel, color='y', alpha=alpha, label='Nitrogen')
-        plt.xlabel('X Velocity (Å/fs)')
-        plt.ylabel('Y Velocity (Å/fs)')
+        plt.scatter(hydrogen_x_vel, hydrogen_y_vel, color='r', alpha=alpha, label='Hydrogen',s=75)
+        plt.scatter(carbon_x_vel, carbon_y_vel, color='black', alpha=alpha, label='Carbon',s=75)
+        plt.scatter(oxygen_x_vel, oxygen_y_vel, color='g', alpha=alpha, label='Oxygen',s=75)
+        plt.scatter(nitrogen_x_vel, nitrogen_y_vel, color='b', alpha=alpha, label='Nitrogen',s=75)
+        if momentum:
+            # A/fs * eV_fs^2/A^2 = eV_fs/A
+            plt.xlabel('Normalized Momentum (x)')
+            plt.ylabel('Normalized Momentum (y)')
+
+        else:
+            plt.xlabel('X Velocity (Å/fs)')
+            plt.ylabel('Y Velocity (Å/fs)')
+            
         plt.xlim(lim_2d_left, lim_2d_right)
         plt.ylim(lim_2d_bottom, lim_2d_top)
+            
+        # Set tick marks manually for Newton-style plots
+        plt.xticks([-1, -0.5, 0, 0.5, 1])
+        plt.yticks([-1, -0.5, 0, 0.5, 1])
+
         if self.show_legend:
             plt.legend()
         
@@ -677,22 +773,24 @@ class NewtonPlot:
         plt.close()
             
             
-    def plot_2d_projections(self, normalize=False,graph_name_tag="",
+    def plot_2d_projections(self, normalize=False,momentum=False,graph_name_tag="",
                                     graph_xy_title="Carbon and Hydrogen X,Y Velocities",
                                     graph_xz_title="Carbon and Hydrogen X,Z Velocities",
                                     graph_yz_title="Carbon and Hydrogen Y,Z Velocities",
                                     alpha=0.9, lim_2d_left=-1,lim_2d_right=1,
                                     lim_2d_bottom=-1,lim_2d_top=1):
         # Plot all of the 2-D NORMALIZED velocity projections
-        self.plot_x_y_velocities(normalize=normalize,graph_name_tag=graph_name_tag,graph_xy_title=graph_xy_title,
+        self.plot_x_y_velocities(normalize=normalize,momentum=momentum,graph_name_tag=graph_name_tag,graph_xy_title=graph_xy_title,
                                  alpha=alpha,lim_2d_left=lim_2d_left,lim_2d_right=lim_2d_right,
                                  lim_2d_bottom=lim_2d_bottom,lim_2d_top=lim_2d_top)
+        '''
         self.plot_x_z_velocities(normalize=normalize,graph_name_tag=graph_name_tag,graph_xz_title=graph_xz_title,
                                  alpha=alpha,lim_2d_left=lim_2d_left,lim_2d_right=lim_2d_right,
                                  lim_2d_bottom=lim_2d_bottom,lim_2d_top=lim_2d_top)
         self.plot_y_z_velocities(normalize=normalize,graph_name_tag=graph_name_tag,graph_yz_title=graph_yz_title,
                                  alpha=alpha,lim_2d_left=lim_2d_left,lim_2d_right=lim_2d_right,
                                  lim_2d_bottom=lim_2d_bottom,lim_2d_top=lim_2d_top)
+        '''
 
 
 def main():
@@ -700,11 +798,15 @@ def main():
     newton_plot = NewtonPlot()
     data_mode = "c" # c for classical, q for quantum
     user_input_mode = False
-    alpha = 0.2  #set alpha =0.2 for c4h10 and =0.03 for c2h2
-    lim_2d_left=-1.0
-    lim_2d_right=1.0
-    lim_2d_bottom=-1.0
-    lim_2d_top=1.0
+    alpha = 0.5  #set alpha =0.2 for c4h10 and =0.03 for c2h2
+    
+    # 2D limits should be set according to the data being analyzed.
+    lim_2d_left=   -1.1
+    lim_2d_right=   1.1
+    lim_2d_bottom= -1.1
+    lim_2d_top=     1.1
+    
+    # 3D limits should be set according to the data being analyzed
     lim_3d_x_lower=-1.0
     lim_3d_x_upper=1.0
     lim_3d_y_lower=-1.0
@@ -713,9 +815,10 @@ def main():
     lim_3d_z_upper=1.0
     newton_plot.axis_subdivide = 4    
 
+    '''
     if (data_mode.lower().startswith('c')):
         #CLASSICAL INPUT FILE:
-        input_file = '/home/viveirosmisa/MISA_FILES_LINUX/Kalman_research/TDDFT-output-and-scripts/newton_plot/pyridazine_nn_xy/moleculeFormations.csv'
+        input_file = 'moleculeFormations.csv'
         graph_name_tag="classical"
         
     if (data_mode.lower().startswith('q')):
@@ -725,27 +828,67 @@ def main():
 
     if user_input_mode:
         input_file = input("Enter the path from current working directory to atom info file: ")
+    '''
+    
+    
+    input_file = "master_moleculeFormations.csv"
+    graph_name_tag="master"
+
     print("Searching for input file: ", input_file)
 
+
     newton_plot.process_data(input_file)
-    
+
     print("Generating Plots...")
     # 2-d velocity projections
-    newton_plot.plot_2d_projections(normalize=False,
+    newton_plot.plot_2d_projections(normalize=True,
+                                    momentum=True,
                                     graph_name_tag=graph_name_tag,
                                     graph_xy_title=f"Carbon and Hydrogen X,Y Velocities ({graph_name_tag})",
                                     graph_xz_title=f"Carbon and Hydrogen X,Z Velocities ({graph_name_tag})",
                                     graph_yz_title=f"Carbon and Hydrogen Y,Z Velocities ({graph_name_tag})",
                                     alpha=alpha, lim_2d_left=lim_2d_left, lim_2d_right=lim_2d_right,
                                     lim_2d_bottom=lim_2d_bottom,lim_2d_top=lim_2d_top)
+
+
+    ''' # NOTE: AUTOMATION SCRIPT TO GENERATE A BUNCH OF PLOTS FOR MULTIPLE FILES 
+    # GENERATE A BUNCH OF FILE PATHS FOR PROCESSING MULTIPLE FILES
+    input_file_list = []
+    base_name = "pyridazine"
+    mol_file = "moleculeFormations.csv"
+    targets = ['c', 'cc', 'cn', 'n', 'nn', 'center', 'c_xy', 'cc_xy', 'cn_xy', 'n_xy', 'nn_xy', 'h_xy']
+    for target in targets:
+        file_path = f'{base_name}_{target}/{mol_file}'
+        input_file_list.append(file_path)
+    print(input_file_list)
     
+    i = 0
+    for input_file in input_file_list:
+        print("input_file=",input_file)
+        newton_plot.process_data(input_file)
+    
+        print("Generating Plots...")
+        # 2-d velocity projections
+        newton_plot.plot_2d_projections(normalize=True,
+                                        momentum=True,
+                                        graph_name_tag=targets[i],
+                                        graph_xy_title=f"Carbon and Hydrogen X,Y Velocities ({graph_name_tag})",
+                                        graph_xz_title=f"Carbon and Hydrogen X,Z Velocities ({graph_name_tag})",
+                                        graph_yz_title=f"Carbon and Hydrogen Y,Z Velocities ({graph_name_tag})",
+                                        alpha=alpha, lim_2d_left=lim_2d_left, lim_2d_right=lim_2d_right,
+                                        lim_2d_bottom=lim_2d_bottom,lim_2d_top=lim_2d_top)
+        i += 1
+    '''
+        
     # 3-D scatter and projection plots    
+    '''
     newton_plot.plot_3d_projections_1_limits(graph_name_tag=graph_name_tag,
                                              graph_scatter_title=f"3D Scatter Plot of Velocities ({graph_name_tag})",
                                              graph_projection_title=f"3D Projection of Velocities ({graph_name_tag})",
                                              alpha=alpha, lim_3d_x_lower=lim_3d_x_lower, lim_3d_x_upper=lim_3d_x_upper,
                                              lim_3d_y_lower=lim_3d_y_lower,lim_3d_y_upper=lim_3d_y_upper,
                                              lim_3d_z_lower=lim_3d_z_lower,lim_3d_z_upper=lim_3d_z_upper)
+    '''
     
     print("FINSIHED: ALL PLOTS GENERATED")
 
