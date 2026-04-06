@@ -1,0 +1,55 @@
+given the labeling diagram for pyradizine and jmol's lables (both in this directory).
+
+The table "table.tex" was generated via density integration which used same trajectory file
+as jmol reads (trajectory.xyz)
+
+my custom labeling labels counter clockwise
+
+What is the corresponce of jmol labeling to my labeling???
+
+jmol -> mine
+  N1 -> N1
+  N2 -> N2
+  C3 -> C3
+  C4 -> C2
+  C5 -> C4
+  C6 -> C1
+  H7 -> H3
+  H8 -> H2
+  H9 -> H4
+  H10-> H1
+
+og table -> mine
+  N1 -> N1
+  N2 -> N2
+  C1 -> C3
+  C2 -> C2
+  C3 -> C4
+  C4 -> C1
+  H1 -> H3
+  H2 -> H2
+  H3 -> H4
+  H4 -> H1
+
+
+mine -> OG table
+  N1 -> N1
+  N2 -> N2
+  C1 -> C4
+  C2 -> C2
+  C3 -> C1
+  C4 -> C3
+  H1 -> H4
+  H2 -> H2
+  H3 -> H1
+  H4 -> H3
+
+OG COLUMNS:
+(1,2) are label columns. 3-12 correspond to atoms. 13 is total
+    C1C2C3C4H1H2H3H4 N1 N2 TOT
+[1,2,3,4,5,6,7,8,9,10,11,12,13]
+-> NEW ORDER OF COLS IN TERMS OF OG COLS
+    C4C2C1C3H4 H2H1H3 N1 N2 TOT
+[1,2,6,4,3,5,10,8,7,9,11,12,13]
+
+
